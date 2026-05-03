@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=3 uid="uid://b8o77knuc35ip"]
+
+[ext_resource type="Script" path="res://Scenes/UpgradeMenu/upgrade_menu.gd" id="1_3axdk"]
+[ext_resource type="Script" path="res://Scenes/UpgradeMenu/graphics.gd" id="2_11oit"]
+[ext_resource type="PackedScene" uid="uid://xygpch6h66gc" path="res://Scenes/UpgradeNode/upgrade_node.tscn" id="3_xkrix"]
+[ext_resource type="Resource" uid="uid://cl3ba50a15vq5" path="res://Resources/upgrade_data_shooter.tres" id="4_cy8dv"]
+[ext_resource type="Resource" uid="uid://dumqyg4r3ylx" path="res://Resources/upgrade_data_shooter_cooldown.tres" id="5_s5xdy"]
+[ext_resource type="Resource" uid="uid://1efh2borrckd" path="res://Resources/upgrade_data_bullet_dmg.tres" id="6_7d856"]
+[ext_resource type="Resource" uid="uid://b6dknchceiyvd" path="res://Resources/upgrade_data_tree_spawnrate.tres" id="6_vokup"]
+[ext_resource type="Resource" uid="uid://bo61oiodoogyi" path="res://Resources/upgrade_data_bullet_spd.tres" id="7_s42ug"]
+[ext_resource type="Resource" uid="uid://1vrd5xx5dmte" path="res://Resources/upgrade_data_bullet_dist.tres" id="8_trs4p"]
+[ext_resource type="Resource" uid="uid://7fw6xutbyu8t" path="res://Resources/upgrade_data_shooter_accuracy.tres" id="9_i7v24"]
+
+[node name="UpgradeMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -40.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3axdk")
+
+[node name="Control" type="Control" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.760784)
+
+[node name="Graphics" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_11oit")
+
+[node name="UpgradeNode" parent="Control/Graphics" instance=ExtResource("3_xkrix")]
+offset_left = 128.0
+offset_top = 64.0
+offset_right = 144.0
+offset_bottom = 80.0
+data = ExtResource("4_cy8dv")
+locked = false
+
+[node name="ShooterCooldown" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+data = ExtResource("5_s5xdy")
+
+[node name="BuletDmg" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
+offset_left = -40.0
+offset_right = -24.0
+data = ExtResource("6_7d856")
+
+[node name="BulletSpd" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
+offset_left = -72.0
+offset_top = -16.0
+offset_right = -56.0
+offset_bottom = 0.0
+data = ExtResource("7_s42ug")
+
+[node name="BulletDist" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
+offset_left = -72.0
+offset_top = 16.0
+offset_right = -56.0
+offset_bottom = 32.0
+data = ExtResource("8_trs4p")
+
+[node name="ShooterAccuracy" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
+offset_top = -40.0
+offset_bottom = -24.0
+data = ExtResource("9_i7v24")
+
+[node name="TreeSpawnrate" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+offset_top = 32.0
+offset_bottom = 48.0
+data = ExtResource("6_vokup")

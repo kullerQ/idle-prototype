@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://tb22m3814na3"]
+
+[ext_resource type="Script" path="res://Scenes/Game/button_upgrades.gd" id="1_7kvol"]
+[ext_resource type="Script" path="res://Scenes/PanelButton/panel_button.gd" id="1_rqo2n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wjxge"]
+bg_color = Color(0.121569, 0.121569, 0.121569, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ikvdx"]
+bg_color = Color(0.682353, 0.682353, 0.682353, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_poume"]
+bg_color = Color(0.298039, 0.298039, 0.298039, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.403922, 0.403922, 0.403922, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tw4ve"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4cv7d"]
+
+[node name="PanelButton" type="Control"]
+custom_minimum_size = Vector2(25, 8)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 25.0
+offset_bottom = 8.0
+script = ExtResource("1_rqo2n")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_wjxge")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ikvdx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_poume")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_tw4ve")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4cv7d")
+action_mode = 0
+script = ExtResource("1_7kvol")

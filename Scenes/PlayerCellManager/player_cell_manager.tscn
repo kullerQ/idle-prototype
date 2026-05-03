@@ -1,0 +1,208 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctck6suxq5bcj"]
+
+[ext_resource type="Script" path="res://Scenes/PlayerCellManager/player_cell_manager.gd" id="1_ejp3e"]
+[ext_resource type="PackedScene" uid="uid://lbdmfqss0gje" path="res://Scenes/CelPlayer/player_cell.tscn" id="2_syj7i"]
+
+[node name="PlayerCellManager" type="GridContainer"]
+offset_left = 32.0
+offset_top = 8.0
+offset_right = 88.0
+offset_bottom = 164.0
+mouse_filter = 2
+columns = 5
+script = ExtResource("1_ejp3e")
+
+[node name="PlayerCell" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell2" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell3" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell4" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell5" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell6" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell7" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell8" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell9" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell10" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell11" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell12" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell13" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell14" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell15" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell16" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell17" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell18" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell19" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell20" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell21" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell22" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell23" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell24" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell25" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell26" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell27" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell28" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell29" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell30" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell31" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell32" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell33" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell34" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell35" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell36" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell37" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell38" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell39" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell40" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell41" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell42" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell43" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell44" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell45" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell46" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell47" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell48" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell49" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell50" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell51" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell52" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell53" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell54" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell55" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell56" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell57" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell58" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell59" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell60" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell61" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell62" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell63" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell64" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2
+
+[node name="PlayerCell65" parent="." instance=ExtResource("2_syj7i")]
+layout_mode = 2

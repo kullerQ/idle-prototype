@@ -1,0 +1,71 @@
+[gd_scene load_steps=5 format=3 uid="uid://lbdmfqss0gje"]
+
+[ext_resource type="Script" path="res://Scenes/CelPlayer/player_cell.gd" id="1_8ibx5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mc1by"]
+bg_color = Color(0.6, 0.6, 0.6, 0.517647)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cf512"]
+bg_color = Color(0.501961, 0.501961, 0.501961, 0.560784)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xg4pb"]
+bg_color = Color(0.698039, 0.572549, 0.00784314, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="PlayerCell" type="Control"]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 8.0
+offset_bottom = 8.0
+mouse_filter = 2
+script = ExtResource("1_8ibx5")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_mc1by")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_cf512")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xg4pb")
+max_value = 1.0
+fill_mode = 3
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="MarkerShoot" type="Marker2D" parent="."]
+position = Vector2(8, 4)

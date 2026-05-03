@@ -1,0 +1,71 @@
+[gd_scene load_steps=6 format=3 uid="uid://bkl6hmwtagir1"]
+
+[ext_resource type="PackedScene" uid="uid://c480787aiynb1" path="res://Scenes/Game/game.tscn" id="1_2txsv"]
+[ext_resource type="Script" path="res://Scenes/Main/main.gd" id="1_wtd6v"]
+[ext_resource type="Script" path="res://Scenes/Main/ui.gd" id="3_pe3fs"]
+[ext_resource type="PackedScene" uid="uid://b8o77knuc35ip" path="res://Scenes/UpgradeMenu/upgrade_menu.tscn" id="4_i4aob"]
+[ext_resource type="Script" path="res://Scenes/UI/tooltip.gd" id="5_ogqt8"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_wtd6v")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+custom_minimum_size = Vector2(320, 180)
+offset_right = 40.0
+offset_bottom = 40.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(320, 180)
+render_target_update_mode = 4
+
+[node name="Game" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_2txsv")]
+
+[node name="UI" type="Control" parent="."]
+custom_minimum_size = Vector2(320, 180)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("3_pe3fs")
+
+[node name="LabelWood" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -12.0
+offset_right = 42.0
+offset_bottom = 4.0
+grow_vertical = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.682353)
+theme_override_font_sizes/font_size = 9
+
+[node name="CanvasLayer" type="CanvasLayer" parent="UI"]
+
+[node name="UpgradeMenu" parent="UI/CanvasLayer" instance=ExtResource("4_i4aob")]
+offset_left = 20.0
+offset_top = 13.0
+offset_right = -20.0
+offset_bottom = -23.0
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="UI"]
+
+[node name="Tooltip" type="Control" parent="UI/CanvasLayer2"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("5_ogqt8")
+
+[node name="LabelTooltip" type="Label" parent="UI/CanvasLayer2/Tooltip"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 45.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.619608)
+theme_override_constants/line_spacing = -3
+theme_override_font_sizes/font_size = 6

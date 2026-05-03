@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://c480787aiynb1"]
+
+[ext_resource type="Script" path="res://Scenes/Game/game.gd" id="1_4djx6"]
+[ext_resource type="Script" path="res://Scenes/Game/button_container.gd" id="8_vtjp6"]
+
+[sub_resource type="Gradient" id="Gradient_ks4ih"]
+colors = PackedColorArray(0.13647, 0.13647, 0.13647, 1, 0.240305, 0.240305, 0.240305, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_q55pm"]
+gradient = SubResource("Gradient_ks4ih")
+width = 16
+
+[sub_resource type="Gradient" id="Gradient_rhycn"]
+offsets = PackedFloat32Array(0.754472, 0.835773, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.0392157, 0, 0, 0, 0.231373)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_itbc6"]
+gradient = SubResource("Gradient_rhycn")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+metadata/_snap_enabled = true
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_4djx6")
+
+[node name="ColorRect" type="TextureRect" parent="."]
+offset_top = 177.0
+offset_right = 177.0
+offset_bottom = 496.0
+rotation = -1.5708
+mouse_filter = 2
+texture = SubResource("GradientTexture1D_q55pm")
+
+[node name="UIPP" type="Control" parent="."]
+custom_minimum_size = Vector2(320, 180)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 1
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(320, 0)
+offset_top = 169.0
+offset_right = 320.0
+offset_bottom = 180.0
+color = Color(0, 0, 0, 1)
+
+[node name="ButtonContainer" type="HBoxContainer" parent="."]
+offset_left = 255.0
+offset_top = 170.0
+offset_right = 309.0
+offset_bottom = 178.0
+script = ExtResource("8_vtjp6")
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(320, 180)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_itbc6")

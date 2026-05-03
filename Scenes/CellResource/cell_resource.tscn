@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://dudk7nqk514vr"]
+
+[ext_resource type="Script" path="res://Scenes/CellResource/cell_resource.gd" id="1_fj0yu"]
+[ext_resource type="Script" path="res://Scenes/CellResource/cell_hitbox.gd" id="2_1muj4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aoy02"]
+bg_color = Color(0.729412, 0.729412, 0.729412, 0.52549)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pcss0"]
+size = Vector2(12, 12)
+
+[node name="CellResource" type="Control"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 16.0
+offset_bottom = 16.0
+mouse_filter = 2
+script = ExtResource("1_fj0yu")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_aoy02")
+
+[node name="CellHitbox" type="Area2D" parent="."]
+position = Vector2(8, 8)
+monitoring = false
+script = ExtResource("2_1muj4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CellHitbox"]
+shape = SubResource("RectangleShape2D_pcss0")
+disabled = true
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+max_value = 1.0
+show_percentage = false

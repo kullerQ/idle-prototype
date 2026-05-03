@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="UpgradeNodeData" load_steps=2 format=3 uid="uid://cl3ba50a15vq5"]
+
+[ext_resource type="Script" path="res://Resources/_scr_upgrade_node_data.gd" id="1_l4008"]
+
+[resource]
+script = ExtResource("1_l4008")
+type = 0
+resource = 0
+cost = 0
+max_lvl = 1
+unlock_lvl = 0

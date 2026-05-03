@@ -1,0 +1,79 @@
+[gd_scene load_steps=7 format=3 uid="uid://xygpch6h66gc"]
+
+[ext_resource type="Script" path="res://Scenes/UpgradeNode/upgrade_node.gd" id="1_0bmfk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dm0do"]
+bg_color = Color(0.380392, 0.380392, 0.380392, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.505882, 0.505882, 0.505882, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l03un"]
+bg_color = Color(0.431373, 0.431373, 0.431373, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.698039, 0.698039, 0.698039, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b8s7y"]
+bg_color = Color(0.290196, 0.290196, 0.290196, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.419608, 0.419608, 0.419608, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ujpv6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6ioq"]
+
+[node name="UpgradeNode" type="Control"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 16.0
+offset_bottom = 16.0
+script = ExtResource("1_0bmfk")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_dm0do")
+theme_override_styles/hover = SubResource("StyleBoxFlat_l03un")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_b8s7y")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ujpv6")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_i6ioq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 18.0
+offset_top = -3.0
+offset_right = 32.0
+offset_bottom = 21.0
+theme_override_constants/separation = -6
+
+[node name="LabelCost" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "123"
+
+[node name="LabelLvl" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "123"
