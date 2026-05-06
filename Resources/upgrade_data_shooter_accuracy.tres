@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_myncm")
 type = 6
-resource = 1
-cost = 20
 max_lvl = 3
 unlock_lvl = 1
+cost = {
+1: 0,
+2: 0
+}

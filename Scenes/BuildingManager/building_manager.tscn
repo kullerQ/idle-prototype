@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://4wswmpgy5skt"]
+
+[ext_resource type="Script" path="res://Scenes/BuildingManager/building_manager.gd" id="1_a47oj"]
+[ext_resource type="PackedScene" uid="uid://ssqv0nnuhyg0" path="res://Scenes/BuildingCell/building_cell.tscn" id="1_iieiq"]
+
+[node name="BuildingManager" type="VBoxContainer"]
+offset_left = -4.0
+offset_top = 32.0
+offset_right = 36.0
+offset_bottom = 216.0
+script = ExtResource("1_a47oj")
+
+[node name="BuildingCell" parent="." instance=ExtResource("1_iieiq")]
+layout_mode = 2
+
+[node name="BuildingCell2" parent="." instance=ExtResource("1_iieiq")]
+layout_mode = 2
+
+[node name="BuildingCell3" parent="." instance=ExtResource("1_iieiq")]
+layout_mode = 2
+
+[node name="BuildingCell4" parent="." instance=ExtResource("1_iieiq")]
+layout_mode = 2
+
+[node name="BuildingCell5" parent="." instance=ExtResource("1_iieiq")]
+layout_mode = 2
+
+[node name="BuildingCell6" parent="." instance=ExtResource("1_iieiq")]
+layout_mode = 2

@@ -1,0 +1,25 @@
+extends HBoxContainer
+class_name TimerProgressBar
+
+var timer: Timer
+@onready var progress_bar: ProgressBar = $ProgressBar
+var wt: float = 0
+@onready var panel = $Icon/Panel
+var tw: Tween
+
+func _ready() -> void:
+	wt = timer.wait_time
+	timer.timeout.connect(_on_timeout)
+
+func _physics_process(delta: float) -> void:
+	progress_bar.value = (wt - timer.time_left) / wt
+	
+func _on_timeout() -> void:
+	wt = timer.wait_time
+	if tw:
+		tw.kill()
+		
+	tw = create_tween()
+	panel.position.y = -2
+	tw.tween_property(panel, "position:y", 0, 0.2)
+

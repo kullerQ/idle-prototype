@@ -1,0 +1,96 @@
+[gd_scene load_steps=8 format=3 uid="uid://ssqv0nnuhyg0"]
+
+[ext_resource type="Script" path="res://Scenes/BuildingCell/building_cell.gd" id="1_hof3l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qe1us"]
+bg_color = Color(0.317647, 0.317647, 0.317647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.619608, 0.619608, 0.619608, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+shadow_color = Color(0, 0, 0, 0.352941)
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jrftw"]
+bg_color = Color(0.45098, 0.45098, 0.45098, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 0.396078)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+shadow_color = Color(0, 0, 0, 0.352941)
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0kiyb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgaqv"]
+bg_color = Color(0.913725, 0.792157, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.580392, 0.580392, 0.580392, 0)
+corner_radius_top_left = 1
+corner_radius_bottom_left = 1
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w8x8t"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_605pt"]
+
+[node name="BuildingCell" type="Control"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 16.0
+offset_bottom = 16.0
+size_flags_horizontal = 4
+script = ExtResource("1_hof3l")
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qe1us")
+
+[node name="PanelNotActive" type="Panel" parent="."]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_jrftw")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_0kiyb")
+theme_override_styles/fill = SubResource("StyleBoxFlat_rgaqv")
+max_value = 1.0
+show_percentage = false
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_w8x8t")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_605pt")
+flat = true

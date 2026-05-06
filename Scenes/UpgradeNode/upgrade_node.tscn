@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://xygpch6h66gc"]
+[gd_scene load_steps=11 format=3 uid="uid://xygpch6h66gc"]
 
 [ext_resource type="Script" path="res://Scenes/UpgradeNode/upgrade_node.gd" id="1_0bmfk"]
 
@@ -42,6 +42,15 @@ corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6ioq"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ms0gk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thksh"]
+bg_color = Color(0.6, 0.6, 0.6, 0.176471)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lxkkk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_su1c7"]
+
 [node name="UpgradeNode" type="Control"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 3
@@ -77,3 +86,16 @@ text = "123"
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "123"
+
+[node name="Button2" type="Button" parent="."]
+layout_mode = 0
+offset_left = -17.0
+offset_right = -1.0
+offset_bottom = 16.0
+mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ms0gk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_thksh")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lxkkk")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_su1c7")
+action_mode = 0
+button_mask = 2

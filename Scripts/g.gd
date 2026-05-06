@@ -8,16 +8,24 @@ var player_cell_manager: PlayerCellManager
 var cell_manager: CellManager
 var timer_manager: TimerManager
 var projectile_manager: ProjectileManager
+var building_manager: BuildingManager
+var timer_ui: TimerUI
 
 signal upgrade_menu_open_requested
 signal upgrade_menu_close_requested
 signal tooltip_requested(text: String)
 signal tooltip_close_required
+signal resource_timeout(type: Economy.Currencies)
+signal crit_label_requested(pos: Vector2)
+signal resource_cell_hitted(type: Economy.Currencies)
 
 func initialize() -> void:
+	upgrade_menu_opened = false
+	########################################
 	economy = Economy.new()
 	CellResource.economy = economy
 	UpgradeNode.economy = economy
+	BuildingCell.economy = economy
 	########################################
 	upgrade_manager = UpgradeManager.new()
 	UpgradeNode.upgrade_manager = upgrade_manager
@@ -26,10 +34,14 @@ func initialize() -> void:
 	cell_manager.name = "CellManager"
 	player_cell_manager = load("uid://ctck6suxq5bcj").instantiate()
 	player_cell_manager.name = "PlauerCellManager"
+	player_cell_manager.economy = economy
 	timer_manager = load("uid://bd2s6jemxrplh").instantiate()
 	timer_manager.name = "TimerManager"
+	building_manager = load("uid://4wswmpgy5skt").instantiate()
+	building_manager.name = "BuildingManager"
 	#||||||||||||||||||||||||||||||||||
 	upgrade_manager.cell_manager = cell_manager
+	upgrade_manager.building_manager = building_manager
 	upgrade_manager.player_cell_manager = player_cell_manager
 	upgrade_manager.timer_manager = timer_manager
 	PlayerCell.manager = player_cell_manager
@@ -38,3 +50,7 @@ func initialize() -> void:
 	projectile_manager = ProjectileManager.new()
 	PlayerCell.projectile_manager = projectile_manager
 	upgrade_manager.projectile_manager = projectile_manager
+	########################################
+	timer_ui = load("uid://cd2muxujuqyi3").instantiate()
+	timer_ui.name = "TimerUI"
+	

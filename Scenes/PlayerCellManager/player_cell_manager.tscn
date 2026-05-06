@@ -5,9 +5,9 @@
 
 [node name="PlayerCellManager" type="GridContainer"]
 offset_left = 32.0
-offset_top = 8.0
+offset_top = 10.0
 offset_right = 88.0
-offset_bottom = 164.0
+offset_bottom = 166.0
 mouse_filter = 2
 columns = 5
 script = ExtResource("1_ejp3e")

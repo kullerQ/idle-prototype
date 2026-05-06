@@ -1,15 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://b8o77knuc35ip"]
+[gd_scene load_steps=4 format=3 uid="uid://b8o77knuc35ip"]
 
 [ext_resource type="Script" path="res://Scenes/UpgradeMenu/upgrade_menu.gd" id="1_3axdk"]
 [ext_resource type="Script" path="res://Scenes/UpgradeMenu/graphics.gd" id="2_11oit"]
 [ext_resource type="PackedScene" uid="uid://xygpch6h66gc" path="res://Scenes/UpgradeNode/upgrade_node.tscn" id="3_xkrix"]
-[ext_resource type="Resource" uid="uid://cl3ba50a15vq5" path="res://Resources/upgrade_data_shooter.tres" id="4_cy8dv"]
-[ext_resource type="Resource" uid="uid://dumqyg4r3ylx" path="res://Resources/upgrade_data_shooter_cooldown.tres" id="5_s5xdy"]
-[ext_resource type="Resource" uid="uid://1efh2borrckd" path="res://Resources/upgrade_data_bullet_dmg.tres" id="6_7d856"]
-[ext_resource type="Resource" uid="uid://b6dknchceiyvd" path="res://Resources/upgrade_data_tree_spawnrate.tres" id="6_vokup"]
-[ext_resource type="Resource" uid="uid://bo61oiodoogyi" path="res://Resources/upgrade_data_bullet_spd.tres" id="7_s42ug"]
-[ext_resource type="Resource" uid="uid://1vrd5xx5dmte" path="res://Resources/upgrade_data_bullet_dist.tres" id="8_trs4p"]
-[ext_resource type="Resource" uid="uid://7fw6xutbyu8t" path="res://Resources/upgrade_data_shooter_accuracy.tres" id="9_i7v24"]
 
 [node name="UpgradeMenu" type="Control"]
 layout_mode = 3
@@ -23,7 +16,6 @@ grow_vertical = 2
 script = ExtResource("1_3axdk")
 
 [node name="Control" type="Control" parent="."]
-clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,39 +46,139 @@ offset_left = 128.0
 offset_top = 64.0
 offset_right = 144.0
 offset_bottom = 80.0
-data = ExtResource("4_cy8dv")
+type = 8
+max_lvl = 1
+lvl = 1
 locked = false
 
-[node name="ShooterCooldown" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
-offset_top = -32.0
-offset_bottom = -16.0
-data = ExtResource("5_s5xdy")
+[node name="AddTowerCell" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+offset_left = -48.0
+offset_right = -32.0
+type = 7
+max_lvl = 1
+unlock_lvl = 1
+wood = 5
 
-[node name="BuletDmg" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell7" parent="Control/Graphics/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
+offset_top = 48.0
+offset_bottom = 64.0
+unlock_lvl = 1
+
+[node name="AddTowerCell2" parent="Control/Graphics/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
-data = ExtResource("6_7d856")
+unlock_lvl = 1
 
-[node name="BulletSpd" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
-offset_left = -72.0
-offset_top = -16.0
-offset_right = -56.0
-offset_bottom = 0.0
-data = ExtResource("7_s42ug")
+[node name="AddTowerCell6" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2" instance=ExtResource("3_xkrix")]
+offset_top = 40.0
+offset_bottom = 56.0
+unlock_lvl = 1
 
-[node name="BulletDist" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
-offset_left = -72.0
-offset_top = 16.0
-offset_right = -56.0
-offset_bottom = 32.0
-data = ExtResource("8_trs4p")
+[node name="AddTowerCell3" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2" instance=ExtResource("3_xkrix")]
+offset_left = -40.0
+offset_right = -24.0
+unlock_lvl = 1
 
-[node name="ShooterAccuracy" parent="Control/Graphics/UpgradeNode/ShooterCooldown" instance=ExtResource("3_xkrix")]
-offset_top = -40.0
-offset_bottom = -24.0
-data = ExtResource("9_i7v24")
-
-[node name="TreeSpawnrate" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell5" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3" instance=ExtResource("3_xkrix")]
 offset_top = 32.0
 offset_bottom = 48.0
-data = ExtResource("6_vokup")
+unlock_lvl = 1
+
+[node name="AddTowerCell4" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3" instance=ExtResource("3_xkrix")]
+offset_left = -40.0
+offset_right = -24.0
+unlock_lvl = 1
+
+[node name="Shooter" parent="Control/Graphics/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
+offset_top = -40.0
+offset_bottom = -24.0
+unlock_lvl = 1
+locked = false
+
+[node name="ShooterCooldown" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
+offset_left = 48.0
+offset_right = 64.0
+unlock_lvl = 1
+
+[node name="BuletDmg" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
+offset_left = -48.0
+offset_right = -32.0
+unlock_lvl = 1
+
+[node name="Shooter2" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+unlock_lvl = 1
+
+[node name="BulletSpd" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
+offset_left = 48.0
+offset_right = 64.0
+unlock_lvl = 1
+
+[node name="ShooterCrit" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
+offset_left = -48.0
+offset_right = -32.0
+unlock_lvl = 1
+
+[node name="ShooterCritMult" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2/ShooterCrit" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+unlock_lvl = 1
+
+[node name="TreeSpawnrate" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+offset_top = 40.0
+offset_bottom = 56.0
+unlock_lvl = 1
+
+[node name="TreeLifetimer" parent="Control/Graphics/UpgradeNode/TreeSpawnrate" instance=ExtResource("3_xkrix")]
+offset_left = 40.0
+offset_top = 32.0
+offset_right = 56.0
+offset_bottom = 48.0
+unlock_lvl = 1
+
+[node name="TreeDurability" parent="Control/Graphics/UpgradeNode/TreeSpawnrate" instance=ExtResource("3_xkrix")]
+offset_top = 64.0
+offset_bottom = 80.0
+unlock_lvl = 1
+
+[node name="UnlockLumberjack" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+offset_left = 48.0
+offset_right = 64.0
+unlock_lvl = 1
+
+[node name="Lumberjack" parent="Control/Graphics/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
+offset_left = 40.0
+offset_right = 56.0
+unlock_lvl = 1
+
+[node name="LumberjackWood" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/Lumberjack" instance=ExtResource("3_xkrix")]
+offset_left = 40.0
+offset_top = -24.0
+offset_right = 56.0
+offset_bottom = -8.0
+unlock_lvl = 1
+
+[node name="LumberjackAutomation" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/Lumberjack" instance=ExtResource("3_xkrix")]
+offset_left = 8.0
+offset_top = 48.0
+offset_right = 24.0
+offset_bottom = 64.0
+unlock_lvl = 1
+
+[node name="LumberjackCrit" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/Lumberjack" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+unlock_lvl = 1
+
+[node name="LumberjackCritMult" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/Lumberjack/LumberjackCrit" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+unlock_lvl = 1
+
+[node name="LumberjackCooldown" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/Lumberjack" instance=ExtResource("3_xkrix")]
+offset_left = 40.0
+offset_top = 24.0
+offset_right = 56.0
+offset_bottom = 40.0
+unlock_lvl = 1

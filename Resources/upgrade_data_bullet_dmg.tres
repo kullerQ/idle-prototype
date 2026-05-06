@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_xd8hi")
 type = 3
-resource = 1
-cost = 10
 max_lvl = 5
 unlock_lvl = 1
+cost = {
+1: PackedInt32Array(),
+2: [0, null]
+}

@@ -9,8 +9,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	G.economy.res_changed.connect(_on_resource_changed)
-	
-	
+		
 func add_label(control: Control, pos: Vector2, text: String) -> Label:
 	var container: Control = Control.new()
 	container.size = control.size
@@ -37,7 +36,7 @@ func format_number(number: float) -> String:
 	var suffex: String = si_suffex[exp] if exp < si_suffex.size() else "e%d" %(exp * 3)
 	return "%0.2f%s" %[v, suffex]
 	
-func _on_resource_changed(type: CellResourceData.Types, value: int) -> void:
+func _on_resource_changed(type: Economy.Currencies, value: int) -> void:
 	match type:
-		CellResourceData.Types.WOOD:
+		Economy.Currencies.WOOD:
 			label_wood.text = "w %s" %format_number(value)

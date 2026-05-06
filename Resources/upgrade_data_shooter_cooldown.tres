@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_uqncm")
 type = 1
-resource = 1
-cost = 5
 max_lvl = 5
-unlock_lvl = 0
+unlock_lvl = 1
+cost = {
+1: 10,
+2: 0
+}

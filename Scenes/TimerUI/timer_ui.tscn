@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cd2muxujuqyi3"]
+
+[ext_resource type="Script" path="res://Scenes/TimerUI/timer_ui.gd" id="1_6bx5k"]
+
+[node name="TimerUI" type="HBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+offset_right = 320.0
+alignment = 2
+script = ExtResource("1_6bx5k")

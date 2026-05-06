@@ -4,8 +4,10 @@
 
 [resource]
 script = ExtResource("1_l4008")
-type = 0
-resource = 0
-cost = 0
+type = 8
 max_lvl = 1
-unlock_lvl = 0
+unlock_lvl = 1
+cost = {
+1: [0],
+2: [0]
+}

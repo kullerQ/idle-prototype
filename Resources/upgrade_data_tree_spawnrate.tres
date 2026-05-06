@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_houqf")
 type = 2
-resource = 1
-cost = 10
-max_lvl = 5
+max_lvl = 8
 unlock_lvl = 0
+cost = {
+1: [0],
+2: [0]
+}

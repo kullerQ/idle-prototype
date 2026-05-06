@@ -1,10 +1,36 @@
-[gd_scene load_steps=5 format=3 uid="uid://dudk7nqk514vr"]
+[gd_scene load_steps=7 format=3 uid="uid://dudk7nqk514vr"]
 
 [ext_resource type="Script" path="res://Scenes/CellResource/cell_resource.gd" id="1_fj0yu"]
 [ext_resource type="Script" path="res://Scenes/CellResource/cell_hitbox.gd" id="2_1muj4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aoy02"]
-bg_color = Color(0.729412, 0.729412, 0.729412, 0.52549)
+bg_color = Color(0.509804, 0.509804, 0.509804, 0.52549)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_75yu1"]
+bg_color = Color(0.509804, 0.509804, 0.509804, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 0.243137)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_84qe2"]
+bg_color = Color(0.509804, 0.509804, 0.509804, 0.52549)
+border_width_left = 1
+border_width_top = 1
+border_width_bottom = 1
+border_color = Color(0.8, 0.8, 0.8, 0)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -25,6 +51,7 @@ mouse_filter = 2
 script = ExtResource("1_fj0yu")
 
 [node name="Panel" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,6 +60,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_aoy02")
+
+[node name="ProgressBar2" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_75yu1")
+theme_override_styles/fill = SubResource("StyleBoxFlat_84qe2")
+max_value = 1.0
+show_percentage = false
 
 [node name="CellHitbox" type="Area2D" parent="."]
 position = Vector2(8, 8)

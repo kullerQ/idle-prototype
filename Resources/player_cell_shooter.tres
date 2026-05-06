@@ -6,3 +6,7 @@
 script = ExtResource("1_fdbgu")
 cooldown = 2.0
 projectile_type = 1
+accuracy = 12.0
+type = 1
+crit_chance = 0.0
+crit_mult = 2

@@ -5,9 +5,10 @@ class_name Main
 
 func _enter_tree():
 	G.initialize()
+	Engine.time_scale = 1
 
-func _ready() -> void:
-	G.economy.set_resource(CellResourceData.Types.WOOD, 1000)
+#func _ready() -> void:
+#	G.economy.set_resource(Economy.Currencies.WOOD, 500)
 
 func _input(event):
 	if event is InputEventKey && event.is_pressed():
@@ -16,3 +17,7 @@ func _input(event):
 				tree.quit()
 			KEY_R:
 				tree.reload_current_scene()
+			KEY_T:
+				G.crit_label_requested.emit(get_global_mouse_position())
+			KEY_4:
+				Engine.time_scale = 32

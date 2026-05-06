@@ -6,6 +6,7 @@ class_name UpgradeMenu
 var tw: Tween
 
 func _ready() -> void:
+	control.clip_contents = true
 	G.upgrade_menu_open_requested.connect(_on_open_requested)
 	G.upgrade_menu_close_requested.connect(_on_close_requested)
 	hide()
