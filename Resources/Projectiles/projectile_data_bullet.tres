@@ -8,3 +8,4 @@ spd = 80.0
 max_range = 230.0
 dmg = 1
 r = 1
+max_pircings = 2

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ProjectileData" load_steps=2 format=3 uid="uid://cqm1gvin210dd"]
+
+[ext_resource type="Script" path="res://Resources/_scr_projectile_data.gd" id="1_e85ax"]
+
+[resource]
+script = ExtResource("1_e85ax")
+spd = 50.0
+max_range = 0.0
+dmg = 1
+r = 2
+max_piercings = 0

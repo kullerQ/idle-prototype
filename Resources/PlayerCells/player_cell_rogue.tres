@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PlayerCellData" load_steps=2 format=3 uid="uid://cson3piyylqw0"]
+
+[ext_resource type="Script" path="res://Resources/_scr_player_cell_data.gd" id="1_pri8x"]
+
+[resource]
+script = ExtResource("1_pri8x")
+cooldown = 2.5
+projectile_type = 2
+accuracy = 11.0
+type = 2
+crit_chance = 100.0
+crit_mult = 2
+xp_increase = 1.0
+autoattack = true
+attacks = 2
+multi_attack_delay = 0.5
+color = Color(0.380392, 0.282353, 0.192157, 1)

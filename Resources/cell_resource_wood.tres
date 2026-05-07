@@ -8,5 +8,5 @@ type = 1
 color = Color(0.615686, 0.356863, 0.0901961, 1)
 life_time = 12.0
 value = 1
-break_value = 10
+break_value = 25
 durability = 40

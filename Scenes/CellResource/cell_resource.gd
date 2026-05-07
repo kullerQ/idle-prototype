@@ -16,6 +16,7 @@ var durability: int = 1
 #@onready var default_color: Color = panel_style.bg_color
 @onready var default_color_bg: Color = progress_bar_hp_bg.bg_color
 @onready var default_color_fill: Color = progress_bar_hp_fill.bg_color
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 static var economy: Economy
 
 func _ready() -> void:
@@ -33,7 +34,9 @@ func _physics_process(delta) -> void:
 func _on_hitted(dmg: int) -> void:
 	if !data:
 		return
-		
+	
+	audio_stream_player.pitch_scale = randf_range(0.9, 1.1)
+	audio_stream_player.playing = true
 	durability -= dmg
 	G.resource_cell_hitted.emit(data.type)
 	if durability <= 0:

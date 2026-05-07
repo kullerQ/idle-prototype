@@ -6,6 +6,8 @@ var cells: Dictionary = {}
 var all_data: Dictionary = {
 	PlayerCellData.Types.NULL: load("uid://cgk1kaetu6bsg").duplicate(),
 	PlayerCellData.Types.SHOOTER: load("uid://d1lppkhdp8brh").duplicate(),
+	PlayerCellData.Types.ROGUE: load("uid://cson3piyylqw0").duplicate(),
+	PlayerCellData.Types.WIZARD: load("uid://ynurimwp8bik").duplicate(),
 }
 var free_cells: Array = []
 var added_cells: int = 1
@@ -24,8 +26,13 @@ func _input(event):
 		match event.keycode:
 			KEY_1:
 				add_free_cell()
-			KEY_2:
+			KEY_S:
 				add_tower(PlayerCellData.Types.SHOOTER)
+			KEY_A:
+				add_tower(PlayerCellData.Types.ROGUE)
+			KEY_W:
+				add_tower(PlayerCellData.Types.WIZARD)
+				
 	
 func _ready() -> void:
 	var pos: Vector2i = Vector2i.ZERO

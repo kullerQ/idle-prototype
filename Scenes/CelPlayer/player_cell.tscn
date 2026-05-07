@@ -94,3 +94,7 @@ one_shot = true
 
 [node name="MarkerShoot" type="Marker2D" parent="."]
 position = Vector2(8, 4)
+
+[node name="TimerMultiAttack" type="Timer" parent="."]
+wait_time = 0.7
+one_shot = true

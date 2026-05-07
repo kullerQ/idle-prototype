@@ -22,9 +22,9 @@ func add_resource(type: Currencies, amount: int) -> void:
 	var new_v: int = resources[type] + amount
 	set_resource(type, new_v)
 	
-func sub_resource_dict(dict: Dictionary) -> void:
+func sub_resource_dict(dict: Dictionary, lvl: int) -> void:
 	for i in dict:
-		var v: int = dict[i]
+		var v: int = dict[i][lvl]
 		if v == 0:
 			continue
 			

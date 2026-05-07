@@ -3,12 +3,12 @@ class_name UpgradeNode
 
 @export_group("data")
 @export var type: UpgradeManager.Types
-@export var max_lvl: int
-@export var unlock_lvl: int
+	
+@export var max_lvl: int = 1
+@export var unlock_lvl: int = 1
 @export_subgroup("cost")
-@export var wood: int = 0
-@export var free_cells: int = 0
-@export_enum(UpgradeManager.Types) var aa: UpgradeManager.Types
+@export var wood: PackedInt64Array = PackedInt64Array([0])
+@export var free_cells: PackedInt64Array = PackedInt64Array([0])
 @export_group("")
 var cost: Dictionary = {}
 
@@ -32,11 +32,12 @@ func _ready() -> void:
 	var parent: Node = get_parent()
 	var currencies_names: Array = Economy.Currencies.keys()
 	for i in range(1, Economy.Currencies.size()):
-		var v: int = get(currencies_names[i].to_lower())
-		if v == 0:
+		var arr: PackedInt64Array = get(currencies_names[i].to_lower())
+		
+		if !arr || arr.size() < max_lvl:
 			continue
 			
-		cost[i] = v
+		cost[i] = arr
 	
 		
 	if parent is UpgradeNode:
@@ -49,10 +50,9 @@ func _ready() -> void:
 	button.mouse_exited.connect(_on_mouse_exited)
 	
 func get_cost_text() -> String:
-	print(cost)
 	var cost_t: String = ""
 	for i in cost:
-		var v: int = cost[i]
+		var v: int = cost[i][lvl] if cost[i].size() -1 >= lvl else 0
 		if v > 0:
 			cost_t += "%d  |  " %v
 	
@@ -90,13 +90,10 @@ func _on_pressed() -> void:
 		return
 		
 	for k in cost:
-		if cost[k] > economy.get_resource(k):
+		if cost[k][lvl] > economy.get_resource(k):
 			return
 	
+	economy.sub_resource_dict(cost, lvl)
 	add_lvl()
-	economy.sub_resource_dict(cost)
 	upgrade_manager.upgrade_purchased.emit(type)
-
-#func _on_debug_pressed() -> void:
-#
-##	= 	label_cost.text = get_cost_text()
+	label_cost.text = get_cost_text()

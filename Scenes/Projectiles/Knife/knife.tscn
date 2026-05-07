@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://btawcaget3dop"]
+
+[ext_resource type="PackedScene" uid="uid://3url7yuxxjew" path="res://Scenes/Projectile/projectile.tscn" id="1_ftaux"]
+[ext_resource type="Script" path="res://Scenes/Projectiles/Knife/knife.gd" id="2_5oa8k"]
+
+[node name="Knife" instance=ExtResource("1_ftaux")]
+script = ExtResource("2_5oa8k")
