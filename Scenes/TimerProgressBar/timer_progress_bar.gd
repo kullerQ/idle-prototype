@@ -10,6 +10,9 @@ var tw: Tween
 func _ready() -> void:
 	wt = timer.wait_time
 	timer.timeout.connect(_on_timeout)
+	var fill_style = progress_bar.get("theme_override_styles/fill").duplicate()
+	fill_style.set("bg_color", timer.color)
+	progress_bar.set("theme_override_styles/fill", fill_style)
 
 func _physics_process(delta: float) -> void:
 	progress_bar.value = (wt - timer.time_left) / wt

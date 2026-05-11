@@ -49,6 +49,7 @@ theme_override_font_sizes/font_size = 9
 [node name="CanvasLayer" type="CanvasLayer" parent="UI"]
 
 [node name="UpgradeMenu" parent="UI/CanvasLayer" instance=ExtResource("4_i4aob")]
+visible = false
 offset_left = 20.0
 offset_top = 13.0
 offset_right = -20.0

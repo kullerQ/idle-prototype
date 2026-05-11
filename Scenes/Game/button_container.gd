@@ -21,6 +21,7 @@ func _ready() -> void:
 	var upgrade_menu_button: PanelButton = b.duplicate()
 	upgrade_menu_button.initialize("upgrades", upgrade_menu_button_func, 32)
 	add_child(upgrade_menu_button)
+	G.upgrades_highlight_label = G.ui.add_label(upgrade_menu_button, upgrade_menu_button.global_position - Vector2(14, 10), "")
 	var wood_button: PanelButton = b.duplicate()
 	wood_button.initialize("+10", wood_func)
 	add_child(wood_button)

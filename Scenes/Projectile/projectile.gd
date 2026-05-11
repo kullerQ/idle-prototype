@@ -10,6 +10,7 @@ var init_pos: Vector2
 var dmg_mult: int = 1
 var p_owner: PlayerCell
 var pierced: int = 0
+var ignore: Array = []
 static var particle_container: Node2D
 
 func _ready() -> void:
@@ -47,7 +48,9 @@ func after_hitted(cell: CellResource = null) -> void:
 		die()
 
 func die() -> void:
-	p_owner.add_xp()
+	if p_owner:
+		p_owner.add_xp()
+	
 	queue_free()
 
 func when_hitted(_area: Area2D) -> void:
@@ -59,7 +62,12 @@ func apply_crit() -> void:
 
 func _on_area_entered(a: Area2D) -> void:
 	var cell: CellResource = a.owner
+	if ignore.has(cell):
+		return
+		
 	before_hitted(cell)
 	when_hitted(a)
 	after_hitted(cell)
 	
+func set_disabled(_disabled: bool) -> void:
+	collision.disabled = _disabled

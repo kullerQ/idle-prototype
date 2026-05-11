@@ -1,7 +1,8 @@
 extends Resource
 class_name CellResourceData
 
-@export var type: Economy.Currencies
+@export var type: CellManager.Types
+@export var _name: CellManager.Names
 @export var color: Color
 @export var life_time: float
 @export var value: int

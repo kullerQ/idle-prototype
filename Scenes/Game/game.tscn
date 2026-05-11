@@ -76,3 +76,5 @@ offset_right = 320.0
 offset_bottom = 180.0
 mouse_filter = 2
 script = ExtResource("3_akcbs")
+
+[node name="CanvasLayer3" type="CanvasLayer" parent="CanvasLayer/UIPP"]

@@ -3,6 +3,9 @@ class_name PlayerCell
 
 const MAX_ACCURACY: int = 12
 var data: PlayerCellData
+@export_group("individual data")
+@export var cooldown_reduction: float = 0
+
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
 @onready var timer: Timer = $Timer
 @onready var progress_bar: ProgressBar = $ProgressBar
@@ -10,10 +13,16 @@ var data: PlayerCellData
 @onready var panel_not_active: Panel = $PanelNotActive
 @onready var pb_style: StyleBoxFlat = progress_bar.get("theme_override_styles/fill").duplicate()
 @onready var timer_multi_attack: Timer = $TimerMultiAttack
+@onready var button: Button = $Button
+@onready var panel_highlight: Panel = $PanelHighlight
+
+var cooldown: float = 1
+var upgrade_path: int = 0
 var attack_count: int = 0
 var type_name: String
 var xp: float = 0
 var lvl: int = 0
+var lvl_tokens: int = 0
 
 static var manager
 static var projectile_manager: ProjectileManager
@@ -30,6 +39,20 @@ func _ready() -> void:
 	
 	timer.timeout.connect(_on_timeout)
 	timer_multi_attack.timeout.connect(_on_multi_attack_timeout)
+	button.pressed.connect(_on_pressed)
+	
+func set_highlight(enabled: bool) -> void:
+	if enabled:
+		panel_highlight.show()
+		return
+	
+	panel_highlight.hide()
+	
+func _on_pressed() -> void:
+	if !data:
+		return
+		
+	G.player_cell_pressed.emit(self)
 	
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton && event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
@@ -39,7 +62,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		attack()
 	
 func _physics_process(delta: float) -> void:
-	progress_bar.value = (data.cooldown - timer.time_left) / data.cooldown
+	progress_bar.value = (cooldown - timer.time_left) / cooldown
 	
 func add_xp() -> void:
 	xp += data.xp_increase - float(lvl) / 10
@@ -49,9 +72,12 @@ func add_xp() -> void:
 		
 func add_lvl() -> void:
 	lvl += 1
+	lvl_tokens += 1
+	manager.cell_lvled_up.emit(self, lvl)
 	
 func start_cd_timer() -> void:
-	timer.wait_time = data.cooldown
+	cooldown = max(0.1, data.cooldown - cooldown_reduction)
+	timer.wait_time = cooldown
 	timer.start()
 
 func start_multi_attack_timer() -> void:
@@ -77,11 +103,10 @@ func set_data(_data: PlayerCellData) -> void:
 		
 	pb_style.set("bg_color", data.color)
 	type_name = PlayerCellData.Types.keys()[data.type].to_lower()
-	timer.wait_time = data.cooldown
 	timer_multi_attack.wait_time = data.multi_attack_delay
-#	if data.autoattack:
-#		attack()
-		
+	if data.autoattack:
+		attack()
+
 	progress_bar.show()
 	set_process_unhandled_input(true)
 	set_physics_process(true)
@@ -120,14 +145,17 @@ func get_dir(pos: Vector2) -> Vector2:
 # shooter
 ##################################
 func shooter_attack() -> void:
-	projectile_manager.add_bullet(self, get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()))
+	projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), self)
 
 # rogue
+##################################
 func rogue_attack() -> void:
-	projectile_manager.add_knife(self, get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()))
+	projectile_manager.add_knife(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), self)
 
 # wizard
 ##################################
 func wizard_attack() -> void:
-	projectile_manager.add_magic(self, get_bullet_pos(), get_bullet_mult(), G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))))
+	projectile_manager.add_magic(get_bullet_pos(), get_bullet_mult(), 
+	G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), self
+	)
 

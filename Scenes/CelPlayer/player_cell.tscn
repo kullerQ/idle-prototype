@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://lbdmfqss0gje"]
+[gd_scene load_steps=10 format=3 uid="uid://lbdmfqss0gje"]
 
 [ext_resource type="Script" path="res://Scenes/CelPlayer/player_cell.gd" id="1_8ibx5"]
 
@@ -43,6 +43,25 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ibqa4"]
+bg_color = Color(1, 1, 1, 1)
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.890196, 0.890196, 0.890196, 1)
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l6usl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rnifb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e2xxl"]
 
 [node name="PlayerCell" type="Control"]
 custom_minimum_size = Vector2(8, 8)
@@ -98,3 +117,23 @@ position = Vector2(8, 4)
 [node name="TimerMultiAttack" type="Timer" parent="."]
 wait_time = 0.7
 one_shot = true
+
+[node name="PanelHighlight" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ibqa4")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_l6usl")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_rnifb")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e2xxl")
+flat = true

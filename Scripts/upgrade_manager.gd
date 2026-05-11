@@ -17,11 +17,14 @@ enum Types {
 	LUMBERJACK_CD,
 	LUMBERJACK_WOOD,
 	LUMBERJACK_CRIT,
-	LUMBERJACK_CRIT_MULT,
+	LUMBERJACK_DMG,
 	LUMBERJACK_CHARGE,
-	TREE_SPAWNRATE,
+	WOOD_SPAWNRATE,
 	TREE_LIFETIME,
-	TREE_DURABILITY, 
+	TREE_DURABILITY,
+	GROVE_ADD, 
+	GROVE_SPAWN, 
+	GROVE_VALUE, 
 	}
 
 var cell_manager : CellManager
@@ -41,17 +44,20 @@ var descriptions: Dictionary = {
 	Types.BULLET_DMG: "bullet dmg +1",
 	Types.BULLET_DIST: "bullet max distance +10",
 	Types.BULLER_SPD: "bullet speed +10",
-	Types.UNLOCK_LUMBERJACK: "clears the place for the lumberjack",
-	Types.ADD_LUMBERJACK: "lumberjack builds his hut",
+	Types.UNLOCK_LUMBERJACK: "every 15 seconds lumberjack builds his hut",
+	Types.ADD_LUMBERJACK: "lumberjack stays in place for 10 more seconds",
 	Types.LUMBERJACK_AUTOMATION: "lumberjack produces wood automatically",
 	Types.LUMBERJACK_CD: "lumberjack's cooldown -2",
 	Types.LUMBERJACK_WOOD: "lumberjack produces +10 more wood",
-	Types.LUMBERJACK_CRIT: "lumberjack crit chance +0.5",
-	Types.LUMBERJACK_CRIT_MULT: "lumberjack crit multiplier +1",
+	Types.LUMBERJACK_CRIT: "lumberjack crit chance +10",
+	Types.LUMBERJACK_DMG: "lumberjack deals 5% more damage from tree's hp",
 	Types.LUMBERJACK_CHARGE: "lumberjack charge increase +1",
-	Types.TREE_SPAWNRATE: "tree spawntime +5",
-	Types.TREE_LIFETIME: "trees live longer for 0.5s",
+	Types.WOOD_SPAWNRATE: "wood resource spawnrate +1",
+	Types.TREE_LIFETIME: "trees live longer fo]r 0.5s",
 	Types.TREE_DURABILITY: "tree durability +20, wood whey destroyed +10",
+	Types.GROVE_ADD: "tree has a chance to become a grove",
+	Types.GROVE_SPAWN: "grove spawn chance +1",
+	Types.GROVE_VALUE: "grove value per hit +1",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -92,10 +98,12 @@ func _on_upgrade_purchased(type: Types) -> void:
 			projectile_manager.get_data(ProjectileManager.Types.BULLET).spd += 10
 			
 		Types.UNLOCK_LUMBERJACK:
-			pass
+			timer_manager.add_lumberjack_timer()
 			
 		Types.ADD_LUMBERJACK:
-			building_manager.add_building(BuildingManager.Buildings.LUMBERJACK)
+			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time *= 2
+#			building_manager.add_building(BuildingManager.Buildings.LUMBERJACK)
+
 			
 		Types.LUMBERJACK_AUTOMATION:
 			building_manager.set_automated(BuildingManager.Buildings.LUMBERJACK, true)
@@ -107,25 +115,39 @@ func _on_upgrade_purchased(type: Types) -> void:
 			building_manager.add_production(BuildingManager.Buildings.LUMBERJACK, Economy.Currencies.WOOD, 10)
 			
 		Types.LUMBERJACK_CRIT:
-			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_chance += 0.5
+			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).crit_chance += 10
+			print(cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).crit_chance)
+			#building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_chance += 0.5
 			
-		Types.LUMBERJACK_CRIT_MULT:
-			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_mult += 1
+		Types.LUMBERJACK_DMG:
+			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).dmg_percent += 0.05
+			
+#			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_mult += 1
 			
 		Types.LUMBERJACK_CHARGE:
 			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).charge_per_hit += 1
 			
-		Types.TREE_SPAWNRATE:
-			timer_manager.get_timer(Economy.Currencies.WOOD).wait_time -= 0.5
+		Types.WOOD_SPAWNRATE:
+			timer_manager.sub_timer_wait_t(TimerManager.Types.CELL_SPAWN, CellManager.Types.WOOD, 0.5)
 
 		Types.TREE_LIFETIME:
-			cell_manager.get_data(Economy.Currencies.WOOD).life_time += 0.5
+			cell_manager.get_data(CellManager.Names.WOOD_TREE).life_time += 0.5
 			
 		Types.TREE_DURABILITY:
-			var data: CellResourceData = cell_manager.get_data(Economy.Currencies.WOOD)
+			var data: CellResourceData = cell_manager.get_data(CellManager.Names.WOOD_TREE)
 			data.break_value += 10
 			data.durability += 20
 		
+		Types.GROVE_ADD:
+			cell_manager.add_cell_weight(CellManager.Names.WOOD_GROVE, 3, CellManager.Types.WOOD)
+			cell_manager.add_resource(CellManager.Names.WOOD_GROVE)
+			
+		Types.GROVE_SPAWN:
+			cell_manager.add_cell_weight(CellManager.Names.WOOD_GROVE, 1, CellManager.Types.WOOD)
+			
+		Types.GROVE_VALUE:
+			cell_manager.get_data(CellManager.Names.WOOD_GROVE).value += 1
+			
 
 			
 			

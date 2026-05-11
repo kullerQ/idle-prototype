@@ -12,7 +12,6 @@ var resources: Dictionary = {
 	Currencies.FREE_CELLS: 0,
 }
 
-static var exclusive_resources: Array = [Currencies.FREE_CELLS]
 signal res_changed(type: Currencies, value: int)
 
 func get_resource(type: Currencies) -> int:

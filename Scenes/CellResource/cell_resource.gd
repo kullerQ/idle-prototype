@@ -2,7 +2,7 @@ extends Control
 class_name CellResource
 
 var data: CellResourceData
-var durability: int = 1
+var hp: int = 1
 @onready var cell_hitbox = $CellHitbox
 @onready var collision: CollisionShape2D = $CellHitbox/CollisionShape2D
 @onready var timer: Timer = $Timer
@@ -17,7 +17,7 @@ var durability: int = 1
 @onready var default_color_bg: Color = progress_bar_hp_bg.bg_color
 @onready var default_color_fill: Color = progress_bar_hp_fill.bg_color
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
-static var economy: Economy
+#static var economy: Economy
 
 func _ready() -> void:
 	timer.timeout.connect(_on_timeout)
@@ -37,17 +37,27 @@ func _on_hitted(dmg: int) -> void:
 	
 	audio_stream_player.pitch_scale = randf_range(0.9, 1.1)
 	audio_stream_player.playing = true
-	durability -= dmg
-	G.resource_cell_hitted.emit(data.type)
-	if durability <= 0:
-		economy.add_resource(data.type, data.break_value)
-		manager.free_cell(self)
-		data = null
-		set_disabled(true)
-		return
 	
-	progress_bar_hp.value = float(durability) / data.durability
-	economy.add_resource(data.type, data.value * dmg)
+	manager.cell_hitted.emit(self, dmg)
+#	durability -= dmg
+#	G.cell_hitted.emit(data.type, data._name)
+#	if durability <= 0:
+#		economy.add_resource(data.currency, data.break_value)
+#		manager.free_cell(self)
+#		data = null
+#		set_disabled(true)
+#		return
+#
+#	economy.add_resource(data.currency, data.value * dmg)
+	
+func sub_hp(v: int) -> void:
+	set_hp(max(0, hp - v))
+	
+func set_hp(new_v: int) -> void:
+	hp = new_v
+	progress_bar_hp.value = float(hp) / data.durability
+	if hp <= 0:
+		manager.cell_died.emit(self)
 	
 func set_data(_data: CellResourceData) -> void:
 	if data == _data:
@@ -57,17 +67,13 @@ func set_data(_data: CellResourceData) -> void:
 #	panel_style.bg_color = Color(data.color, default_color.a)
 	progress_bar_hp_bg.bg_color = Color(data.color, default_color_bg.a)
 	progress_bar_hp_fill.bg_color = Color(data.color, default_color_fill.a)
+	if data.life_time > 0:
+		timer.wait_time = data.life_time
+		timer.start()
+		progress_bar.value = data.life_time
 	
-	timer.wait_time = data.life_time
-	timer.start()
-	durability = data.durability
-	
-	progress_bar.value = data.life_time
-	progress_bar_hp.value = durability
-	
-	set_disabled(false)
+	set_hp(data.durability)
 	manager.occupy_cell(self)
-
 
 func set_disabled(_disabled: bool) -> void:
 	collision.call_deferred("set_disabled", _disabled)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dudk7nqk514vr"]
+[gd_scene load_steps=9 format=3 uid="uid://dudk7nqk514vr"]
 
 [ext_resource type="Script" path="res://Scenes/CellResource/cell_resource.gd" id="1_fj0yu"]
 [ext_resource type="Script" path="res://Scenes/CellResource/cell_hitbox.gd" id="2_1muj4"]
@@ -41,6 +41,15 @@ shadow_offset = Vector2(1, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pcss0"]
 size = Vector2(12, 12)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u2qg8"]
+bg_color = Color(0.815686, 0.482353, 0.6, 0.360784)
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_blend = true
 
 [node name="CellResource" type="Control"]
 custom_minimum_size = Vector2(16, 16)
@@ -103,3 +112,12 @@ show_percentage = false
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_bd4jn")
 volume_db = -8.313
+
+[node name="PanelWeaken" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u2qg8")

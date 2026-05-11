@@ -20,6 +20,7 @@ var nodes: Array = []
 @onready var label_lvl : Label = $VBoxContainer/LabelLvl
 @onready var button: Button = $Button
 @onready var debugbtn = $Button2
+@onready var panel = $Panel
 
 static var economy: Economy
 static var upgrade_manager: UpgradeManager
@@ -34,20 +35,28 @@ func _ready() -> void:
 	for i in range(1, Economy.Currencies.size()):
 		var arr: PackedInt64Array = get(currencies_names[i].to_lower())
 		
-		if !arr || arr.size() < max_lvl:
+		if arr.size() < max_lvl || (arr.size() == 1 && arr[0] == 0):
 			continue
 			
 		cost[i] = arr
 	
-		
+	owner.reg_node(cost.keys(), self)
 	if parent is UpgradeNode:
 		parent.nodes.append(self)
 	
-	label_lvl.text = "%d/%d" %[lvl, max_lvl]
 	label_cost.text = get_cost_text()
 	button.pressed.connect(_on_pressed)
 	button.mouse_entered.connect(_on_mouse_entered)
 	button.mouse_exited.connect(_on_mouse_exited)
+	
+func block() -> void:
+	panel.show()
+	
+func unblock() -> void:
+	panel.hide()
+	
+func get_cost(currency: Economy.Currencies) -> int:
+	return cost[currency][lvl]
 	
 func get_cost_text() -> String:
 	var cost_t: String = ""
@@ -65,6 +74,7 @@ func _on_mouse_exited() -> void:
 	G.tooltip_close_required.emit()
 	
 func unlock() -> void:
+	locked = false
 	show()
 	
 func add_lvl() -> void:
@@ -72,10 +82,12 @@ func add_lvl() -> void:
 
 func set_lvl(new_lvl: int) -> void:
 	lvl = new_lvl
+	label_lvl.text = "%d/%d" %[lvl, max_lvl]
 	if lvl >= max_lvl:
 		label_cost.hide()
+		label_lvl.text = "MAX"
+		button.modulate.a = 0.5
 
-	label_lvl.text = "%d/%d" %[lvl, max_lvl]
 	for n in range(nodes.size() - 1, -1, -1):
 		var node: UpgradeNode = nodes[n]
 		if node.unlock_lvl <= lvl:
@@ -93,7 +105,7 @@ func _on_pressed() -> void:
 		if cost[k][lvl] > economy.get_resource(k):
 			return
 	
-	economy.sub_resource_dict(cost, lvl)
 	add_lvl()
+	economy.sub_resource_dict(cost, lvl - 1)
 	upgrade_manager.upgrade_purchased.emit(type)
 	label_cost.text = get_cost_text()

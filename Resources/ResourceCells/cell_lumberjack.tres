@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LumberjackData" load_steps=2 format=3 uid="uid://tcqsywu5xh4d"]
+
+[ext_resource type="Script" path="res://Resources/_scr_cell_lumberjack_data.gd" id="1_evuec"]
+
+[resource]
+script = ExtResource("1_evuec")
+crit_chance = 0.0
+dmg_percent = 0.25
+type = 2
+_name = 3
+color = Color(0.713726, 0.576471, 0.372549, 1)
+life_time = 15.0
+value = 0
+break_value = 0
+durability = 1

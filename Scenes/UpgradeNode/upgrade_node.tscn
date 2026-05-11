@@ -1,14 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://xygpch6h66gc"]
+[gd_scene load_steps=12 format=3 uid="uid://xygpch6h66gc"]
 
 [ext_resource type="Script" path="res://Scenes/UpgradeNode/upgrade_node.gd" id="1_0bmfk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dm0do"]
-bg_color = Color(0.380392, 0.380392, 0.380392, 1)
+bg_color = Color(0.470588, 0.470588, 0.470588, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.505882, 0.505882, 0.505882, 1)
+border_color = Color(0.580392, 0.580392, 0.580392, 1)
 corner_radius_top_left = 1
 corner_radius_top_right = 1
 corner_radius_bottom_right = 1
@@ -27,7 +27,7 @@ corner_radius_bottom_right = 1
 corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b8s7y"]
-bg_color = Color(0.290196, 0.290196, 0.290196, 1)
+bg_color = Color(0.352941, 0.352941, 0.352941, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -50,6 +50,14 @@ bg_color = Color(0.6, 0.6, 0.6, 0.176471)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lxkkk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_su1c7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gxfct"]
+bg_color = Color(0, 0, 0, 0.509804)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.643137, 0, 0.0627451, 1)
 
 [node name="UpgradeNode" type="Control"]
 custom_minimum_size = Vector2(16, 16)
@@ -99,3 +107,14 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_lxkkk")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_su1c7")
 action_mode = 0
 button_mask = 2
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gxfct")

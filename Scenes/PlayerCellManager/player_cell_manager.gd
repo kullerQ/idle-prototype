@@ -15,8 +15,11 @@ var up_added: int = 0
 var down_added: int = 0
 var h_idx: int = 0
 var start_pos: Vector2i = Vector2i(4, 6)
+var highlighted_cell: PlayerCell
 
 var economy: Economy
+
+signal cell_lvled_up(cell: PlayerCell, lvl: int)
 
 func _enter_tree() -> void:
 	G.upgrade_manager.player_cell_manager = self
@@ -45,8 +48,43 @@ func _ready() -> void:
 			
 		pos.x += 1
 		
-	cells[start_pos].set_data(all_data[PlayerCellData.Types.SHOOTER])
-#	cells[Vector2i(3,1)].set_data(all_data[PlayerCellData.Types.SHOOTER])
+	
+	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
+#	fill_grid(PlayerCellData.Types.SHOOTER)
+
+	G.player_cell_pressed.connect(_on_cell_pressed)
+	G.level_upgrade_menu_close_requested.connect(_on_level_upgrade_menu_close_requested)
+
+func fill_grid(type: PlayerCellData.Types) -> void:
+	for i in cells.values():
+		i.call_deferred("set_data", all_data[type])
+	
+func _on_level_upgrade_menu_close_requested() -> void:
+	if !highlighted_cell:
+		return
+	
+	highlighted_cell.set_highlight(false)
+	highlighted_cell = null
+	
+
+func _on_cell_pressed(cell: PlayerCell) -> void:
+	if G.upgrade_menu_opened:
+		return
+	
+	if highlighted_cell == cell:
+		G.level_upgrade_menu_close_requested.emit()
+		return
+	
+	if highlighted_cell:
+		highlighted_cell.set_highlight(false)
+		
+	highlighted_cell = cell
+	highlighted_cell.set_highlight(true)
+	G.level_upgrade_menu_open_requested.emit(cell)
+		
+
+func add_starting_cell(type: PlayerCellData.Types, offset_x: int = 0, offset_y: int = 0) -> void:
+	cells[start_pos + Vector2i(offset_x, offset_y)].call_deferred("set_data", all_data[type])
 
 func get_data(type: PlayerCellData.Types) -> PlayerCellData:
 	return all_data[type]

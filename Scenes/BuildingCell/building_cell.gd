@@ -31,18 +31,19 @@ func set_data(_data: BuildingData) -> void:
 func _physics_process(delta: float) -> void:
 	progress_bar.value =  timer.time_left / graphics_cd #(graphics_cd - timer.time_left) / graphics_cd
 
-func _on_resource_hitted(type: Economy.Currencies) -> void:
-	if charged:
-		return
-		
-	if type != Economy.Currencies.WOOD:
-		return
-	
-	current_charge += 1
-	if current_charge >= data.charge:
-		set_charged(true)
-#		current_charge -= data.charge
-#		apply_effects()
+func _on_resource_hitted(type: CellManager.Types, _name: CellManager.Names) -> void:
+	return
+#	if charged:
+#		return
+#
+#	if type != Economy.Currencies.WOOD:
+#		return
+#
+#	current_charge += 1
+#	if current_charge >= data.charge:
+#		set_charged(true)
+##		current_charge -= data.charge
+##		apply_effects()
 	
 	progress_bar.value = float(current_charge) / data.charge
 

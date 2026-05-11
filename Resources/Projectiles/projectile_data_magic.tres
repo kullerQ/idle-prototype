@@ -6,6 +6,6 @@
 script = ExtResource("1_e85ax")
 spd = 50.0
 max_range = 0.0
-dmg = 1
+dmg = 3
 r = 2
 max_piercings = 0

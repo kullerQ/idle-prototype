@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CellResourceData" load_steps=2 format=3 uid="uid://cfyepdnjigkxa"]
+
+[ext_resource type="Script" path="res://Resources/_scr_cell_resource_data.gd" id="1_av527"]
+
+[resource]
+script = ExtResource("1_av527")
+type = 1
+_name = 2
+color = Color(0.286275, 0.215686, 0.188235, 1)
+life_time = 20.0
+value = 3
+break_value = 40
+durability = 100

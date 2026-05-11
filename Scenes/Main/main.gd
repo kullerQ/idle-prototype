@@ -18,6 +18,12 @@ func _input(event):
 			KEY_R:
 				tree.reload_current_scene()
 			KEY_T:
-				G.crit_label_requested.emit(get_global_mouse_position())
+				G.cell_manager.add_resource(CellManager.Names.SPECIAL_LUMBERJACK)
 			KEY_4:
 				Engine.time_scale = 32
+			KEY_5:
+				var m: CellManager = G.cell_manager
+				for i in range(10):
+					m.add_rand_resource(CellManager.Types.WOOD)
+			KEY_X:
+				G.cell_manager.free_cell_at_global(get_global_mouse_position())
