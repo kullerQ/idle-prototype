@@ -15,9 +15,10 @@ var upgrade_path_type: Control
 var upgrade_path: Control
 var manager: LevelUpgradeManager
 
-signal upgrade_button_pressed(type: LevelUpgradeManager.Types)
+signal upgrade_button_pressed(node: LevelUpgradeNode)
 
 func _ready() -> void:
+	hide()
 	G.level_upgrade_menu_close_requested.connect(_on_level_upgrade_menu_close_requested)
 	G.level_upgrade_menu_open_requested.connect(_on_level_upgrade_menu_open_requested)
 	G.player_cell_manager.cell_lvled_up.connect(_on_cell_lvled_up)
@@ -25,14 +26,18 @@ func _ready() -> void:
 	upgrade_button_pressed.connect(_on_upgrade_button_pressed)
 	set_physics_process(false)
 	
-func _on_upgrade_button_pressed(type: LevelUpgradeManager.Types, path: int) -> void:
+func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
+	var type: LevelUpgradeManager.Types = node.type
+	var path: int = node.path
 	if cell.lvl_tokens < 1:
 		return
 	
 	if path:
 		change_path(path)
 		
-	cell.lvl_tokens -= 1
+	node.unlock_next_node()
+	cell.sub_tokens()
+	node.lock()
 	manager.apply_upgrade(type, cell)
 	label_tokens.text = "%d" %cell.lvl_tokens
 

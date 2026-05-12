@@ -25,6 +25,9 @@ enum Types {
 	GROVE_ADD, 
 	GROVE_SPAWN, 
 	GROVE_VALUE, 
+	SHOOTER_XP, 
+	AXE_BOUNCE,
+	AXE_SPD,
 	}
 
 var cell_manager : CellManager
@@ -53,11 +56,14 @@ var descriptions: Dictionary = {
 	Types.LUMBERJACK_DMG: "lumberjack deals 5% more damage from tree's hp",
 	Types.LUMBERJACK_CHARGE: "lumberjack charge increase +1",
 	Types.WOOD_SPAWNRATE: "wood resource spawnrate +1",
-	Types.TREE_LIFETIME: "trees live longer fo]r 0.5s",
+	Types.TREE_LIFETIME: "trees live longer for 0.5s",
 	Types.TREE_DURABILITY: "tree durability +20, wood whey destroyed +10",
 	Types.GROVE_ADD: "tree has a chance to become a grove",
 	Types.GROVE_SPAWN: "grove spawn chance +1",
 	Types.GROVE_VALUE: "grove value per hit +1",
+	Types.SHOOTER_XP: "shooters get +1 xp",
+	Types.AXE_BOUNCE: "axe bounces off empty cells",
+	Types.AXE_SPD: "axe speed +10",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -116,7 +122,6 @@ func _on_upgrade_purchased(type: Types) -> void:
 			
 		Types.LUMBERJACK_CRIT:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).crit_chance += 10
-			print(cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).crit_chance)
 			#building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_chance += 0.5
 			
 		Types.LUMBERJACK_DMG:
@@ -148,6 +153,13 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.GROVE_VALUE:
 			cell_manager.get_data(CellManager.Names.WOOD_GROVE).value += 1
 			
-
+		Types.SHOOTER_XP:
+			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).xp_increase += 1
+			
+		Types.AXE_BOUNCE:
+			Axe.bounce = true
+			
+		Types.AXE_SPD:
+			projectile_manager.get_data(ProjectileManager.Types.AXE).spd += 10
 			
 			

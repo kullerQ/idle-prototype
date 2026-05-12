@@ -18,8 +18,4 @@ func after_hitted(cell: CellResource = null) -> void:
 	if dmg_mult == 1 || p_owner.data.type != PlayerCellData.Types.ROGUE:
 		return
 	
-	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center(cell)
-	if !target_cell_pos:
-		return
-		
-	dir = global_position.direction_to(target_cell_pos) 
+	ricochet(cell)

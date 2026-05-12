@@ -3,9 +3,17 @@ class_name PlayerCell
 
 const MAX_ACCURACY: int = 12
 var data: PlayerCellData
-@export_group("individual data")
-@export var cooldown_reduction: float = 0
+# individual data
+var cooldown_reduction: float = 0
+var weakening_chance: float = 0
+var weakened_dmg_mod: float = 1.4
+var ricohcet_if_weakened: bool = false
+var reduce_cd_if_weakened: float = 0
+var auto_weakening_chance: float = 0
+var special_attack_count: int = 0
+var add_bullet_spd: int = 0
 
+var projectile_mod_data: ProjectileDataModifiers
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
 @onready var timer: Timer = $Timer
 @onready var progress_bar: ProgressBar = $ProgressBar
@@ -23,6 +31,7 @@ var type_name: String
 var xp: float = 0
 var lvl: int = 0
 var lvl_tokens: int = 0
+@onready var upgrade_arrow: Polygon2D = $UpgradeArrow
 
 static var manager
 static var projectile_manager: ProjectileManager
@@ -73,7 +82,13 @@ func add_xp() -> void:
 func add_lvl() -> void:
 	lvl += 1
 	lvl_tokens += 1
+	upgrade_arrow.show()
 	manager.cell_lvled_up.emit(self, lvl)
+	
+func sub_tokens() -> void:
+	lvl_tokens -= 1
+	if lvl_tokens == 0:
+		upgrade_arrow.hide()
 	
 func start_cd_timer() -> void:
 	cooldown = max(0.1, data.cooldown - cooldown_reduction)
@@ -86,6 +101,15 @@ func start_multi_attack_timer() -> void:
 
 func attack() -> void:
 	call(type_name + "_attack")
+	if auto_weakening_chance > 0:
+		if special_attack_count < 1:
+			special_attack_count += 1
+			if randf_range(0, 1) < auto_weakening_chance:
+				start_multi_attack_timer()
+				return
+			
+		special_attack_count = 0
+	
 	attack_count += 1
 	if attack_count < data.attacks:
 		start_multi_attack_timer()
@@ -96,6 +120,14 @@ func attack() -> void:
 	
 func set_data(_data: PlayerCellData) -> void:
 	data = _data
+	projectile_mod_data = ProjectileDataModifiers.new(
+		weakened_dmg_mod, 
+		weakening_chance, 
+		ricohcet_if_weakened,
+		reduce_cd_if_weakened,
+		add_bullet_spd,
+		)
+		
 	panel.show()
 	panel_not_active.hide()
 	if data.type == 0:
@@ -142,20 +174,42 @@ func get_attack_dir_to_mouse() -> Vector2:
 func get_dir(pos: Vector2) -> Vector2:
 	return get_attack_dir_to_mouse() if !data.autoattack else pos.direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
 	
+func get_dir_to_rand_cell(pos: Vector2) -> Vector2:
+	return pos.direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
+
+func reduce_cd_time(amount: float) -> void:
+	var time_left: float = timer.time_left
+	var new_time: float = time_left - amount
+	if new_time <= 0.01:
+		timer.stop()
+		timer.timeout.emit()
+		return
+	
+	timer.wait_time = new_time
+	timer.start()
+	
 # shooter
 ##################################
 func shooter_attack() -> void:
-	projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), self)
+#	var weakening: bool = true if randf_range(0, 1) <= weakening_chance else false
+	if special_attack_count == 1:
+		var init_chance: float = projectile_mod_data.weakening_chance
+		projectile_mod_data.weakening_chance = 1
+		projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir_to_rand_cell(get_bullet_pos()), projectile_mod_data, self)
+		projectile_mod_data.weakening_chance = init_chance
+		return
+		
+	projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, self)
+		
 
 # rogue
 ##################################
 func rogue_attack() -> void:
-	projectile_manager.add_knife(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), self)
+	projectile_manager.add_knife(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, self)
 
 # wizard
 ##################################
 func wizard_attack() -> void:
 	projectile_manager.add_magic(get_bullet_pos(), get_bullet_mult(), 
-	G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), self
-	)
+	G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self )
 

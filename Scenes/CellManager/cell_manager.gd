@@ -101,7 +101,7 @@ func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
 			var cell_pos: Vector2 = cell.global_position + CELL_SIZE / 2
 			var crit_mult: int = 2 if randf_range(0, 100) <= data.crit_chance else 1
 			G.projectile_manager.add_resource_axe(cell_pos, crit_mult, data.dmg_percent,
-			get_rand_occupied_cell_global_center(cell, Types.WOOD), [cell])
+			get_rand_occupied_cell_global_center(cell, Types.WOOD), ProjectileDataModifiers.new(1.5, 0), [cell])
 			free_cell(cell)
 			return false
 			
@@ -129,6 +129,8 @@ func get_rand_occupied_cell_global_center(exclude: CellResource = null, type: Ty
 		return Vector2.ZERO
 	
 	var target_arr: Array = occupied_cells if type == 0 else occupied_cells_types[type]
+	if target_arr.is_empty():
+		return Vector2.ZERO
 	
 	if exclude:
 		var temp_occupied_cells = target_arr.duplicate()
@@ -211,6 +213,9 @@ func add_resource_at(coords: Vector2i, _name: Names) -> void:
 		return
 	
 	set_cell_data(cell, all_data[_name])
+
+func add_resource_at_global(pos: Vector2, _name: Names) -> void:
+	add_resource_at(get_cell_coords_from_global_pos(pos), _name)
 
 func before_set_cell_data(data: CellResourceData) -> bool:
 	if !is_cell_special(data._name):

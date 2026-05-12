@@ -11,6 +11,7 @@ var projectile_manager: ProjectileManager
 var building_manager: BuildingManager
 var timer_ui: TimerUI
 var upgrades_highlight_label: Label
+var lvl_upgrades_highlight_label: Label
 var level_upgrade_manager: LevelUpgradeManager
 
 signal upgrade_menu_open_requested
@@ -65,3 +66,5 @@ func initialize() -> void:
 	timer_ui.initialize(timer_manager)
 	########################################
 	level_upgrade_manager = LevelUpgradeManager.new()
+	
+	Axe.bounce = false

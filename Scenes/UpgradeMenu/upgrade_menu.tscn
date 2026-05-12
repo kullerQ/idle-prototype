@@ -14,6 +14,7 @@ offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3axdk")
+metadata/_edit_lock_ = true
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 1
@@ -22,6 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="ColorRect" type="ColorRect" parent="Control"]
 layout_mode = 1
@@ -31,6 +33,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.760784)
+metadata/_edit_lock_ = true
 
 [node name="Graphics" type="Control" parent="Control"]
 layout_mode = 1
@@ -40,6 +43,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_11oit")
+metadata/_edit_lock_ = true
 
 [node name="UpgradeNode" parent="Control/Graphics" instance=ExtResource("3_xkrix")]
 offset_left = 128.0
@@ -124,6 +128,14 @@ type = 6
 max_lvl = 3
 wood = PackedInt64Array(200, 500, 1000)
 
+[node name="ShooterXP" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+type = 24
+max_lvl = 5
+wood = PackedInt64Array(100, 100, 100, 150, 150)
+free_cells = PackedInt64Array(1)
+
 [node name="TreeLifetimer" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
 offset_top = 40.0
 offset_bottom = 56.0
@@ -180,9 +192,22 @@ type = 16
 max_lvl = 6
 wood = PackedInt64Array(20, 20, 20, 60, 60, 60)
 
+[node name="LumberjackSpd" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
+offset_left = 40.0
+offset_right = 56.0
+type = 26
+max_lvl = 5
+wood = PackedInt64Array(50, 50, 50, 80, 80)
+
 [node name="LumberjackCrit" parent="Control/Graphics/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 15
 max_lvl = 5
 wood = PackedInt64Array(20, 50, 90, 140, 200)
+
+[node name="AxeBounce" parent="Control/Graphics/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
+offset_top = 32.0
+offset_bottom = 48.0
+type = 25
+wood = PackedInt64Array(180)

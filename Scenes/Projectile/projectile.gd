@@ -5,12 +5,15 @@ var dir: Vector2 = Vector2.ZERO
 var data: ProjectileData
 @onready var collision: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var area: Area2D = $Area2D
-var dmg: int = 0
+var mod_data: ProjectileDataModifiers
+var dmg: float = 0
+var spd: int = 0
 var init_pos: Vector2
 var dmg_mult: int = 1
 var p_owner: PlayerCell
 var pierced: int = 0
 var ignore: Array = []
+var weakening: bool = false
 static var particle_container: Node2D
 
 func _ready() -> void:
@@ -18,6 +21,7 @@ func _ready() -> void:
 	area.area_entered.connect(_on_area_entered)
 	init_pos = global_position
 	dmg = data.dmg
+	spd += data.spd
 
 func _physics_process(delta: float) -> void:
 	move(delta)
@@ -27,7 +31,7 @@ func move(delta: float) -> void:
 	if !dir:
 		queue_free()
 		
-	global_position += dir * data.spd * delta
+	global_position += dir * spd * delta
 	
 func check_max_range() -> void:
 	if global_position.distance_to(init_pos) >= data.max_range:
@@ -44,6 +48,7 @@ func before_hitted(cell: CellResource = null) -> void:
 func after_hitted(cell: CellResource = null) -> void:
 	particle_container.add_child(HitCircle.new(global_position))
 	pierced += 1
+			
 	if pierced >= data.max_piercings + 1:
 		die()
 
@@ -53,8 +58,25 @@ func die() -> void:
 	
 	queue_free()
 
-func when_hitted(_area: Area2D) -> void:
-	_area.hitted.emit(dmg)
+func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
+	_area.hitted.emit(DamageData.new(dmg, mod_data.weakened_dmg_mod))
+	apply_effects(cell)
+
+func apply_effects(cell: CellResource) -> void:
+	if weakening:
+		if cell.weakened:
+			if mod_data.ricohcet_if_weakened:
+				if ricochet(cell):
+					pierced -= 1
+			
+			return
+			
+		cell.set_weaken(true)
+	
+	if cell.weakened:
+		if mod_data.reduce_cd_if_weakened:
+			p_owner.reduce_cd_time(mod_data.reduce_cd_if_weakened)
+		
 
 func apply_crit() -> void:
 	dmg *= dmg_mult
@@ -66,8 +88,21 @@ func _on_area_entered(a: Area2D) -> void:
 		return
 		
 	before_hitted(cell)
-	when_hitted(a)
+	when_hitted(a, cell)
 	after_hitted(cell)
 	
 func set_disabled(_disabled: bool) -> void:
 	collision.disabled = _disabled
+
+func ricochet(cell: CellResource = null) -> bool:
+	print(dmg)
+	if dmg <= 0:
+		die()
+		
+	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center(cell)
+	if !target_cell_pos:
+		return false
+		
+	dir = global_position.direction_to(target_cell_pos) 
+	dmg = floor(float(dmg) / 2)
+	return true

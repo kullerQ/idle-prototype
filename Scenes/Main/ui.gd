@@ -4,6 +4,7 @@ class_name UI
 @onready var label_wood: Label = $LabelWood
 var si_suffex: Array = ["", "K", "M", "B"]
 
+# todo implement ui manager and refactor ui node to add ui manager
 func _enter_tree() -> void:
 	G.ui = self
 

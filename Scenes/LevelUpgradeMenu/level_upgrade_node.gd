@@ -23,10 +23,16 @@ func _on_pressed() -> void:
 	if locked:
 		return
 
-	owner.upgrade_button_pressed.emit(type, path)
+	owner.upgrade_button_pressed.emit(self)
 	
 func unlock() -> void:
 	locked = false
 	
 func unlock_next_node() -> void:
+	if !next_node:
+		return
+		
 	next_node.unlock()
+
+func lock() -> void:
+	locked = true

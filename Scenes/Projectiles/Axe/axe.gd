@@ -2,8 +2,8 @@ extends Projectile
 class_name Axe
 
 var target_pos: Vector2
-@onready var spd: float = data.spd
 var dmg_percent: float = 0
+static var bounce: bool = false
 
 func _ready() -> void:
 	super()
@@ -16,6 +16,14 @@ func move(delta: float) -> void:
 		if area.has_overlapping_areas():
 			return
 		
+		if bounce:
+			target_pos = G.cell_manager.get_rand_occupied_cell_global_center(null, CellManager.Types.WOOD)
+			if target_pos:
+				spd = data.spd
+				set_physics_process(true)
+				set_disabled(true)
+				return
+			
 		die()
 		return
 		

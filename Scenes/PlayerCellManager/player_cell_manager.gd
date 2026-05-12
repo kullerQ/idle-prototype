@@ -16,13 +16,14 @@ var down_added: int = 0
 var h_idx: int = 0
 var start_pos: Vector2i = Vector2i(4, 6)
 var highlighted_cell: PlayerCell
+var cells_to_upgrade: Array = []
+var upgrade_cell_idx: int = 0
+@onready var lvl_upgrades_highlight_label: Label = G.lvl_upgrades_highlight_label
 
 var economy: Economy
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
-
-func _enter_tree() -> void:
-	G.upgrade_manager.player_cell_manager = self
+signal cell_upgraded(cell: PlayerCell)
 
 func _input(event):
 	if event is InputEventKey && event.is_pressed():
@@ -47,9 +48,10 @@ func _ready() -> void:
 			continue
 			
 		pos.x += 1
-		
 	
 	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
+	cell_lvled_up.connect(_on_cell_lvled_up)
+	cell_upgraded.connect(_on_cell_upgraded)
 #	fill_grid(PlayerCellData.Types.SHOOTER)
 
 	G.player_cell_pressed.connect(_on_cell_pressed)
@@ -127,3 +129,33 @@ func add_free_cell() -> void:
 	up_added = 0
 	down_added = 0
 	h_idx += 1
+
+func _on_cell_lvled_up(cell: PlayerCell, lvl: int) -> void:
+	if cells_to_upgrade.has(cell):
+		return
+		
+	cells_to_upgrade.append(cell)
+	lvl_upgrades_highlight_label.show()
+	lvl_upgrades_highlight_label.text = "%d" %cells_to_upgrade.size()
+	
+func _on_cell_upgraded(cell: PlayerCell) -> void:
+	if cell.lvl_tokens > 0:
+		return
+		
+	cells_to_upgrade.erase(cell)
+	lvl_upgrades_highlight_label.text = "%d" %cells_to_upgrade.size()
+	if !cells_to_upgrade.is_empty():
+		return
+	
+	lvl_upgrades_highlight_label.hide()
+
+func get_cell_to_upgrade() -> PlayerCell:
+	if cells_to_upgrade.is_empty():
+		return null
+	
+	if upgrade_cell_idx >= cells_to_upgrade.size():
+		upgrade_cell_idx = upgrade_cell_idx % cells_to_upgrade.size()
+		
+	var cell: PlayerCell = cells_to_upgrade[upgrade_cell_idx]
+	upgrade_cell_idx = (upgrade_cell_idx + 1) % cells_to_upgrade.size()
+	return cell

@@ -41,10 +41,17 @@ offset_bottom = 180.0
 color = Color(0, 0, 0, 1)
 
 [node name="ButtonContainer" type="HBoxContainer" parent="."]
-offset_left = 255.0
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 264.0
 offset_top = 170.0
-offset_right = 309.0
+offset_right = 318.0
 offset_bottom = 178.0
+grow_horizontal = 0
+grow_vertical = 0
 script = ExtResource("8_vtjp6")
 
 [node name="Control" type="Control" parent="."]

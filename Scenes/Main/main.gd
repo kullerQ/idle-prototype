@@ -18,7 +18,9 @@ func _input(event):
 			KEY_R:
 				tree.reload_current_scene()
 			KEY_T:
-				G.cell_manager.add_resource(CellManager.Names.SPECIAL_LUMBERJACK)
+				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_TREE)
+			KEY_Z:
+				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_LUMBERJACK)
 			KEY_4:
 				Engine.time_scale = 32
 			KEY_5:
@@ -27,3 +29,11 @@ func _input(event):
 					m.add_rand_resource(CellManager.Types.WOOD)
 			KEY_X:
 				G.cell_manager.free_cell_at_global(get_global_mouse_position())
+			KEY_C:
+				var cell: PlayerCell = G.player_cell_manager.highlighted_cell
+				if !cell:
+					return
+					
+				cell.add_lvl()
+				
+				

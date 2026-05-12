@@ -131,9 +131,15 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ibqa4")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_right = 8.0
+offset_left = 1.0
+offset_right = 9.0
 offset_bottom = 8.0
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_l6usl")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_rnifb")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_e2xxl")
 flat = true
+
+[node name="UpgradeArrow" type="Polygon2D" parent="."]
+visible = false
+color = Color(0.54902, 0.909804, 0.345098, 1)
+polygon = PackedVector2Array(11, -1, 11, -2, 9, 1, 8, 2, 10, 2, 10, 4, 11, 4, 11, 2, 13, 2)
