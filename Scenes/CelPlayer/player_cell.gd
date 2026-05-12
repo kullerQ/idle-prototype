@@ -188,10 +188,12 @@ func reduce_cd_time(amount: float) -> void:
 	timer.wait_time = new_time
 	timer.start()
 	
+func add_dir_projectile(function: Callable) -> void:
+	function.call(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, self)
+	
 # shooter
 ##################################
 func shooter_attack() -> void:
-#	var weakening: bool = true if randf_range(0, 1) <= weakening_chance else false
 	if special_attack_count == 1:
 		var init_chance: float = projectile_mod_data.weakening_chance
 		projectile_mod_data.weakening_chance = 1
@@ -199,13 +201,12 @@ func shooter_attack() -> void:
 		projectile_mod_data.weakening_chance = init_chance
 		return
 		
-	projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, self)
+	add_dir_projectile(projectile_manager.add_bullet)
 		
-
 # rogue
 ##################################
 func rogue_attack() -> void:
-	projectile_manager.add_knife(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, self)
+	add_dir_projectile(projectile_manager.add_knife)
 
 # wizard
 ##################################
@@ -213,3 +214,7 @@ func wizard_attack() -> void:
 	projectile_manager.add_magic(get_bullet_pos(), get_bullet_mult(), 
 	G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self )
 
+# druid
+##################################
+func druid_attack() -> void:
+	add_dir_projectile(projectile_manager.add_druid_magic)

@@ -5,7 +5,8 @@ enum Types {
 	BULLET,
 	KNIFE,
 	MAGIC,
-	AXE
+	AXE,
+	DRUID_MAGIC
 	
 }
 var projectile_scenes: Dictionary = {
@@ -13,13 +14,14 @@ var projectile_scenes: Dictionary = {
 	Types.KNIFE: load("uid://btawcaget3dop"),
 	Types.MAGIC: load("uid://dbvm0xe75co22"),
 	Types.AXE: load("uid://fayy1y7iri3x"),
+	Types.DRUID_MAGIC: load("uid://dw7hqy0bhgwaw"),
 }
 
 var projectile_data: Dictionary = {
 	Types.BULLET: load("uid://c2v6gmbo5oumv").duplicate(),
 	Types.KNIFE: load("uid://d2gth6s63tah6").duplicate(),
 	Types.MAGIC: load("uid://cqm1gvin210dd").duplicate(),
-	Types.AXE: load("uid://cwix8ktqxey3o").duplicate(),
+	Types.DRUID_MAGIC: load("uid://ckqurogg2vv7y").duplicate(),
 	}
 
 var projectile_container: Node2D
@@ -68,6 +70,11 @@ func add_magic(pos: Vector2, mult: int, _target_pos: Vector2, mod_data: Projecti
 	var magic: Magic = new_player_projectle(pos, Types.MAGIC, mult, mod_data, _owner)
 	magic.target_pos = _target_pos
 	add_projectile(magic)
+
+func add_druid_magic(pos: Vector2, mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
+	var druid_magic: DruidMagic = new_player_projectle(pos, Types.DRUID_MAGIC, mult, mod_data, _owner)
+	druid_magic.dir = _dir
+	add_projectile(druid_magic)
 	
 func add_resource_axe(pos: Vector2, mult: int, _dmg_percent: float, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array) -> void:
 	var axe: Axe = new_resource_projectule(pos, Types.AXE, mult, mod_data, _ignore)

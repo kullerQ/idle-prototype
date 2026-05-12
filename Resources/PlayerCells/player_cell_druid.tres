@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PlayerCellData" load_steps=2 format=3 uid="uid://0xyfkmq4ag42"]
+
+[ext_resource type="Script" path="res://Resources/_scr_player_cell_data.gd" id="1_ngjbh"]
+
+[resource]
+script = ExtResource("1_ngjbh")
+cooldown = 3.0
+projectile_type = 5
+accuracy = 12.0
+type = 4
+crit_chance = 0.0
+crit_mult = 2
+xp_increase = 1.0
+autoattack = false
+attacks = 1
+multi_attack_delay = 0.5
+color = Color(0.470588, 0.65098, 0.427451, 1)

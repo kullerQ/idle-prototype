@@ -40,7 +40,7 @@ var separation: Vector2
 var max_lumberjack_count: int = 1
 var economy : Economy
 
-signal cell_hitted(cell: CellResource, dmg: int) #todo: change dmg to dmg data
+signal cell_hitted(cell: CellResource, dmg_data: DamageData)
 signal cell_died(cell: CellResource)
 signal cell_occupied(cell: CellResource) 
 
@@ -84,15 +84,40 @@ func _on_cell_died(cell: CellResource) -> void:
 	add_res(data.type, data.break_value)
 	free_cell(cell)
 	
-func _on_cell_hitted(cell: CellResource, dmg: int) -> void:
+func _on_cell_hitted(cell: CellResource, dmg_data: DamageData) -> void:
 	var data: CellResourceData = cell.data
 	if !handle_hit_function(data, cell):
 		return
-	
+
 	var hp: int = cell.hp
-	if !handle_cell_hit(data, cell, dmg):
-		return
+	var dmg: float = dmg_data.dmg
+	if cell.weakened:
+		dmg = round(dmg * dmg_data.weakened_mod)
 	
+	match data._name:
+		Names.SPECIAL_LUMBERJACK:
+			return
+	
+	match dmg_data.type:
+		DamageData.Types.HIT:
+			cell.sub_hp(dmg)
+	
+		DamageData.Types.HEAL_LIFETIME:
+			var overheal: float = cell.add_life_time(dmg)
+			if overheal:
+				var other_cell: CellResource = get_rand_occupied_cell(cell)
+				if !other_cell:
+					return
+				
+#				var new_data: DamageData = dmg_data.duplicate()
+#				new_data.dmg = overheal
+				var test: Test = Test.new()
+				prints(dmg_data.duplicate())
+				other_cell.add_life_time(overheal)
+				print(overheal)
+				
+			return
+		
 	add_res(data.type, min(hp, data.value * dmg))
 
 func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
@@ -107,14 +132,6 @@ func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
 			
 	return true
 
-func handle_cell_hit(data: CellResourceData, cell: CellResource, dmg: int) -> bool:
-	match data._name:
-		Names.SPECIAL_LUMBERJACK:
-			return false
-	
-	cell.sub_hp(dmg)
-	return true
-
 func get_cell_coords_from_global_pos(pos: Vector2) -> Vector2i:
 	return floor((pos - global_position) / (CELL_SIZE + separation))
 
@@ -124,26 +141,32 @@ func get_cell_global_pos(coords: Vector2i) -> Vector2:
 func get_cell_global_center(coords: Vector2i) -> Vector2:
 	return cells[coords].global_position + CELL_SIZE / 2
 	
-func get_rand_occupied_cell_global_center(exclude: CellResource = null, type: Types = 0) -> Vector2:
+func get_rand_occupied_cell(exclude: CellResource = null, type: Types = 0) -> CellResource:
 	if occupied_cells.is_empty():
-		return Vector2.ZERO
-	
+		return null
+
 	var target_arr: Array = occupied_cells if type == 0 else occupied_cells_types[type]
 	if target_arr.is_empty():
-		return Vector2.ZERO
+		return null
 	
 	if exclude:
 		var temp_occupied_cells = target_arr.duplicate()
 		if temp_occupied_cells.has(exclude):
 			temp_occupied_cells.erase(exclude)
-		
-		if temp_occupied_cells.is_empty():
-			return Vector2.ZERO
-			
-		return temp_occupied_cells.pick_random().global_position + CELL_SIZE / 2
 	
+		if temp_occupied_cells.is_empty():
+			return null
+			
+		target_arr = temp_occupied_cells
+	
+	return target_arr.pick_random()
+	
+func get_rand_occupied_cell_global_center(exclude: CellResource = null, type: Types = 0) -> Vector2:
+	var cell: CellResource = get_rand_occupied_cell(exclude, type)
+	if !cell:
+		return Vector2.ZERO
 		
-	return occupied_cells.pick_random().global_position + CELL_SIZE / 2
+	return cell.global_position + CELL_SIZE / 2
 	
 func get_data(_name: Names) -> CellResourceData:
 	return all_data[_name]
@@ -188,6 +211,7 @@ func get_rand_name(type: Types) -> Names:
 	assert(_name != 0)
 	return _name
 	
+
 func add_rand_resource(type: Types) -> void:
 	if free_cells.is_empty():
 		return

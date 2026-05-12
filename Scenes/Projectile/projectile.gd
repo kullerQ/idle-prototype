@@ -104,5 +104,5 @@ func ricochet(cell: CellResource = null) -> bool:
 		return false
 		
 	dir = global_position.direction_to(target_cell_pos) 
-	dmg = floor(float(dmg) / 2)
+	dmg = floor(dmg / 2)
 	return true

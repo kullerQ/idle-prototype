@@ -8,6 +8,7 @@ var all_data: Dictionary = {
 	PlayerCellData.Types.SHOOTER: load("uid://d1lppkhdp8brh").duplicate(),
 	PlayerCellData.Types.ROGUE: load("uid://cson3piyylqw0").duplicate(),
 	PlayerCellData.Types.WIZARD: load("uid://ynurimwp8bik").duplicate(),
+	PlayerCellData.Types.DRUID: load("uid://0xyfkmq4ag42").duplicate(),
 }
 var free_cells: Array = []
 var added_cells: int = 1
@@ -24,19 +25,6 @@ var economy: Economy
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
-
-func _input(event):
-	if event is InputEventKey && event.is_pressed():
-		match event.keycode:
-			KEY_1:
-				add_free_cell()
-			KEY_S:
-				add_tower(PlayerCellData.Types.SHOOTER)
-			KEY_A:
-				add_tower(PlayerCellData.Types.ROGUE)
-			KEY_W:
-				add_tower(PlayerCellData.Types.WIZARD)
-				
 	
 func _ready() -> void:
 	var pos: Vector2i = Vector2i.ZERO
@@ -49,7 +37,8 @@ func _ready() -> void:
 			
 		pos.x += 1
 	
-	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
+#	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
+	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
 	cell_lvled_up.connect(_on_cell_lvled_up)
 	cell_upgraded.connect(_on_cell_upgraded)
 #	fill_grid(PlayerCellData.Types.SHOOTER)

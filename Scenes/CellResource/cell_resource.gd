@@ -41,12 +41,8 @@ func _on_hitted(dmg_data: DamageData) -> void:
 		return
 	
 	audio_stream_player.pitch_scale = randf_range(0.9, 1.1)
-	audio_stream_player.playing = true
-	var dmg: float = dmg_data.dmg
-	if weakened:
-		dmg = round(dmg * dmg_data.weakened_mod)
-	
-	manager.cell_hitted.emit(self, dmg)
+	audio_stream_player.playing = true	
+	manager.cell_hitted.emit(self, dmg_data)
 	
 func sub_hp(v: int) -> void:
 	set_hp(max(0, hp - v))
@@ -113,3 +109,17 @@ func set_weaken(enabled: bool) -> void:
 	
 func _on_weaken_timeout() -> void:
 	set_weaken(false)
+
+# retunrs overheal
+func add_life_time(amount: float) -> float:
+	var time_left: float = timer.time_left
+	var new_time_left: float = time_left + amount
+	var overheal: float = 0
+	timer.stop()
+	if new_time_left > data.life_time:
+		overheal = new_time_left - data.life_time
+		new_time_left = data.life_time
+	
+	timer.wait_time = new_time_left
+	timer.start()
+	return overheal
