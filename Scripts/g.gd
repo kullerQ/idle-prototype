@@ -1,6 +1,7 @@
 extends Node
 
 var economy: Economy
+var damage_manager: DamageManager
 var ui: UI
 var upgrade_menu_opened: bool = false
 var upgrade_manager: UpgradeManager
@@ -32,6 +33,9 @@ func initialize() -> void:
 	UpgradeNode.economy = economy
 	BuildingCell.economy = economy
 	########################################
+	damage_manager = DamageManager.new()
+	damage_manager.initialize()
+	########################################
 	cell_manager = load("uid://b14oi7hhj8hew").instantiate()
 	cell_manager.name = "CellManager"
 	cell_manager.economy = economy
@@ -39,6 +43,7 @@ func initialize() -> void:
 	player_cell_manager = load("uid://ctck6suxq5bcj").instantiate()
 	player_cell_manager.name = "PlayerCellManager"
 	player_cell_manager.economy = economy
+	player_cell_manager.damage_manager = damage_manager
 	#
 	timer_manager = load("uid://bd2s6jemxrplh").instantiate()
 	timer_manager.name = "TimerManager"
@@ -52,12 +57,14 @@ func initialize() -> void:
 	upgrade_manager.building_manager = building_manager
 	upgrade_manager.player_cell_manager = player_cell_manager
 	upgrade_manager.timer_manager = timer_manager
+	upgrade_manager.damage_manager = damage_manager
 	UpgradeNode.upgrade_manager = upgrade_manager
 	#
 	PlayerCell.manager = player_cell_manager
 	TimerResource.cell_manager = cell_manager
 	########################################
 	projectile_manager = ProjectileManager.new()
+	projectile_manager.damage_manager = damage_manager
 	PlayerCell.projectile_manager = projectile_manager
 	upgrade_manager.projectile_manager = projectile_manager
 	########################################

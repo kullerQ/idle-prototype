@@ -51,4 +51,14 @@ func _input(event):
 					
 				cell.add_lvl()
 
+			KEY_F1:
+				var cell: PlayerCell = G.player_cell_manager.highlighted_cell
+				if !cell:
+					return
+					
+				if cell.data.type != PlayerCellData.Types.DRUID:
+					return
+					
+				G.player_cell_manager.set_cell_bonus_damage_preset(cell, DamageManager.TowerPresets.DRUID_DURAB)
+
 				

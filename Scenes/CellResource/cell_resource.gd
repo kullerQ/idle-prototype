@@ -37,18 +37,18 @@ func _physics_process(delta) -> void:
 	progress_bar.value = timer.time_left / data.life_time 
 	panel_weaken.value = timer_weaken.time_left / timer_weaken.wait_time
 
-func _on_hitted(dmg_data: DamageData) -> void:
+func _on_hitted(damage_data: Dictionary) -> void:
 	if !data:
 		return
 	
 	audio_stream_player.pitch_scale = randf_range(0.9, 1.1)
 	audio_stream_player.playing = true	
-	manager.cell_hitted.emit(self, dmg_data)
+	manager.cell_hitted.emit(self, damage_data)
 	
 func sub_hp(v: int) -> void:
 	if !data:
 		return
-	set_hp(max(0, hp - v))
+	set_hp(hp - v)
 	
 func add_hp(v: int) -> void:
 	if !data:
@@ -59,8 +59,8 @@ func add_hp(v: int) -> void:
 func set_hp(new_v: int) -> void:
 	hp = new_v
 	progress_bar_hp.value = float(hp) / data.durability
-	if hp <= 0:
-		manager.cell_died.emit(self)
+#	if hp <= 0:
+#		manager.cell_died.emit(self)
 	
 func set_data(_data: CellResourceData) -> void:
 	if data == _data:

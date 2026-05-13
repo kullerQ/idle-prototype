@@ -40,7 +40,7 @@ var separation: Vector2
 var max_lumberjack_count: int = 1
 var economy : Economy
 
-signal cell_hitted(cell: CellResource, dmg_data: DamageData)
+signal cell_hitted(cell: CellResource, damage: Dictionary)
 signal cell_died(cell: CellResource)
 signal cell_occupied(cell: CellResource) 
 
@@ -84,58 +84,123 @@ func _on_cell_died(cell: CellResource) -> void:
 	add_res(data.type, data.break_value)
 	free_cell(cell)
 	
-func _on_cell_hitted(cell: CellResource, dmg_data: DamageData) -> void:
-	var data: CellResourceData = cell.data
-	if !handle_hit_function(data, cell):
-		return
+func _on_cell_hitted(cell: CellResource, damage_data: Dictionary) -> void:
+	var cell_data: CellResourceData = cell.data
+	var base_data: Dictionary = damage_data[DamageManager.DamageDataTypes.BASE]
+	var bonus_data: Dictionary = damage_data[DamageManager.DamageDataTypes.BONUS]
+	for type in base_data:
+		for stat in base_data[type]:
+			var damage_value: float = base_data[type][stat] + bonus_data[type][stat]
+			if !damage_value:
+				continue
 
-	var hp: int = cell.hp
+			match type:
+				DamageManager.Types.HIT:
+					match stat:
+						DamageManager.Stats.HP:
+							cell.sub_hp(damage_value)
+							add_res(cell_data.type, cell_data.value * damage_value)
+						
+						DamageManager.Stats.LIFE_TIME:
+							cell.sub_life_time(damage_value)
+
+				DamageManager.Types.HEAL:
+					match stat:
+						DamageManager.Stats.HP:
+							cell.add_hp(damage_value)
+						
+						DamageManager.Stats.LIFE_TIME:
+							cell.add_life_time(damage_value)
+							
 	
-	match data._name:
-		Names.SPECIAL_LUMBERJACK:
-			return
-	
-	var sub_data: Dictionary = dmg_data.sub
-	var add_data: Dictionary = dmg_data.add
-################################
-	for value in sub_data:
-		var dmg: float = sub_data[value]
-		if cell.weakened:
-			dmg = round(dmg * dmg_data.weakened_mod)
+	if cell.hp <= 0:
+		cell_died.emit(cell)
 		
-		match value:
-			DamageData.Values.HP:
-				cell.sub_hp(dmg)
-				add_res(data.type, min(hp, data.value * dmg))
-				print(dmg)
 		
-			DamageData.Values.LIFE_TIME:
-				var overkill: float = cell.sub_life_time(dmg)
+#		for stat in type:
+#			for v in stat:
+#				pass
+#				print(v)
 				
-####################################
-	for value in add_data:
-		var dmg: float = add_data[value]
-		if cell.weakened:
-			dmg = round(dmg * dmg_data.weakened_mod)
-			
-		match value:
-			DamageData.Values.HP:
-				cell.add_hp(dmg)
+#	cell.sub_hp(damage_data[DamageManager.Types.HIT][DamageManager.Stats.HP])
+#	cell.add_hp(damage_data[DamageManager.Types.HEAL][DamageManager.Stats.HP])
 
-			DamageData.Values.LIFE_TIME:
-				var overheal: float = cell.add_life_time(dmg)
-				if overheal:
-					var other_cell: CellResource = get_rand_occupied_cell(cell)
-					if !other_cell:
-						return
-
-					for i in occupied_cells:
-						overheal = i.add_life_time(overheal)
-						if overheal <= 0:
-							break
-
-				return
+#	var data: CellResourceData = cell.data
+#	if !handle_hit_function(data, cell):
+#		return
+#
+#	var hp: int = cell.hp
+#
+#	match data._name:
+#		Names.SPECIAL_LUMBERJACK:
+#			return
+#
+#	for i in damage:
+#		var v: float = damage[i]
+#		if !v:
+#			return
+#
+#		match i:
+#			DamageData.Stats.HP:
+#				if v < 0:
+#					cell.add_hp(v)
+#
+#				if v > 0:
+#					cell.sub_hp(v)
+#					add_res(data.type, min(hp, data.value * v))
+					
+					
+					
+					
 		
+#	var dmg: Dictionary = dmg_data.dmg
+#	var heal: Dictionary = dmg_data.heal
+#################################
+#	for change_v in dmg:
+#		var value: float = dmg[change_v]
+#		if !value:
+#			continue
+#
+#		if cell.weakened:
+#			value = round(value * dmg_data.weakened_mod)
+#
+#		match change_v:
+#			DamageData.Values.HP:
+#				cell.sub_hp(value)
+#				add_res(data.type, min(hp, data.value * value))
+#
+#			DamageData.Values.LIFE_TIME:
+#				var overkill: float = cell.sub_life_time(value)
+#
+#####################################
+#	for change_v in heal:
+#		var value: float = heal[change_v]
+#		if !value:
+#			continue
+#
+#		if cell.weakened:
+#			value = round(value * dmg_data.weakened_mod)
+#
+#		match change_v:
+#			DamageData.Values.HP:
+#				cell.add_hp(value)
+#
+#			DamageData.Values.LIFE_TIME:
+#				var overheal: float = cell.add_life_time(value)
+#				if overheal:
+#					var other_cell: CellResource = get_rand_occupied_cell(cell)
+#					if !other_cell:
+#						return
+#
+#					for i in occupied_cells:
+#						overheal = i.add_life_time(overheal)
+#						if overheal <= 0:
+#							break
+#
+#				return
+#
+#	if cell.hp <= 0:
+#		cell_died.emit(cell)
 
 func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
 	match data._name:

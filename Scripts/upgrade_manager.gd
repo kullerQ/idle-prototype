@@ -37,6 +37,7 @@ enum Types {
 	}
 
 var cell_manager : CellManager
+var damage_manager: DamageManager
 var player_cell_manager : PlayerCellManager
 var timer_manager: TimerManager
 var projectile_manager: ProjectileManager
@@ -107,7 +108,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).crit_mult += 1
 			
 		Types.BULLET_DMG:
-			projectile_manager.get_data(ProjectileManager.Types.BULLET).dmg += 1
+			damage_manager.add_flat_damage_bonus(ProjectileManager.Types.BULLET, 1)
 			
 		Types.BULLET_DIST:
 			projectile_manager.get_data(ProjectileManager.Types.BULLET).max_range += 10

@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="TestModData" load_steps=2 format=3 uid="uid://bfr4b2e33lcru"]
+
+[ext_resource type="Script" path="res://Resources/DamageModData/test_mod_data.gd" id="1_fwio0"]
+
+[resource]
+script = ExtResource("1_fwio0")

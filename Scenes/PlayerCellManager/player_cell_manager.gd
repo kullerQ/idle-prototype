@@ -10,8 +10,18 @@ var all_data: Dictionary = {
 	PlayerCellData.Types.WIZARD: load("uid://ynurimwp8bik").duplicate(),
 	PlayerCellData.Types.DRUID: load("uid://0xyfkmq4ag42").duplicate(),
 }
+#var damage_data: Dictionary = {
+#	PlayerCellData.Types.NULL: DamageData.new(),
+#	PlayerCellData.Types.SHOOTER: load("uid://b25j3a61ph37i").duplicate(),
+#}
+#var damage_mod_data: Dictionary = {
+#	PlayerCellData.Types.NULL: DamageModData.new(),
+#	PlayerCellData.Types.SHOOTER: load("").duplicate(),
+#
+#}
+
 var free_cells: Array = []
-var added_cells: int = 1
+var added_cells: int = 0
 var up_added: int = 0
 var down_added: int = 0
 var h_idx: int = 0
@@ -22,6 +32,7 @@ var upgrade_cell_idx: int = 0
 @onready var lvl_upgrades_highlight_label: Label = G.lvl_upgrades_highlight_label
 
 var economy: Economy
+var damage_manager: DamageManager
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
@@ -56,7 +67,6 @@ func _on_level_upgrade_menu_close_requested() -> void:
 	
 	highlighted_cell.set_highlight(false)
 	highlighted_cell = null
-	
 
 func _on_cell_pressed(cell: PlayerCell) -> void:
 	if G.upgrade_menu_opened:
@@ -73,23 +83,39 @@ func _on_cell_pressed(cell: PlayerCell) -> void:
 	highlighted_cell.set_highlight(true)
 	G.level_upgrade_menu_open_requested.emit(cell)
 		
-
 func add_starting_cell(type: PlayerCellData.Types, offset_x: int = 0, offset_y: int = 0) -> void:
-	cells[start_pos + Vector2i(offset_x, offset_y)].call_deferred("set_data", all_data[type])
+	add_free_cell()
+	add_tower_at(type, start_pos + Vector2i(offset_x, offset_y))
 
 func get_data(type: PlayerCellData.Types) -> PlayerCellData:
 	return all_data[type]
 
-func add_tower(type: PlayerCellData.Types) -> void:
+func add_tower_at(type: PlayerCellData.Types, coords: Vector2i) -> void:
+	add_tower(type, cells[coords])
+
+func add_tower(type: PlayerCellData.Types, cell: PlayerCell = null) -> void:
 	if free_cells.is_empty():
 		return
 		
 	if type == 0:
 		return
-		
-	var cell: PlayerCell = free_cells.pick_random()
+	
+	if !cell:
+		cell = free_cells.pick_random()
+
+	
 	cell.set_data(all_data[type])
-	free_cells.erase(cell)
+	if type == PlayerCellData.Types.DRUID:
+		cell.bonus_damage = damage_manager.tower_bonus_damage_presets[DamageManager.TowerPresets.DRUID_LIFE_TIME]
+		
+	occupy_cell(cell)
+#	if damage_mod_data.has(type):
+#		cell.set_damage_data(damage_mod_data[type].duplicate())
+#	else:
+#		cell.set_damage_data(damage_mod_data[0])
+#		print("null dmg data")
+		
+
 
 func add_free_cell() -> void:
 	if h_idx >= columns:
@@ -137,6 +163,13 @@ func _on_cell_upgraded(cell: PlayerCell) -> void:
 		return
 	
 	lvl_upgrades_highlight_label.hide()
+
+func occupy_cell(cell: PlayerCell) -> void:
+	free_cells.erase(cell)
+	economy.sub_resource(Economy.Currencies.FREE_CELLS, 1)
+
+func set_cell_bonus_damage_preset(cell: PlayerCell, preset: DamageManager.TowerPresets) -> void:
+	cell.bonus_damage = damage_manager.tower_bonus_damage_presets[preset]
 
 func get_cell_to_upgrade() -> PlayerCell:
 	if cells_to_upgrade.is_empty():

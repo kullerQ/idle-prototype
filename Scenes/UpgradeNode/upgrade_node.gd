@@ -106,6 +106,9 @@ func _on_pressed() -> void:
 			return
 	
 	add_lvl()
+	if cost.has(Economy.Currencies.FREE_CELLS):
+		cost.erase(Economy.Currencies.FREE_CELLS)
+		
 	economy.sub_resource_dict(cost, lvl - 1)
 	upgrade_manager.upgrade_purchased.emit(type)
 	label_cost.text = get_cost_text()

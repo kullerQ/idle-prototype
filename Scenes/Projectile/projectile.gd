@@ -6,6 +6,7 @@ var data: ProjectileData
 @onready var collision: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var area: Area2D = $Area2D
 var mod_data: ProjectileDataModifiers
+var damage_data: Dictionary
 var dmg: float = 0
 var spd: int = 0
 var init_pos: Vector2
@@ -59,19 +60,18 @@ func die() -> void:
 	queue_free()
 
 func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
-	var damage_data: DamageData = DamageData.new({DamageData.Values.HP: dmg}, mod_data.weakened_dmg_mod)
-	if !mod_data.add_overwrite.is_empty():
-		damage_data.add = {}
-		for k in mod_data.add_overwrite:
-			damage_data.add[k] = dmg * mod_data.add_overwrite[k]
-		
-	if !mod_data.sub_overwrite.is_empty():
-		damage_data.sub = {}
-		for k in mod_data.sub_overwrite:
-			damage_data.sub[k] = dmg * mod_data.sub_overwrite[k]
+#	if !mod_data.add_overwrite.is_empty():
+#		damage_data.add = {}
+#		for k in mod_data.add_overwrite:
+#			damage_data.add[k] = dmg * mod_data.add_overwrite[k]
+#
+#	if !mod_data.sub_overwrite.is_empty():
+#		damage_data.sub = {}
+#		for k in mod_data.sub_overwrite:
+#			damage_data.sub[k] = dmg * mod_data.sub_overwrite[k]
 		
 	_area.hitted.emit(damage_data)
-	apply_effects(cell)
+#	apply_effects(cell)
 
 func apply_effects(cell: CellResource) -> void:
 	if weakening:
@@ -104,9 +104,8 @@ func _on_area_entered(a: Area2D) -> void:
 	
 func set_disabled(_disabled: bool) -> void:
 	collision.disabled = _disabled
-
+# todo
 func ricochet(cell: CellResource = null) -> bool:
-	print(dmg)
 	if dmg <= 0:
 		die()
 		

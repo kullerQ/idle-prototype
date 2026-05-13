@@ -50,8 +50,9 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 			cell.projectile_mod_data.add_bullet_spd += 30
 
 		Types.DRUID_DURAB:
-			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}
-			cell.projectile_mod_data.sub_overwrite = {DamageData.Values.LIFE_TIME: 1}
+			pass
+#			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}
+#			cell.projectile_mod_data.sub_overwrite = {DamageData.Values.LIFE_TIME: 1}
 
 	G.player_cell_manager.cell_upgraded.emit(cell)
 		

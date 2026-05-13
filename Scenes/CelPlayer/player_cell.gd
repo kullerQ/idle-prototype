@@ -14,8 +14,11 @@ var special_attack_count: int = 0
 var add_bullet_spd: int = 0
 var projectile_add_overwrite: Dictionary = {} # {DamageData.Values.value: v} -> projectile_dmg * v
 var projectile_sub_overwrite: Dictionary = {}
-
+#################
+var bonus_damage: Dictionary = {}
+##############
 var projectile_mod_data: ProjectileDataModifiers
+var damage_data: DamageData
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
 @onready var timer: Timer = $Timer
 @onready var progress_bar: ProgressBar = $ProgressBar
@@ -51,7 +54,22 @@ func _ready() -> void:
 	timer.timeout.connect(_on_timeout)
 	timer_multi_attack.timeout.connect(_on_multi_attack_timeout)
 	button.pressed.connect(_on_pressed)
+
+	bonus_damage = DamageManager.new_damage_data(
+		DamageManager.new_data(0, 0), # cell's bonus heal data 
+		DamageManager.new_data(0, 0)  # cell's bonus hit data
+		)
 	
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton && event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
+		if !timer.is_stopped():
+			return
+			
+		attack()
+	
+func _physics_process(delta: float) -> void:
+	progress_bar.value = (cooldown - timer.time_left) / cooldown
+
 func set_highlight(enabled: bool) -> void:
 	if enabled:
 		panel_highlight.show()
@@ -65,15 +83,6 @@ func _on_pressed() -> void:
 		
 	G.player_cell_pressed.emit(self)
 	
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
-		if !timer.is_stopped():
-			return
-			
-		attack()
-	
-func _physics_process(delta: float) -> void:
-	progress_bar.value = (cooldown - timer.time_left) / cooldown
 	
 func add_xp() -> void:
 	xp += data.xp_increase - float(lvl) / 10
@@ -103,29 +112,32 @@ func start_multi_attack_timer() -> void:
 
 func attack() -> void:
 	call(type_name + "_attack")
-	if auto_weakening_chance > 0:
-		if special_attack_count < 1:
-			special_attack_count += 1
-			if randf_range(0, 1) < auto_weakening_chance:
-				start_multi_attack_timer()
-				return
-			
-		special_attack_count = 0
-	
+#	if auto_weakening_chance > 0:
+#		if special_attack_count < 1:
+#			special_attack_count += 1
+#			if randf_range(0, 1) < auto_weakening_chance:
+#				start_multi_attack_timer()
+#				return
+#
+#		special_attack_count = 0
+#
 	attack_count += 1
 	if attack_count < data.attacks:
 		start_multi_attack_timer()
 		return
-		
+
 	attack_count = 0
 	start_cd_timer()
 	
+func set_damage_data(_data: DamageData) -> void:
+	damage_data = _data
+	
 func set_data(_data: PlayerCellData) -> void:
 	data = _data
-	match data.type:
-		PlayerCellData.Types.DRUID:
-			projectile_add_overwrite = {DamageData.Values.LIFE_TIME: 3}
-			projectile_sub_overwrite = {DamageData.Values.HP: 0}
+#	match data.type:
+#		PlayerCellData.Types.DRUID:
+#			projectile_add_overwrite = {DamageData.Values.LIFE_TIME: 3}
+#			projectile_sub_overwrite = {DamageData.Values.HP: 0}
 			
 	projectile_mod_data = ProjectileDataModifiers.new(
 		weakened_dmg_mod, 
@@ -198,17 +210,17 @@ func reduce_cd_time(amount: float) -> void:
 	timer.start()
 	
 func add_dir_projectile(function: Callable) -> void:
-	function.call(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, self)
+	function.call(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, bonus_damage,self)
 	
 # shooter
 ##################################
 func shooter_attack() -> void:
-	if special_attack_count == 1:
-		var init_chance: float = projectile_mod_data.weakening_chance
-		projectile_mod_data.weakening_chance = 1
-		projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir_to_rand_cell(get_bullet_pos()), projectile_mod_data, self)
-		projectile_mod_data.weakening_chance = init_chance
-		return
+#	if special_attack_count == 1:
+#		var init_chance: float = projectile_mod_data.weakening_chance
+#		projectile_mod_data.weakening_chance = 1
+#		projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir_to_rand_cell(get_bullet_pos()), projectile_mod_data, self)
+#		projectile_mod_data.weakening_chance = init_chance
+#		return
 		
 	add_dir_projectile(projectile_manager.add_bullet)
 		
