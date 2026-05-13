@@ -12,6 +12,8 @@ var reduce_cd_if_weakened: float = 0
 var auto_weakening_chance: float = 0
 var special_attack_count: int = 0
 var add_bullet_spd: int = 0
+var projectile_add_overwrite: Dictionary = {} # {DamageData.Values.value: v} -> projectile_dmg * v
+var projectile_sub_overwrite: Dictionary = {}
 
 var projectile_mod_data: ProjectileDataModifiers
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
@@ -120,12 +122,19 @@ func attack() -> void:
 	
 func set_data(_data: PlayerCellData) -> void:
 	data = _data
+	match data.type:
+		PlayerCellData.Types.DRUID:
+			projectile_add_overwrite = {DamageData.Values.LIFE_TIME: 3}
+			projectile_sub_overwrite = {DamageData.Values.HP: 0}
+			
 	projectile_mod_data = ProjectileDataModifiers.new(
 		weakened_dmg_mod, 
 		weakening_chance, 
 		ricohcet_if_weakened,
 		reduce_cd_if_weakened,
 		add_bullet_spd,
+		projectile_add_overwrite,
+		projectile_sub_overwrite,
 		)
 		
 	panel.show()

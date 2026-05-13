@@ -90,35 +90,52 @@ func _on_cell_hitted(cell: CellResource, dmg_data: DamageData) -> void:
 		return
 
 	var hp: int = cell.hp
-	var dmg: float = dmg_data.dmg
-	if cell.weakened:
-		dmg = round(dmg * dmg_data.weakened_mod)
 	
 	match data._name:
 		Names.SPECIAL_LUMBERJACK:
 			return
 	
-	match dmg_data.type:
-		DamageData.Types.HIT:
-			cell.sub_hp(dmg)
-	
-		DamageData.Types.HEAL_LIFETIME:
-			var overheal: float = cell.add_life_time(dmg)
-			if overheal:
-				var other_cell: CellResource = get_rand_occupied_cell(cell)
-				if !other_cell:
-					return
-				
-#				var new_data: DamageData = dmg_data.duplicate()
-#				new_data.dmg = overheal
-				var test: Test = Test.new()
-				prints(dmg_data.duplicate())
-				other_cell.add_life_time(overheal)
-				print(overheal)
-				
-			return
+	var sub_data: Dictionary = dmg_data.sub
+	var add_data: Dictionary = dmg_data.add
+################################
+	for value in sub_data:
+		var dmg: float = sub_data[value]
+		if cell.weakened:
+			dmg = round(dmg * dmg_data.weakened_mod)
 		
-	add_res(data.type, min(hp, data.value * dmg))
+		match value:
+			DamageData.Values.HP:
+				cell.sub_hp(dmg)
+				add_res(data.type, min(hp, data.value * dmg))
+				print(dmg)
+		
+			DamageData.Values.LIFE_TIME:
+				var overkill: float = cell.sub_life_time(dmg)
+				
+####################################
+	for value in add_data:
+		var dmg: float = add_data[value]
+		if cell.weakened:
+			dmg = round(dmg * dmg_data.weakened_mod)
+			
+		match value:
+			DamageData.Values.HP:
+				cell.add_hp(dmg)
+
+			DamageData.Values.LIFE_TIME:
+				var overheal: float = cell.add_life_time(dmg)
+				if overheal:
+					var other_cell: CellResource = get_rand_occupied_cell(cell)
+					if !other_cell:
+						return
+
+					for i in occupied_cells:
+						overheal = i.add_life_time(overheal)
+						if overheal <= 0:
+							break
+
+				return
+		
 
 func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
 	match data._name:

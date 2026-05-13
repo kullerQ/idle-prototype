@@ -9,6 +9,7 @@ var cell: PlayerCell
 @onready var upgrade_paths: Dictionary = {
 	PlayerCellData.Types.SHOOTER: $Graphics/MarginContainer/VBoxContainer/ShooterUpgrades,
 	PlayerCellData.Types.ROGUE: $Graphics/MarginContainer/VBoxContainer/RogueUpgrades,
+	PlayerCellData.Types.DRUID: $Graphics/MarginContainer/VBoxContainer/DruidUpgrades,
 }
 var nodes_to_hide: Array = []
 var upgrade_path_type: Control
@@ -29,6 +30,9 @@ func _ready() -> void:
 func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
 	var type: LevelUpgradeManager.Types = node.type
 	var path: int = node.path
+	if node.locked_for.has(cell):
+		return
+		
 	if cell.lvl_tokens < 1:
 		return
 	
@@ -37,7 +41,7 @@ func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
 		
 	node.unlock_next_node()
 	cell.sub_tokens()
-	node.lock()
+	node.locked_for.append(cell)
 	manager.apply_upgrade(type, cell)
 	label_tokens.text = "%d" %cell.lvl_tokens
 

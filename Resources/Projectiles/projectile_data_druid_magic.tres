@@ -6,6 +6,6 @@
 script = ExtResource("1_k0uye")
 spd = 60.0
 max_range = 250.0
-dmg = 10.0
+dmg = 1.0
 r = 1
 max_piercings = 0

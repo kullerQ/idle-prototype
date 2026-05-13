@@ -9,6 +9,8 @@ enum Types {
 	SHOOTER_AUTO_WEAK,
 	SHOOTER_DPS_CD_RESET_WEAK,
 	SHOOTER_DPS_BULLET_SPD,
+	DRUID_DURAB,
+	DRUID_LIFET,
 }
 
 var descriptions: Dictionary = {
@@ -20,6 +22,8 @@ var descriptions: Dictionary = {
 	Types.SHOOTER_AUTO_WEAK: "50% chance to shoot an additional weaking bullet in a direction of a random cell",
 	Types.SHOOTER_DPS_CD_RESET_WEAK: "if hits weakened cell, reduce cooldown by 1 second",
 	Types.SHOOTER_DPS_BULLET_SPD: "bullet speed +30",
+	Types.DRUID_DURAB: "magic reduces cells life time by damage, but adds durability by damage x2 ",
+	Types.DRUID_LIFET: "tood: add",
 }
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
@@ -44,6 +48,10 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 
 		Types.SHOOTER_DPS_BULLET_SPD:
 			cell.projectile_mod_data.add_bullet_spd += 30
+
+		Types.DRUID_DURAB:
+			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}
+			cell.projectile_mod_data.sub_overwrite = {DamageData.Values.LIFE_TIME: 1}
 
 	G.player_cell_manager.cell_upgraded.emit(cell)
 		

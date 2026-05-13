@@ -6,11 +6,17 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aoy02"]
 bg_color = Color(0.509804, 0.509804, 0.509804, 0.52549)
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 0.266667)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
-shadow_size = 1
+shadow_color = Color(0, 0, 0, 0.392157)
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_75yu1"]
@@ -62,7 +68,6 @@ mouse_filter = 2
 script = ExtResource("1_fj0yu")
 
 [node name="Panel" type="Panel" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,6 +78,7 @@ mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_aoy02")
 
 [node name="ProgressBar2" type="ProgressBar" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -82,6 +88,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_75yu1")
 theme_override_styles/fill = SubResource("StyleBoxFlat_84qe2")
+min_value = -0.14
 max_value = 1.0
 show_percentage = false
 

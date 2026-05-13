@@ -70,13 +70,13 @@ wood = PackedInt64Array(50)
 offset_left = -40.0
 offset_right = -24.0
 type = 1
-wood = PackedInt64Array(100)
+wood = PackedInt64Array(50)
 
 [node name="AddTowerCell4" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 1
-wood = PackedInt64Array(200)
+wood = PackedInt64Array(50)
 
 [node name="Shooter" parent="Control/Graphics/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
 offset_top = -40.0
@@ -179,6 +179,57 @@ type = 18
 max_lvl = 8
 wood = PackedInt64Array(20, 25, 35, 45, 60, 80, 90, 100)
 
+[node name="Druid" parent="Control/Graphics/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
+offset_left = 64.0
+offset_right = 80.0
+type = 27
+wood = PackedInt64Array(25)
+free_cells = PackedInt64Array(1)
+
+[node name="DruidCooldown" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid" instance=ExtResource("3_xkrix")]
+offset_left = 104.0
+offset_right = 120.0
+type = 28
+max_lvl = 5
+wood = PackedInt64Array(20, 30, 40, 50, 60)
+free_cells = PackedInt64Array(1)
+
+[node name="DruidCrit" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid" instance=ExtResource("3_xkrix")]
+offset_left = 24.0
+offset_top = 32.0
+offset_right = 40.0
+offset_bottom = 48.0
+type = 29
+max_lvl = 5
+wood = PackedInt64Array(50, 50, 100, 100, 150)
+free_cells = PackedInt64Array(1)
+
+[node name="DruidCritMult" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidCrit" instance=ExtResource("3_xkrix")]
+offset_top = 32.0
+offset_bottom = 48.0
+type = 30
+max_lvl = 2
+wood = PackedInt64Array(200, 200)
+free_cells = PackedInt64Array(1)
+
+[node name="DruidMagicDmg" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid" instance=ExtResource("3_xkrix")]
+offset_left = 56.0
+offset_top = -16.0
+offset_right = 72.0
+offset_bottom = 0.0
+type = 31
+max_lvl = 5
+wood = PackedInt64Array(20, 30, 40, 50, 60)
+free_cells = PackedInt64Array(1)
+
+[node name="DruidMagicSpd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg" instance=ExtResource("3_xkrix")]
+offset_top = 32.0
+offset_bottom = 48.0
+type = 32
+max_lvl = 5
+wood = PackedInt64Array(25, 50, 100, 180, 260)
+free_cells = PackedInt64Array(1)
+
 [node name="UnlockLumberjack" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_right = 64.0
@@ -207,7 +258,9 @@ max_lvl = 5
 wood = PackedInt64Array(20, 50, 90, 140, 200)
 
 [node name="AxeBounce" parent="Control/Graphics/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
-offset_top = 32.0
-offset_bottom = 48.0
+offset_left = 40.0
+offset_top = -32.0
+offset_right = 56.0
+offset_bottom = -16.0
 type = 25
 wood = PackedInt64Array(180)

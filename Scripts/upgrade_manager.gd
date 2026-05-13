@@ -28,6 +28,12 @@ enum Types {
 	SHOOTER_XP, 
 	AXE_BOUNCE,
 	AXE_SPD,
+	DRUID,
+	DRUID_COOLDOWN,
+	DRUID_CRIT,
+	DRUID_CRIT_MULT,
+	DRUID_MAGIC_DMG,
+	DRUID_MAGIC_SPD,
 	}
 
 var cell_manager : CellManager
@@ -40,7 +46,7 @@ var descriptions: Dictionary = {
 	Types.NULL: "no description",
 	Types.ADD_TOWER_CELL: "+1 additional cell for towers",
 	Types.SHOOTER: "+1 shooter",
-	Types.SHOOTER_COOLDOWN: "shooter cooldown -1",
+	Types.SHOOTER_COOLDOWN: "shooter cooldown -0.1s",
 	Types.SHOOTER_ACCURACY: "shooter accuracy +1",
 	Types.SHOOTER_CRIT: "shooter crit chance +0.5",
 	Types.SHOOTER_CRIT_MULT: "shooter crit multiplier +1",
@@ -64,6 +70,12 @@ var descriptions: Dictionary = {
 	Types.SHOOTER_XP: "shooters get +1 xp",
 	Types.AXE_BOUNCE: "axe bounces off empty cells",
 	Types.AXE_SPD: "axe speed +10",
+	Types.DRUID: "+1 druid",
+	Types.DRUID_COOLDOWN: "druid cooldown -0.5s",
+	Types.DRUID_CRIT: "druid crit chance +5",
+	Types.DRUID_CRIT_MULT: "druid crit mult +1",
+	Types.DRUID_MAGIC_DMG: "druid magic dmg +1",
+	Types.DRUID_MAGIC_SPD: "druid magic speed +15",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -162,4 +174,22 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.AXE_SPD:
 			projectile_manager.get_data(ProjectileManager.Types.AXE).spd += 10
 			
+		Types.DRUID:
+			player_cell_manager.add_tower(PlayerCellData.Types.DRUID)
 			
+		Types.DRUID_COOLDOWN:
+			player_cell_manager.get_data(PlayerCellData.Types.DRUID).cooldown -= 0.1
+			
+		Types.DRUID_CRIT:
+			player_cell_manager.get_data(PlayerCellData.Types.DRUID).crit_chance += 5
+			
+		Types.DRUID_CRIT_MULT:
+			player_cell_manager.get_data(PlayerCellData.Types.DRUID).crit_mult += 1
+			
+		Types.DRUID_MAGIC_DMG:
+			projectile_manager.get_data(ProjectileManager.Types.DRUID_MAGIC).dmg += 1
+			
+		Types.DRUID_MAGIC_SPD:
+			projectile_manager.get_data(ProjectileManager.Types.DRUID_MAGIC).spd += 15
+			
+	

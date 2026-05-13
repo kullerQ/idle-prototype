@@ -27,6 +27,7 @@ func _ready() -> void:
 	progress_bar_hp.set("theme_override_styles/fill", progress_bar_hp_fill)
 	set_physics_process(false)
 	progress_bar.hide()
+	progress_bar_hp.hide()
 	panel_weaken.hide()
 	cell_hitbox.hitted.connect(_on_hitted)
 	# todo change to effect_timers dic 
@@ -45,7 +46,15 @@ func _on_hitted(dmg_data: DamageData) -> void:
 	manager.cell_hitted.emit(self, dmg_data)
 	
 func sub_hp(v: int) -> void:
+	if !data:
+		return
 	set_hp(max(0, hp - v))
+	
+func add_hp(v: int) -> void:
+	if !data:
+		return
+		
+	set_hp(min(data.durability, hp + v))
 	
 func set_hp(new_v: int) -> void:
 	hp = new_v
@@ -75,9 +84,10 @@ func set_disabled(_disabled: bool) -> void:
 	if _disabled:
 		panel_style.bg_color = default_color_bg
 		progress_bar.hide()
+		progress_bar_hp.hide()
 		panel_weaken.hide()
 #		progress_bar_hp_bg.bg_color = default_color
-		progress_bar_hp.value = 0
+#		progress_bar_hp.value = 0
 		set_physics_process(false)
 	else:
 		progress_bar.show()
@@ -123,3 +133,16 @@ func add_life_time(amount: float) -> float:
 	timer.wait_time = new_time_left
 	timer.start()
 	return overheal
+
+# returns overkill
+func sub_life_time(amount: float) -> float:
+	var time_left: float = timer.time_left
+	var new_time_left: float = time_left - amount
+	timer.stop()
+	if new_time_left <= 0.01:
+		timer.timeout.emit()
+		return new_time_left
+	
+	timer.wait_time = new_time_left
+	timer.start()
+	return 0

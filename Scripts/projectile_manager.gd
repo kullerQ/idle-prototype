@@ -21,6 +21,7 @@ var projectile_data: Dictionary = {
 	Types.BULLET: load("uid://c2v6gmbo5oumv").duplicate(),
 	Types.KNIFE: load("uid://d2gth6s63tah6").duplicate(),
 	Types.MAGIC: load("uid://cqm1gvin210dd").duplicate(),
+	Types.AXE: load("uid://cwix8ktqxey3o").duplicate(),
 	Types.DRUID_MAGIC: load("uid://ckqurogg2vv7y").duplicate(),
 	}
 

@@ -5,6 +5,7 @@ class_name LevelUpgradeNode
 @export var path: int
 @export var locked: bool = true
 @export var next_node: LevelUpgradeNode
+var locked_for: Array = []
 static var manager: UpgradeManager
 
 func _ready() -> void:
