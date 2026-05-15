@@ -37,13 +37,13 @@ func _physics_process(delta) -> void:
 	progress_bar.value = timer.time_left / data.life_time 
 	panel_weaken.value = timer_weaken.time_left / timer_weaken.wait_time
 
-func _on_hitted(damage_data: Dictionary) -> void:
+func _on_hitted(damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
 	if !data:
 		return
 	
 	audio_stream_player.pitch_scale = randf_range(0.9, 1.1)
 	audio_stream_player.playing = true	
-	manager.cell_hitted.emit(self, damage_data)
+	manager.cell_hitted.emit(self, damage_data, spread_damage_data)
 	
 func sub_hp(v: int) -> void:
 	if !data:
@@ -101,9 +101,9 @@ func _on_timeout() -> void:
 	set_disabled(true)
 
 func clear_effects() -> void:
-	set_weaken(false)
+	set_weakened(false)
 
-func set_weaken(enabled: bool) -> void:
+func set_weakened(enabled: bool) -> void:
 	if weakened == enabled:
 		return
 		
@@ -118,7 +118,7 @@ func set_weaken(enabled: bool) -> void:
 		timer_weaken.stop()
 	
 func _on_weaken_timeout() -> void:
-	set_weaken(false)
+	set_weakened(false)
 
 # retunrs overheal
 func add_life_time(amount: float) -> float:

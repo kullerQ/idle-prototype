@@ -73,7 +73,7 @@ func apply_effects() -> void:
 		var v: int = data.production[i]
 		if v != 0:
 			var mult: int = 1
-			if randf_range(0, 100) <= data.crit_chance:
+			if randi() % 100 < data.crit_chance:
 				mult = data.crit_chance
 				G.crit_label_requested.emit(progress_bar.global_position + progress_bar.size / 2)
 				

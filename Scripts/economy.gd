@@ -4,12 +4,14 @@ enum Currencies {
 	NULL,
 	WOOD,
 	FREE_CELLS,
+	XP,
 	
 }
 
 var resources: Dictionary = {
 	Currencies.WOOD: 0,
 	Currencies.FREE_CELLS: 0,
+	Currencies.XP: 0,
 }
 
 signal res_changed(type: Currencies, value: int)

@@ -15,7 +15,7 @@ func _draw() -> void:
 
 func after_hitted(cell: CellResource = null) -> void:
 	super()
-	if dmg_mult == 1 || p_owner.data.type != PlayerCellData.Types.ROGUE:
+	if crit_mult == 1 || p_owner.data.type != PlayerCellData.Types.ROGUE:
 		return
 	
 	ricochet(cell)

@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_evuec")
 crit_chance = 0.0
-dmg_percent = 0.25
+dmg_ratio = 0.2
+spawn_wood = true
 type = 2
 _name = 3
 color = Color(0.713726, 0.576471, 0.372549, 1)

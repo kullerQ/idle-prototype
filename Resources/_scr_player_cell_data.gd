@@ -12,7 +12,7 @@ enum Types {
 @export var projectile_type: ProjectileManager.Types
 @export var accuracy: float
 @export var type: Types
-@export var crit_chance: float
+@export var crit_chance: int
 @export var crit_mult: int = 2
 @export var xp_increase: float = 1
 @export var autoattack: bool = false

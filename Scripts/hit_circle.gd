@@ -10,7 +10,7 @@ func _ready() -> void:
 	tw = create_tween()
 	tw.tween_property(self, "scale", Vector2.ZERO, 0.25).set_ease(Tween.EASE_IN_OUT)
 	await tw.finished
-	tw.kill()
+	queue_free()
 
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, 2, Color.WHITE)

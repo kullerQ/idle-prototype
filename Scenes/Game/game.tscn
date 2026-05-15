@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://c480787aiynb1"]
+[gd_scene load_steps=7 format=3 uid="uid://c480787aiynb1"]
 
 [ext_resource type="Script" path="res://Scenes/Game/game.gd" id="1_4djx6"]
-[ext_resource type="Script" path="res://Scenes/Game/uipp.gd" id="3_akcbs"]
 [ext_resource type="Script" path="res://Scenes/Game/button_container.gd" id="8_vtjp6"]
 
 [sub_resource type="Gradient" id="Gradient_ks4ih"]
@@ -72,16 +71,3 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("GradientTexture2D_itbc6")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="UIPP" type="Control" parent="CanvasLayer"]
-custom_minimum_size = Vector2(320, 180)
-layout_mode = 3
-anchors_preset = 0
-offset_right = 320.0
-offset_bottom = 180.0
-mouse_filter = 2
-script = ExtResource("3_akcbs")
-
-[node name="CanvasLayer3" type="CanvasLayer" parent="CanvasLayer/UIPP"]

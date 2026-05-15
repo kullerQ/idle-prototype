@@ -34,6 +34,8 @@ enum Types {
 	DRUID_CRIT_MULT,
 	DRUID_MAGIC_DMG,
 	DRUID_MAGIC_SPD,
+	DRUID_XP,
+	LUMBERJACK_WOOD_SPANW,
 	}
 
 var cell_manager : CellManager
@@ -49,11 +51,11 @@ var descriptions: Dictionary = {
 	Types.SHOOTER: "+1 shooter",
 	Types.SHOOTER_COOLDOWN: "shooter cooldown -0.1s",
 	Types.SHOOTER_ACCURACY: "shooter accuracy +1",
-	Types.SHOOTER_CRIT: "shooter crit chance +0.5",
+	Types.SHOOTER_CRIT: "shooter crit chance +10%",
 	Types.SHOOTER_CRIT_MULT: "shooter crit multiplier +1",
 	Types.BULLET_DMG: "bullet dmg +1",
 	Types.BULLET_DIST: "bullet max distance +10",
-	Types.BULLER_SPD: "bullet speed +10",
+	Types.BULLER_SPD: "bullet speed +5",
 	Types.UNLOCK_LUMBERJACK: "every 15 seconds lumberjack builds his hut",
 	Types.ADD_LUMBERJACK: "lumberjack stays in place for 10 more seconds",
 	Types.LUMBERJACK_AUTOMATION: "lumberjack produces wood automatically",
@@ -77,6 +79,8 @@ var descriptions: Dictionary = {
 	Types.DRUID_CRIT_MULT: "druid crit mult +1",
 	Types.DRUID_MAGIC_DMG: "druid magic dmg +1",
 	Types.DRUID_MAGIC_SPD: "druid magic speed +15",
+	Types.DRUID_XP: "druid get +1 xp",
+	Types.LUMBERJACK_WOOD_SPANW: "chance to spawn wood cell after lumberjack +25%",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -102,27 +106,25 @@ func _on_upgrade_purchased(type: Types) -> void:
 			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).accuracy += 1
 			
 		Types.SHOOTER_CRIT:
-			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).crit_chance += 0.5
+			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).crit_chance += 10
 			
 		Types.SHOOTER_CRIT_MULT:
 			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).crit_mult += 1
 			
 		Types.BULLET_DMG:
-			damage_manager.add_flat_damage_bonus(ProjectileManager.Types.BULLET, 1)
+			add_projectile_damage(ProjectileManager.Types.BULLET, 1)
 			
 		Types.BULLET_DIST:
 			projectile_manager.get_data(ProjectileManager.Types.BULLET).max_range += 10
 			
 		Types.BULLER_SPD:
-			projectile_manager.get_data(ProjectileManager.Types.BULLET).spd += 10
+			projectile_manager.get_data(ProjectileManager.Types.BULLET).spd += 5
 			
 		Types.UNLOCK_LUMBERJACK:
 			timer_manager.add_lumberjack_timer()
 			
 		Types.ADD_LUMBERJACK:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time *= 2
-#			building_manager.add_building(BuildingManager.Buildings.LUMBERJACK)
-
 			
 		Types.LUMBERJACK_AUTOMATION:
 			building_manager.set_automated(BuildingManager.Buildings.LUMBERJACK, true)
@@ -135,12 +137,9 @@ func _on_upgrade_purchased(type: Types) -> void:
 			
 		Types.LUMBERJACK_CRIT:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).crit_chance += 10
-			#building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_chance += 0.5
 			
 		Types.LUMBERJACK_DMG:
-			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).dmg_percent += 0.05
-			
-#			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).crit_mult += 1
+			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).dmg_ratio += 0.05
 			
 		Types.LUMBERJACK_CHARGE:
 			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).charge_per_hit += 1
@@ -188,9 +187,17 @@ func _on_upgrade_purchased(type: Types) -> void:
 			player_cell_manager.get_data(PlayerCellData.Types.DRUID).crit_mult += 1
 			
 		Types.DRUID_MAGIC_DMG:
-			projectile_manager.get_data(ProjectileManager.Types.DRUID_MAGIC).dmg += 1
+			add_projectile_damage(ProjectileManager.Types.DRUID_MAGIC, 1)
 			
 		Types.DRUID_MAGIC_SPD:
 			projectile_manager.get_data(ProjectileManager.Types.DRUID_MAGIC).spd += 15
 			
+		Types.DRUID_XP:
+			player_cell_manager.get_data(PlayerCellData.Types.DRUID).xp_increase += 1
+			
+		Types.LUMBERJACK_WOOD_SPANW:
+			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).spawn_wood_chance += 25
+			
+func add_projectile_damage(type: ProjectileManager.Types, amount: int) -> void:
+	damage_manager.add_flat_damage_bonus(type, 1)
 	

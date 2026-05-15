@@ -9,12 +9,14 @@ var mod_data: ProjectileDataModifiers
 var damage_data: Dictionary
 var dmg: float = 0
 var spd: int = 0
+var crit_mult: int = 0
 var init_pos: Vector2
-var dmg_mult: int = 1
+var crit_chance: int = 1
 var p_owner: PlayerCell
 var pierced: int = 0
 var ignore: Array = []
 var weakening: bool = false
+var base_mult: int = 1
 static var particle_container: Node2D
 
 func _ready() -> void:
@@ -23,7 +25,10 @@ func _ready() -> void:
 	init_pos = global_position
 	dmg = data.dmg
 	spd += data.spd
-
+	base_mult = damage_data[DamageManager.DamageDataTypes.MULT]
+	if p_owner:
+		damage_data["owner"] = p_owner
+	
 func _physics_process(delta: float) -> void:
 	move(delta)
 	check_max_range()
@@ -43,13 +48,20 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO, data.r, Color.DARK_GRAY)
 
 func before_hitted(cell: CellResource = null) -> void:
-	if dmg_mult > 1:
-		apply_crit()
+	apply_crit()
 	
 func after_hitted(cell: CellResource = null) -> void:
 	particle_container.add_child(HitCircle.new(global_position))
 	pierced += 1
+		
+	if mod_data.ricochet_after_kill:
+		if cell.hp <= 0:
+			ricochet(cell)
+			return
 			
+#	if ricochet(cell):
+#		return
+		
 	if pierced >= data.max_piercings + 1:
 		die()
 
@@ -60,18 +72,14 @@ func die() -> void:
 	queue_free()
 
 func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
-#	if !mod_data.add_overwrite.is_empty():
-#		damage_data.add = {}
-#		for k in mod_data.add_overwrite:
-#			damage_data.add[k] = dmg * mod_data.add_overwrite[k]
-#
-#	if !mod_data.sub_overwrite.is_empty():
-#		damage_data.sub = {}
-#		for k in mod_data.sub_overwrite:
-#			damage_data.sub[k] = dmg * mod_data.sub_overwrite[k]
-		
-	_area.hitted.emit(damage_data)
-#	apply_effects(cell)
+	if cell.weakened:
+		damage_data[DamageManager.DamageDataTypes.MULT] += mod_data.weakened_dmg_mod
+	
+	_area.hitted.emit(damage_data, get_spread_damage_data())
+	apply_effects(cell)
+
+func get_spread_damage_data() -> Dictionary:
+	return {"to":  mod_data.spread_damage_to, "ratio": mod_data.spread_damage_ratio}
 
 func apply_effects(cell: CellResource) -> void:
 	if weakening:
@@ -82,16 +90,18 @@ func apply_effects(cell: CellResource) -> void:
 			
 			return
 			
-		cell.set_weaken(true)
+		cell.set_weakened(true)
 	
 	if cell.weakened:
 		if mod_data.reduce_cd_if_weakened:
 			p_owner.reduce_cd_time(mod_data.reduce_cd_if_weakened)
 		
+	
 
 func apply_crit() -> void:
-	dmg *= dmg_mult
-	G.crit_label_requested.emit(global_position)
+	if randi() % 100 < crit_chance:
+		damage_data[DamageManager.DamageDataTypes.MULT] += crit_mult
+		G.crit_label_requested.emit(global_position)
 
 func _on_area_entered(a: Area2D) -> void:
 	var cell: CellResource = a.owner
@@ -104,9 +114,26 @@ func _on_area_entered(a: Area2D) -> void:
 	
 func set_disabled(_disabled: bool) -> void:
 	collision.disabled = _disabled
+
+func get_dmg() -> float:
+	dmg = 0
+	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
+		for type in damage_data[dmg_type]:
+			for stat in damage_data[dmg_type][type]:
+				dmg += damage_data[dmg_type][type][stat]
+	
+	return dmg
+
+func div_dmg(amount: int) -> void:
+	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
+		for type in damage_data[dmg_type]:
+			for stat in damage_data[dmg_type][type]:
+				damage_data[dmg_type][type][stat] = floor(damage_data[dmg_type][type][stat] / amount)
+
 # todo
-func ricochet(cell: CellResource = null) -> bool:
-	if dmg <= 0:
+func ricochet(cell: CellResource = null, div_dmg: bool = true) -> bool:
+	damage_data[DamageManager.DamageDataTypes.MULT] = base_mult
+	if get_dmg() <= 0:
 		die()
 		
 	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center(cell)
@@ -114,5 +141,7 @@ func ricochet(cell: CellResource = null) -> bool:
 		return false
 		
 	dir = global_position.direction_to(target_cell_pos) 
-	dmg = floor(dmg / 2)
+	if div_dmg:
+		div_dmg(2)
+	
 	return true

@@ -5,20 +5,25 @@ const MAX_ACCURACY: int = 12
 var data: PlayerCellData
 # individual data
 var cooldown_reduction: float = 0
-var weakening_chance: float = 0
-var weakened_dmg_mod: float = 1.4
+var weakening_chance: int = 0
+var weakened_dmg_mod: float = 0.4
 var ricohcet_if_weakened: bool = false
 var reduce_cd_if_weakened: float = 0
-var auto_weakening_chance: float = 0
+var auto_weakening_chance: int = 0
 var special_attack_count: int = 0
-var add_bullet_spd: int = 0
-var projectile_add_overwrite: Dictionary = {} # {DamageData.Values.value: v} -> projectile_dmg * v
-var projectile_sub_overwrite: Dictionary = {}
+var bonus_bullet_spd: int = 0
+var bonus_crit_chance: int = 0
+var ricochet_after_kill: bool = false
+var auto_aim: bool = false
+var bonus_attacks: int = 0
+var spread_damage_ratio: float = 0
+var spread_damage_to: float = 0
+var spawn_tree_on_overheal_chance: int = 0
+
 #################
 var bonus_damage: Dictionary = {}
 ##############
 var projectile_mod_data: ProjectileDataModifiers
-var damage_data: DamageData
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
 @onready var timer: Timer = $Timer
 @onready var progress_bar: ProgressBar = $ProgressBar
@@ -36,6 +41,7 @@ var type_name: String
 var xp: float = 0
 var lvl: int = 0
 var lvl_tokens: int = 0
+var disabled: bool = false
 @onready var upgrade_arrow: Polygon2D = $UpgradeArrow
 
 static var manager
@@ -43,6 +49,17 @@ static var projectile_manager: ProjectileManager
 
 func _ready() -> void:
 	set_physics_process(false)
+	projectile_mod_data = ProjectileDataModifiers.new(
+		weakened_dmg_mod, 
+		weakening_chance, 
+		ricohcet_if_weakened,
+		reduce_cd_if_weakened,
+		bonus_bullet_spd,
+		ricochet_after_kill,
+		spread_damage_ratio,
+		spread_damage_to,
+		)
+		
 	if !data:
 		panel.hide()
 		panel_not_active.show()
@@ -83,7 +100,6 @@ func _on_pressed() -> void:
 		
 	G.player_cell_pressed.emit(self)
 	
-	
 func add_xp() -> void:
 	xp += data.xp_increase - float(lvl) / 10
 	if xp >= 100:
@@ -111,43 +127,29 @@ func start_multi_attack_timer() -> void:
 	timer_multi_attack.start()
 
 func attack() -> void:
+	if disabled:
+		return
+		
 	call(type_name + "_attack")
-#	if auto_weakening_chance > 0:
-#		if special_attack_count < 1:
-#			special_attack_count += 1
-#			if randf_range(0, 1) < auto_weakening_chance:
-#				start_multi_attack_timer()
-#				return
-#
-#		special_attack_count = 0
-#
+	if auto_weakening_chance > 0:
+		if special_attack_count < 1:
+			special_attack_count += 1
+			if randi() % 100 < auto_weakening_chance:
+				start_multi_attack_timer()
+				return
+
+		special_attack_count = 0
+
 	attack_count += 1
-	if attack_count < data.attacks:
+	if attack_count < data.attacks + bonus_attacks:
 		start_multi_attack_timer()
 		return
 
 	attack_count = 0
 	start_cd_timer()
 	
-func set_damage_data(_data: DamageData) -> void:
-	damage_data = _data
-	
 func set_data(_data: PlayerCellData) -> void:
 	data = _data
-#	match data.type:
-#		PlayerCellData.Types.DRUID:
-#			projectile_add_overwrite = {DamageData.Values.LIFE_TIME: 3}
-#			projectile_sub_overwrite = {DamageData.Values.HP: 0}
-			
-	projectile_mod_data = ProjectileDataModifiers.new(
-		weakened_dmg_mod, 
-		weakening_chance, 
-		ricohcet_if_weakened,
-		reduce_cd_if_weakened,
-		add_bullet_spd,
-		projectile_add_overwrite,
-		projectile_sub_overwrite,
-		)
 		
 	panel.show()
 	panel_not_active.hide()
@@ -173,11 +175,12 @@ func _on_timeout() -> void:
 func _on_multi_attack_timeout() -> void:
 	attack()
 
-func get_bullet_mult() -> int:
-	if randf_range(0, 100) <= data.crit_chance:
-		return data.crit_mult
-	
-	return 1
+func get_bullet_crit_chance() -> float:
+	return data.crit_chance + bonus_crit_chance
+#	if randf_range(0, 100) <= (data.crit_chance + bonus_crit_chance):
+#		return data.crit_mult
+#
+#	return 0
 
 func get_bullet_pos() -> Vector2:
 	return bullet_pos_marker.global_position
@@ -193,10 +196,13 @@ func get_attack_dir_to_mouse() -> Vector2:
 	return bullet_dir
 	
 func get_dir(pos: Vector2) -> Vector2:
-	return get_attack_dir_to_mouse() if !data.autoattack else pos.direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
+	if auto_aim || data.autoattack:
+		return get_dir_to_rand_cell()
 	
-func get_dir_to_rand_cell(pos: Vector2) -> Vector2:
-	return pos.direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
+	return get_attack_dir_to_mouse()
+	
+func get_dir_to_rand_cell() -> Vector2:
+	return get_bullet_pos().direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
 
 func reduce_cd_time(amount: float) -> void:
 	var time_left: float = timer.time_left
@@ -210,17 +216,17 @@ func reduce_cd_time(amount: float) -> void:
 	timer.start()
 	
 func add_dir_projectile(function: Callable) -> void:
-	function.call(get_bullet_pos(), get_bullet_mult(), get_dir(get_bullet_pos()), projectile_mod_data, bonus_damage,self)
+	function.call(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, get_dir(get_bullet_pos()), projectile_mod_data, bonus_damage,self)
 	
 # shooter
 ##################################
 func shooter_attack() -> void:
-#	if special_attack_count == 1:
-#		var init_chance: float = projectile_mod_data.weakening_chance
-#		projectile_mod_data.weakening_chance = 1
-#		projectile_manager.add_bullet(get_bullet_pos(), get_bullet_mult(), get_dir_to_rand_cell(get_bullet_pos()), projectile_mod_data, self)
-#		projectile_mod_data.weakening_chance = init_chance
-#		return
+	if special_attack_count == 1:
+		var init_chance: int = projectile_mod_data.weakening_chance
+		projectile_mod_data.weakening_chance = 100
+		projectile_manager.add_bullet(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, get_dir_to_rand_cell(), projectile_mod_data, bonus_damage, self)
+		projectile_mod_data.weakening_chance = init_chance
+		return
 		
 	add_dir_projectile(projectile_manager.add_bullet)
 		
@@ -232,7 +238,7 @@ func rogue_attack() -> void:
 # wizard
 ##################################
 func wizard_attack() -> void:
-	projectile_manager.add_magic(get_bullet_pos(), get_bullet_mult(), 
+	projectile_manager.add_magic(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, 
 	G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self )
 
 # druid

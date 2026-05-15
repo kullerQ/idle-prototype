@@ -2,7 +2,7 @@ extends Projectile
 class_name Axe
 
 var target_pos: Vector2
-var dmg_percent: float = 0
+var dmg_ratio: float = 0
 static var bounce: bool = false
 
 func _ready() -> void:
@@ -31,6 +31,12 @@ func move(delta: float) -> void:
 		spd = 0
 		set_disabled(false)
 
-func before_hitted(cell: CellResource = null) -> void:
-	dmg = (cell.data.durability * dmg_percent)
-	super()
+#func before_hitted(cell: CellResource = null) -> void:
+#	dmg = (cell.data.durability * dmg_ratio)
+#	super()
+
+func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
+	damage_data[DamageManager.DamageDataTypes.BASE][DamageManager.Types.HIT][DamageManager.Stats.HP] = round(float(cell.data.durability) * dmg_ratio)
+	_area.hitted.emit(damage_data, get_spread_damage_data())
+	
+	

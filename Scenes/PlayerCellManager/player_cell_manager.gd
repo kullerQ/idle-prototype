@@ -50,6 +50,7 @@ func _ready() -> void:
 	
 #	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
 	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
+
 	cell_lvled_up.connect(_on_cell_lvled_up)
 	cell_upgraded.connect(_on_cell_upgraded)
 #	fill_grid(PlayerCellData.Types.SHOOTER)
@@ -105,9 +106,6 @@ func add_tower(type: PlayerCellData.Types, cell: PlayerCell = null) -> void:
 
 	
 	cell.set_data(all_data[type])
-	if type == PlayerCellData.Types.DRUID:
-		cell.bonus_damage = damage_manager.tower_bonus_damage_presets[DamageManager.TowerPresets.DRUID_LIFE_TIME]
-		
 	occupy_cell(cell)
 #	if damage_mod_data.has(type):
 #		cell.set_damage_data(damage_mod_data[type].duplicate())
@@ -115,8 +113,6 @@ func add_tower(type: PlayerCellData.Types, cell: PlayerCell = null) -> void:
 #		cell.set_damage_data(damage_mod_data[0])
 #		print("null dmg data")
 		
-
-
 func add_free_cell() -> void:
 	if h_idx >= columns:
 		return

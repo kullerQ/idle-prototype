@@ -56,9 +56,8 @@ func _input(event):
 				if !cell:
 					return
 					
-				if cell.data.type != PlayerCellData.Types.DRUID:
-					return
-					
-				G.player_cell_manager.set_cell_bonus_damage_preset(cell, DamageManager.TowerPresets.DRUID_DURAB)
+				cell.disabled = !cell.disabled
+#				DamageManager.add_hit_hp(cell.bonus_damage, 1)
+#				G.player_cell_manager.set_cell_bonus_damage_preset(cell, DamageManager.TowerPresets.DRUID_DURAB)
 
 				

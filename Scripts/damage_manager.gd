@@ -12,7 +12,8 @@ enum Types {
 
 enum DamageDataTypes {
 	BASE,
-	BONUS
+	BONUS,
+	MULT,
 }
 
 enum TowerPresets {
@@ -22,15 +23,16 @@ enum TowerPresets {
 
 var projectile_damage_data: Dictionary = {
 	ProjectileManager.Types.BULLET: {
-		DamageDataTypes.BASE: {
-			Types.HEAL: {},
-			Types.HIT: {},
-		},
-		DamageDataTypes.BONUS: {
-			Types.HEAL: {},
-			Types.HIT: {},
-		},
-	},
+#		DamageDataTypes.BASE: {
+#			Types.HEAL: {},
+#			Types.HIT: {},
+#		},
+#		DamageDataTypes.BONUS: {
+#			Types.HEAL: {},
+#			Types.HIT: {},
+#		},
+#		DamageDataTypes.MULT: 1
+	}
 }
 
 var tower_bonus_damage_presets: Dictionary = {}
@@ -52,21 +54,41 @@ static func new_damage_data(heal_data: Dictionary, hit_data: Dictionary) -> Dict
 static func add_hit_hp(data: Dictionary, amount: float) -> void:
 	data[Types.HIT][Stats.HP] += amount
 
+static func print_data(data: Dictionary) -> void:
+	var dtk: Array = DamageDataTypes.keys()
+	var tk: Array = Types.keys()
+	var sk: Array = Stats.keys()
+	print("###")
+	for damage_type in data:
+		if damage_type == DamageDataTypes.MULT:
+			return
+			
+		print("\nx Damage type: %s" %dtk[damage_type])
+		for type in data[damage_type]:
+			print("= type: %s" %tk[type])
+			for stat in data[damage_type][type]:
+				print("# stat: %s value: %d" %[sk[stat], data[damage_type][type][stat]])
+
+func add_mult(projectile_type: ProjectileManager.Types, amount: int) -> void:
+	projectile_damage_data[projectile_type][DamageDataTypes.MULT] += amount
+
+func set_mult(projectile_type: ProjectileManager.Types, mult: int = 1) -> void:
+	projectile_damage_data[projectile_type][DamageDataTypes.MULT] = mult
+
 func initialize() -> void:
 	for i in range(1, ProjectileManager.Types.size()):
 		flat_damage_bonus[i] = 0
 		
-	for projcetilein in range(1, ProjectileManager.Types.size()):
-		projectile_damage_data[projcetilein] = {}
-		for damage_data_type in DamageDataTypes:
-			projectile_damage_data[projcetilein][damage_data_type] = {}
-			for type in Types:
-				projectile_damage_data[projcetilein][damage_data_type][type] = {}
+	for projcetile in range(1, ProjectileManager.Types.size()):
+		projectile_damage_data[projcetile] = {}
+		for damage_data_type in DamageDataTypes.size():
+			projectile_damage_data[projcetile][damage_data_type] = {}
+			for type in Types.size():
+				projectile_damage_data[projcetile][damage_data_type][type] = {}
 		
-	new_base_bullet_data()
-	new_base_druid_magic_data()
-	new_tower_preset(TowerPresets.DRUID_LIFE_TIME, new_damage_data(new_data(0, 10), new_data()))
-	new_tower_preset(TowerPresets.DRUID_DURAB, new_damage_data(new_data(10, 0), new_data(0, 1)))
+	new_base_data(ProjectileManager.Types.BULLET, new_data(), new_data(1))
+	new_base_data(ProjectileManager.Types.DRUID_MAGIC, new_data(0, 1))
+	new_base_data(ProjectileManager.Types.AXE)
 
 func new_tower_preset(tower_preset: TowerPresets, damage_data: Dictionary) -> void:
 	tower_bonus_damage_presets[tower_preset] =  damage_data
@@ -74,21 +96,10 @@ func new_tower_preset(tower_preset: TowerPresets, damage_data: Dictionary) -> vo
 func new_projectile_damage_data(data_type: DamageDataTypes, projectile_type: ProjectileManager.Types, damage_data: Dictionary) -> void:
 	projectile_damage_data[projectile_type][data_type] = damage_data
 
-func new_base_bullet_data() -> void:
-	var base_heal_data: Dictionary = new_data()
-	var base_hit_data: Dictionary = new_data(1)
-	var bonus_heal_data: Dictionary = new_data()
-	var bonus_hit_data: Dictionary = new_data()
-	new_projectile_damage_data(DamageDataTypes.BASE, ProjectileManager.Types.BULLET, new_damage_data(base_heal_data, base_hit_data))
-	new_projectile_damage_data(DamageDataTypes.BONUS, ProjectileManager.Types.BULLET, new_damage_data(bonus_heal_data, bonus_hit_data))
-
-func new_base_druid_magic_data() -> void:
-	var base_heal_data: Dictionary = new_data()
-	var base_hit_data: Dictionary = new_data()
-	var bonus_heal_data: Dictionary = new_data()
-	var bonus_hit_data: Dictionary = new_data()
-	new_projectile_damage_data(DamageDataTypes.BASE, ProjectileManager.Types.DRUID_MAGIC, new_damage_data(base_heal_data, base_hit_data))
-	new_projectile_damage_data(DamageDataTypes.BONUS, ProjectileManager.Types.DRUID_MAGIC, new_damage_data(bonus_heal_data, bonus_hit_data))
+func new_base_data(type: ProjectileManager.Types, base_heal_data: Dictionary = new_data(), base_hit_data: Dictionary = new_data(), bonus_heal_data: Dictionary = new_data(), bonus_hit_data: Dictionary = new_data()) -> void:
+	new_projectile_damage_data(DamageDataTypes.BASE, type, new_damage_data(base_heal_data, base_hit_data))
+	new_projectile_damage_data(DamageDataTypes.BONUS, type, new_damage_data(bonus_heal_data, bonus_hit_data))
+	set_mult(type)
 
 func get_damage_data(projectile_type: ProjectileManager.Types) -> Dictionary:
 	return projectile_damage_data[projectile_type]

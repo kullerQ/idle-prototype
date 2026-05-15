@@ -37,32 +37,35 @@ func get_data(type: Types) -> ProjectileData:
 	return projectile_data[type]
 	
 # todo refactor effects
-func new_projectile(pos: Vector2, type: Types, mult: int, _mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
+func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, _mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
 	var projectile: Projectile = projectile_scenes[type].instantiate()
 	projectile.data = projectile_data[type]
-	projectile.dmg_mult = mult
+	projectile.crit_chance = crit_chance
+	projectile.crit_mult = crit_mult - 1
 	projectile.global_position = pos
 	var damage_data: Dictionary = damage_manager.get_damage_data(type).duplicate(true)
 	var base_damage_bonus: Dictionary = damage_data[DamageManager.DamageDataTypes.BONUS]
 	for damage_type in bonus_damage:
 		for stat in bonus_damage[damage_type]:
 			var value: float = bonus_damage[damage_type][stat]
-			base_damage_bonus[damage_type][stat] += damage_manager.flat_damage_bonus[type] +  value
+			base_damage_bonus[damage_type][stat] += value
+			if damage_data[DamageManager.DamageDataTypes.BASE][damage_type][stat] > 0:
+				base_damage_bonus[damage_type][stat] += damage_manager.flat_damage_bonus[type]
 		
 	projectile.damage_data = damage_data
+	if _mod_data.weakening_chance > 0:
+		projectile.weakening = true if randi() % 100 < _mod_data.weakening_chance else false
+
+	projectile.mod_data = _mod_data
 	return projectile
-#	if _mod_data.weakening_chance > 0:
-#		projectile.weakening = true if randf_range(0, 1) < _mod_data.weakening_chance else false
-#
-#	projectile.mod_data = _mod_data
 	
-func new_resource_projectule(pos: Vector2, type: Types, mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array) -> Projectile:
-	var projectile: Projectile = new_projectile(pos, type, mult, mod_data, bonus_damage)
+func new_resource_projectule(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array) -> Projectile:
+	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.ignore = _ignore
 	return projectile
 
-func new_player_projectle(pos: Vector2, type: Types, mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> Projectile:
-	var projectile: Projectile = new_projectile(pos, type, mult, mod_data, bonus_damage)
+func new_player_projectle(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> Projectile:
+	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.p_owner = _owner
 #	if damage_mod_data:
 #		damage = damage_mod_data.apply(damage_data)
@@ -73,32 +76,32 @@ func new_player_projectle(pos: Vector2, type: Types, mult: int, mod_data: Projec
 func add_projectile(projectile: Projectile) -> void:
 	projectile_container.call_deferred("add_child", projectile)
 
-func add_bullet(pos: Vector2, mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary,  _owner: PlayerCell) -> void:
-	var bullet: Bullet = new_player_projectle(pos, Types.BULLET, mult, mod_data, bonus_damage, _owner)
-	bullet.spd = mod_data.add_bullet_spd
+func add_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary,  _owner: PlayerCell) -> void:
+	var bullet: Bullet = new_player_projectle(pos, Types.BULLET, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	bullet.spd = mod_data.bonus_bullet_spd
 	bullet.dir = _dir
 	add_projectile(bullet)
 #
-#func add_knife(pos: Vector2, mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
-#	var knife: Knife = new_player_projectle(pos, Types.KNIFE, mult, mod_data, _owner)
+#func add_knife(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
+#	var knife: Knife = new_player_projectle(pos, Types.KNIFE, crit_chance, crit_chance, mod_data, _owner)
 #	knife.dir = _dir
 #	add_projectile(knife)
 #
-#func add_magic(pos: Vector2, mult: int, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
-#	var magic: Magic = new_player_projectle(pos, Types.MAGIC, mult, mod_data, _owner)
+#func add_magic(pos: Vector2, crit_chance: int, crit_mult: int, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
+#	var magic: Magic = new_player_projectle(pos, Types.MAGIC, crit_chance, crit_chance, mod_data, _owner)
 #	magic.target_pos = _target_pos
 #	add_projectile(magic)
 #
-func add_druid_magic(pos: Vector2, mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
-	var druid_magic: DruidMagic = new_player_projectle(pos, Types.DRUID_MAGIC, mult, mod_data, bonus_damage, _owner)
+func add_druid_magic(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
+	var druid_magic: DruidMagic = new_player_projectle(pos, Types.DRUID_MAGIC, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	druid_magic.dir = _dir
 	add_projectile(druid_magic)
 #
-#func add_resource_axe(pos: Vector2, mult: int, _dmg_percent: float, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array) -> void:
-#	var axe: Axe = new_resource_projectule(pos, Types.AXE, mult, mod_data,  _ignore)
-#	axe.target_pos = _target_pos
-#	axe.dmg_percent = _dmg_percent
-#	add_projectile(axe)
+func add_resource_axe(pos: Vector2, crit_chance: int, crit_mult: int, _dmg_ratio: float, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array) -> void:
+	var axe: Axe = new_resource_projectule(pos, Types.AXE, crit_chance, crit_mult, mod_data, {}, _ignore)#projectile_scenes[Types.AXE].instantiate()
+	axe.target_pos = _target_pos
+	axe.dmg_ratio = _dmg_ratio
+	add_projectile(axe)
 	
 
 	
