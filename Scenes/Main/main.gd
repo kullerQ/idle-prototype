@@ -26,6 +26,10 @@ func _input(event):
 				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_TREE)
 			KEY_Z:
 				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_LUMBERJACK)
+			KEY_B:
+				var cell_manager: CellManager = G.cell_manager
+				cell_manager.lvlup_cell_at(cell_manager.get_cell_coords_from_global_pos(get_global_mouse_position()))
+#				cell_manager.get_cell_from_global_pos(get_global_mouse_position()).set_weakened(true)
 			KEY_5:
 				var m: CellManager = G.cell_manager
 				for i in range(10):
@@ -44,6 +48,8 @@ func _input(event):
 				G.player_cell_manager.add_tower(PlayerCellData.Types.WIZARD)
 			KEY_D:
 				G.player_cell_manager.add_tower(PlayerCellData.Types.DRUID)
+			KEY_E:
+				G.player_cell_manager.add_tower(PlayerCellData.Types.EXECUTIONER)
 			KEY_C:
 				var cell: PlayerCell = G.player_cell_manager.highlighted_cell
 				if !cell:

@@ -7,6 +7,7 @@ enum Types {
 	ROGUE,
 	WIZARD,
 	DRUID,
+	EXECUTIONER,
 }
 @export var cooldown: float
 @export var projectile_type: ProjectileManager.Types

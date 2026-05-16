@@ -7,6 +7,7 @@ var nodes: Dictionary = {}
 var unlocked_node_count: int = 0
 var tw: Tween
 @onready var highlight_label: Label = G.upgrades_highlight_label
+#todo remove G dependency
 @onready var economy: Economy = G.economy
 
 func _ready() -> void:

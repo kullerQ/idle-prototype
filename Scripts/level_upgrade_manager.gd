@@ -19,6 +19,8 @@ enum Types {
 	SHOOTER_SUP_5,
 	SHOOTER_SUP_6,
 	DRUID_OVERHEAL_SPAWN_WEAK,
+	DRUID_SPAWN_WOOD_RIGHT,
+	DRUID_OVERHEAL_LVLUP,
 }
 
 var descriptions: Dictionary = {
@@ -35,6 +37,8 @@ var descriptions: Dictionary = {
 	Types.SHOOTER_DPS_RICOCHET: "ricochets when kills cell",
 	Types.SHOOTER_DPS_DMG: "bullet speed -30, bullet damage +10",
 	Types.DRUID_OVERHEAL_SPAWN_WEAK: "if overheals: 25% chance to spawn weakened wood resource",
+	Types.DRUID_SPAWN_WOOD_RIGHT: "+10% chance to spawn wood to the right of healed cell",
+	Types.DRUID_OVERHEAL_LVLUP: "if overheals: 35% chance to upgrade cell",
 }
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
@@ -78,6 +82,13 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 		Types.DRUID_OVERHEAL_SPAWN_WEAK: 
 			cell.weakening_chance = 100
 			cell.spawn_tree_on_overheal_chance += 25
+
+		Types.DRUID_SPAWN_WOOD_RIGHT: 
+			cell.spawn_wood_to_the_right_chance += 10
+			
+		Types.DRUID_OVERHEAL_LVLUP: 
+			cell.cell_lvlup_chance += 35
+			
 #			"if overheals: 25% chance to spawn weakened wood resource",
 #			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}
 #			cell.projectile_mod_data.sub_overwrite = {DamageData.Values.LIFE_TIME: 1}

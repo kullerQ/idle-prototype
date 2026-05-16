@@ -65,6 +65,7 @@ func initialize() -> void:
 	########################################
 	projectile_manager = ProjectileManager.new()
 	projectile_manager.damage_manager = damage_manager
+	projectile_manager.cell_manager = cell_manager
 	PlayerCell.projectile_manager = projectile_manager
 	upgrade_manager.projectile_manager = projectile_manager
 	########################################

@@ -20,6 +20,7 @@ var all_data: Dictionary = {
 	Names.SPECIAL_LUMBERJACK: load("uid://tcqsywu5xh4d"),
 }
 
+var row_count: int = 0
 var cells: Dictionary = {}
 var free_cells: Array = []
 var occupied_cells: Array = []
@@ -28,14 +29,15 @@ var spawned_special_cells: Dictionary = {
 	Names.SPECIAL_LUMBERJACK: [],
 }
 var far_cells: Array
-var weights: Dictionary = {
-	Types.WOOD:
-		{
-			0: 0, # total weight
-			Names.WOOD_TREE: 20,
-			Names.WOOD_GROVE: 0,
-		},
+var tiers: Dictionary = {
+	Types.WOOD: {
+		0: 0, # total weight
+		Names.WOOD_TREE: {"weight": 20, "tier": 1},
+		Names.WOOD_GROVE: {"weight": 0, "tier": 2},
+		
+	},
 }
+
 var separation: Vector2
 var max_lumberjack_count: int = 1
 var economy : Economy
@@ -60,9 +62,10 @@ func _ready():
 			
 		coords.x += 1
 	
-	for curr in weights.values():
+	row_count = cells.keys().back().y
+	for curr in tiers.values():
 		for i in range(1, curr.size()):
-			curr[0] += curr[i]
+			curr[0] += curr[i].weight
 	
 	for i in range(1, Types.size()):
 		occupied_cells_types[i] = []
@@ -129,104 +132,29 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 							
 						DamageManager.Stats.LIFE_TIME:
 							var overheal: float = c.add_life_time(value)
-							if overheal > 0.1:
-								print(overheal)
-								var _owner: PlayerCell = damage_data.owner
-								if _owner.data.type == PlayerCellData.Types.DRUID:
-									var spawn_tree_on_overheal_chance = _owner.spawn_tree_on_overheal_chance
-									if spawn_tree_on_overheal_chance > 0:
-										if randi() % 100 < spawn_tree_on_overheal_chance:
-											var new_cell: CellResource = add_rand_resource(Types.WOOD)
-											if randi() % 100 < _owner.weakening_chance:
-												new_cell.set_weakened(true)
-									
+							var _owner: PlayerCell = damage_data.owner
+							if _owner.data.type == PlayerCellData.Types.DRUID:
+								if overheal > 0.1:
+										var cell_lvlup_chance: int = _owner.cell_lvlup_chance
+										if cell_lvlup_chance > 0:
+											if randi() % 100 < cell_lvlup_chance:
+												lvlup_cell(c)
+										
+										var spawn_tree_on_overheal_chance: int = _owner.spawn_tree_on_overheal_chance
+										if spawn_tree_on_overheal_chance > 0:
+											if randi() % 100 < spawn_tree_on_overheal_chance:
+												var new_cell: CellResource = add_rand_resource(Types.WOOD)
+												if randi() % 100 < _owner.weakening_chance:
+													new_cell.set_weakened(true)
+													
+								var spawn_wood_to_the_right_chance: int = _owner.spawn_wood_to_the_right_chance
+								if spawn_wood_to_the_right_chance > 0:
+									if randi() % 100 < spawn_wood_to_the_right_chance:
+										add_rand_resource_at(cells.find_key(c) + Vector2i.RIGHT, Types.WOOD) 
+										
 	
 	if cell.hp <= 0:
 		cell_died.emit(cell)
-		
-		
-#		for stat in type:
-#			for v in stat:
-#				pass
-#				print(v)
-				
-#	cell.sub_hp(damage_data[DamageManager.Types.HIT][DamageManager.Stats.HP])
-#	cell.add_hp(damage_data[DamageManager.Types.HEAL][DamageManager.Stats.HP])
-
-#	var data: CellResourceData = cell.data
-#
-#	var hp: int = cell.hp
-#
-#	match data._name:
-#		Names.SPECIAL_LUMBERJACK:
-#			return
-#
-#	for i in damage:
-#		var v: float = damage[i]
-#		if !v:
-#			return
-#
-#		match i:
-#			DamageData.Stats.HP:
-#				if v < 0:
-#					cell.add_hp(v)
-#
-#				if v > 0:
-#					cell.sub_hp(v)
-#					add_res(data.type, min(hp, data.value * v))
-					
-					
-					
-					
-		
-#	var dmg: Dictionary = dmg_data.dmg
-#	var heal: Dictionary = dmg_data.heal
-#################################
-#	for change_v in dmg:
-#		var value: float = dmg[change_v]
-#		if !value:
-#			continue
-#
-#		if cell.weakened:
-#			value = round(value * dmg_data.weakened_mod)
-#
-#		match change_v:
-#			DamageData.Values.HP:
-#				cell.sub_hp(value)
-#				add_res(data.type, min(hp, data.value * value))
-#
-#			DamageData.Values.LIFE_TIME:
-#				var overkill: float = cell.sub_life_time(value)
-#
-#####################################
-#	for change_v in heal:
-#		var value: float = heal[change_v]
-#		if !value:
-#			continue
-#
-#		if cell.weakened:
-#			value = round(value * dmg_data.weakened_mod)
-#
-#		match change_v:
-#			DamageData.Values.HP:
-#				cell.add_hp(value)
-#
-#			DamageData.Values.LIFE_TIME:
-#				var overheal: float = cell.add_life_time(value)
-#				if overheal:
-#					var other_cell: CellResource = get_rand_occupied_cell(cell)
-#					if !other_cell:
-#						return
-#
-#					for i in occupied_cells:
-#						overheal = i.add_life_time(overheal)
-#						if overheal <= 0:
-#							break
-#
-#				return
-#
-#	if cell.hp <= 0:
-#		cell_died.emit(cell)
 
 func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
 	match data._name:
@@ -261,6 +189,9 @@ func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float
 		exclude = cell
 
 	return cells
+
+func get_cell_from_global_pos(pos: Vector2) -> CellResource:
+	return cells[get_cell_coords_from_global_pos(pos)]
 
 func get_cell_coords_from_global_pos(pos: Vector2) -> Vector2i:
 	return floor((pos - global_position) / (CELL_SIZE + separation))
@@ -304,29 +235,29 @@ func add_cell_weight(_name: Names, amount: int, type: Types = 0) -> void:
 		type = get_type_from_name(_name)
 		assert(type != 0)
 
-	set_cell_weight(_name, weights[type][_name] + amount, type)
+	set_cell_weight(_name, tiers[type][_name].weight + amount, type)
 
 func sub_cell_weight(_name: Names, amount: int, type: Types = 0) -> void:
 	if type == 0:
 		type = get_type_from_name(_name)
 		assert(type != 0)
 
-	set_cell_weight(_name, weights[type][_name] - amount, type)
+	set_cell_weight(_name, tiers[type][_name].weight - amount, type)
 
 func set_cell_weight(_name: Names, value: int, type: Types = 0) -> void:
 	if type == 0:
 		type = get_type_from_name(_name)
 		assert(type != 0)
 
-	weights[type][0] -= weights[type][_name] - value # total weight
-	weights[type][_name] = value
-
+	tiers[type][0] -= tiers[type][_name].weight - value # total weight
+	tiers[type][_name].weight = value
+	
 func get_rand_name(type: Types) -> Names:
-	var w: Array = weights[type].values()
+	var w: Array = tiers[type].values()
 	var roll: int = randi_range(0, w[0] - 1)
 	var _name: Names = 0
 	for i in range(1, w.size()):
-		var value: int = w[i]
+		var value: int = w[i].weight
 		if roll < value:
 			_name = i
 			break
@@ -336,7 +267,6 @@ func get_rand_name(type: Types) -> Names:
 	assert(_name != 0)
 	return _name
 	
-
 func add_rand_resource(type: Types) -> CellResource:
 	if free_cells.is_empty():
 		return
@@ -346,7 +276,7 @@ func add_rand_resource(type: Types) -> CellResource:
 	return cell
 
 func add_rand_resource_at(coords: Vector2i, type: Types) -> void:
-	var cell: CellResource = cells[coords]
+	var cell: CellResource = cells.get(coords, null)
 	if !free_cells.has(cell):
 		return
 	
@@ -382,13 +312,20 @@ func before_set_cell_data(data: CellResourceData) -> bool:
 				return false
 				
 	return true
-	
 
-func set_cell_data(cell: CellResource, data: CellResourceData) -> void:
+func reset_cell_data(cell: CellResource, data: CellResourceData, old_data: CellResourceData) -> void:
+	var args: Dictionary = {
+		"sub_hp": old_data.durability - cell.hp, 
+		"sub_life_time": old_data.life_time - cell.timer.time_left, 
+		"effects": [cell.weakened]
+	}
+	set_cell_data(cell, data, args)
+
+func set_cell_data(cell: CellResource, data: CellResourceData, args: Dictionary = {"sub_hp": 0, "sub_life_time": 0, "effects": [] })  -> void:
 #	if !before_set_cell_data(data):
 #		return
 #
-	cell.set_data(data)
+	cell.set_data(data, args)
 	
 func free_cell(cell: CellResource) -> void:
 	if free_cells.has(cell):
@@ -442,6 +379,25 @@ func respawn_res_at_rand_cell(cell: CellResource) -> void:
 	var data: CellResourceData = all_data[cell.data._name]
 	free_cell(cell)
 	set_cell_data(new_cell, data)
+
+func lvlup_cell(cell: CellResource) -> void:
+	if !occupied_cells.has(cell):
+		return
+	
+	var cell_data: CellResourceData = cell.data
+	var tier_keys: Array = tiers[cell_data.type].keys()
+	var tier: int = tiers[cell_data.type][cell_data._name].tier
+	if tier >= tier_keys.size() - 1:
+		return
+	
+	reset_cell_data(cell, get_data(tier_keys[tier + 1]), cell_data)
+
+func lvlup_cell_at(coords: Vector2i) -> void:
+	var cell: CellResource = cells[coords]
+	if !cell.data:
+		return
+	
+	lvlup_cell(cell)
 
 #func add_max_lumberjack_count(amount: int) -> void:
 #	set_max_lumberjack_count(max_lumberjack_count + amount)

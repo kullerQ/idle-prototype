@@ -9,6 +9,7 @@ var all_data: Dictionary = {
 	PlayerCellData.Types.ROGUE: load("uid://cson3piyylqw0").duplicate(),
 	PlayerCellData.Types.WIZARD: load("uid://ynurimwp8bik").duplicate(),
 	PlayerCellData.Types.DRUID: load("uid://0xyfkmq4ag42").duplicate(),
+	PlayerCellData.Types.EXECUTIONER: load("uid://d3gj115kupqd7").duplicate(),
 }
 #var damage_data: Dictionary = {
 #	PlayerCellData.Types.NULL: DamageData.new(),
@@ -36,6 +37,7 @@ var damage_manager: DamageManager
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
+signal xp_added(cell: PlayerCell)
 	
 func _ready() -> void:
 	var pos: Vector2i = Vector2i.ZERO
@@ -49,10 +51,13 @@ func _ready() -> void:
 		pos.x += 1
 	
 #	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
-	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
+#	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
+	await get_tree().process_frame
+	add_starting_cell(PlayerCellData.Types.EXECUTIONER, 0, 0)
 
 	cell_lvled_up.connect(_on_cell_lvled_up)
 	cell_upgraded.connect(_on_cell_upgraded)
+	xp_added.connect(_on_xp_added)
 #	fill_grid(PlayerCellData.Types.SHOOTER)
 
 	G.player_cell_pressed.connect(_on_cell_pressed)
@@ -112,7 +117,9 @@ func add_tower(type: PlayerCellData.Types, cell: PlayerCell = null) -> void:
 #	else:
 #		cell.set_damage_data(damage_mod_data[0])
 #		print("null dmg data")
-		
+func _on_xp_added(cell: PlayerCell) -> void:
+	economy.add_resource(Economy.Currencies.XP, cell.data.xp_increase)
+
 func add_free_cell() -> void:
 	if h_idx >= columns:
 		return

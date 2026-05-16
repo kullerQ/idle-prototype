@@ -62,7 +62,7 @@ func set_hp(new_v: int) -> void:
 #	if hp <= 0:
 #		manager.cell_died.emit(self)
 	
-func set_data(_data: CellResourceData) -> void:
+func set_data(_data: CellResourceData, args: Dictionary) -> void:
 	if data == _data:
 		return
 	
@@ -71,12 +71,15 @@ func set_data(_data: CellResourceData) -> void:
 	progress_bar_hp_bg.bg_color = Color(data.color, default_color_bg.a)
 	progress_bar_hp_fill.bg_color = Color(data.color, default_color_fill.a)
 	if data.life_time > 0:
-		timer.wait_time = data.life_time
+		timer.wait_time = data.life_time - args.sub_life_time
 		timer.start()
-		progress_bar.value = data.life_time
+		progress_bar.value = timer.time_left / data.life_time
 	
-	clear_effects()
-	set_hp(data.durability)
+		
+	if args.effects.is_empty():
+		clear_effects()
+	
+	set_hp(data.durability - args.sub_hp)
 	manager.occupy_cell(self)
 
 func set_disabled(_disabled: bool) -> void:

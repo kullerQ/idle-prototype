@@ -87,7 +87,9 @@ func initialize() -> void:
 				projectile_damage_data[projcetile][damage_data_type][type] = {}
 		
 	new_base_data(ProjectileManager.Types.BULLET, new_data(), new_data(1))
+	new_base_data(ProjectileManager.Types.KNIFE, new_data(), new_data(1))
 	new_base_data(ProjectileManager.Types.DRUID_MAGIC, new_data(0, 1))
+	new_base_data(ProjectileManager.Types.GREATAXE, new_data(), new_data(10))
 	new_base_data(ProjectileManager.Types.AXE)
 
 func new_tower_preset(tower_preset: TowerPresets, damage_data: Dictionary) -> void:

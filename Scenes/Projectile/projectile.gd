@@ -58,20 +58,17 @@ func after_hitted(cell: CellResource = null) -> void:
 		if cell.hp <= 0:
 			ricochet(cell)
 			return
-			
-#	if ricochet(cell):
-#		return
 		
 	if pierced >= data.max_piercings + 1:
 		die()
 
 func die() -> void:
-	if p_owner:
-		p_owner.add_xp()
-	
 	queue_free()
 
 func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
+	if p_owner:
+		p_owner.add_xp()
+	
 	if cell.weakened:
 		damage_data[DamageManager.DamageDataTypes.MULT] += mod_data.weakened_dmg_mod
 	

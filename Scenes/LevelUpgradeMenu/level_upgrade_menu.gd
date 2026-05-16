@@ -14,7 +14,11 @@ var cell: PlayerCell
 var nodes_to_hide: Array = []
 var upgrade_path_type: Control
 var upgrade_path: Control
+
 var manager: LevelUpgradeManager
+#todo remove G dependency
+@onready var economy: Economy = G.economy
+
 
 signal upgrade_button_pressed(node: LevelUpgradeNode)
 
@@ -32,21 +36,24 @@ func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
 	var path: int = node.path
 	if node.locked_for.has(cell):
 		return
-		
-	if cell.lvl_tokens < 1:
+	
+	if economy.get_resource(Economy.Currencies.XP) < node.cost:
 		return
+#	if cell.lvl_tokens < 1:
+#		return
 	
 	if path:
 		change_path(path)
 		
 	node.unlock_next_node()
-	cell.sub_tokens()
+	economy.sub_resource(Economy.Currencies.XP, node.cost)
+#	cell.sub_tokens()
 	node.locked_for.append(cell)
 	manager.apply_upgrade(type, cell)
 	label_tokens.text = "%d" %cell.lvl_tokens
 
-func show_tooltip(type: LevelUpgradeManager.Types) -> void:
-	G.tooltip_requested.emit(manager.get_description(type))
+func show_tooltip(type: LevelUpgradeManager.Types, cost: int) -> void:
+	G.tooltip_requested.emit("%d xp\n%s" %[cost, manager.get_description(type)])
 
 func hide_tooltip(type: LevelUpgradeManager.Types) -> void:
 	G.tooltip_close_required.emit()

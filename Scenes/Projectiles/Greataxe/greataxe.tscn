@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7cw5v3hfnc34"]
+
+[ext_resource type="PackedScene" uid="uid://3url7yuxxjew" path="res://Scenes/Projectile/projectile.tscn" id="1_wl51r"]
+[ext_resource type="Script" path="res://Scenes/Projectiles/Greataxe/greataxe.gd" id="2_60mdo"]
+
+[node name="Greataxe" instance=ExtResource("1_wl51r")]
+script = ExtResource("2_60mdo")

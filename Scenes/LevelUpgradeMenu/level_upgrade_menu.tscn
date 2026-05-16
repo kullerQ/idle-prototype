@@ -298,20 +298,21 @@ size_flags_vertical = 4
 layout_mode = 2
 type = 9
 locked = false
-next_node = NodePath("../../../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer/LevelUpgradeNode3")
+next_node = NodePath("../LevelUpgradeNode3")
 
 [node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
 layout_mode = 2
-type = 5
-next_node = NodePath("../../../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer/LevelUpgradeNode4")
+type = 18
+next_node = NodePath("../LevelUpgradeNode4")
 
 [node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
 layout_mode = 2
-next_node = NodePath("../../../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer/LevelUpgradeNode5")
+next_node = NodePath("../LevelUpgradeNode5")
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+next_node = NodePath(".")
 
 [node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3"]
 layout_mode = 2
@@ -344,7 +345,7 @@ alignment = 1
 [node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2" instance=ExtResource("3_8usvs")]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-type = 9
+type = 17
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2"]
 layout_mode = 2
@@ -355,9 +356,9 @@ size_flags_vertical = 4
 
 [node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
 layout_mode = 2
-type = 6
+type = 19
 locked = false
-next_node = NodePath("../../../../../ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer/LevelUpgradeNode3")
+next_node = NodePath("../LevelUpgradeNode3")
 
 [node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
 layout_mode = 2

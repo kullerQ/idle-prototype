@@ -33,8 +33,10 @@ func _ready() -> void:
 	var parent: Node = get_parent()
 	var currencies_names: Array = Economy.Currencies.keys()
 	for i in range(1, Economy.Currencies.size()):
-		var arr: PackedInt64Array = get(currencies_names[i].to_lower())
-		
+		var arr: Variant = get(currencies_names[i].to_lower()) # type PackedInt64Array
+		if !arr:
+			continue
+			
 		if arr.size() < max_lvl || (arr.size() == 1 && arr[0] == 0):
 			continue
 			

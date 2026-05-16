@@ -16,8 +16,12 @@ func upgrade_menu_button_func() -> void:
 func wood_func() -> void:
 	G.economy.add_resource(Economy.Currencies.WOOD, 100)
 
-func zero_wood_func() -> void:
+func xp_func() -> void:
+	G.economy.add_resource(Economy.Currencies.XP, 100)
+
+func zero_func() -> void:
 	G.economy.set_resource(Economy.Currencies.WOOD, 0)
+	G.economy.set_resource(Economy.Currencies.XP, 0)
 
 func lvl_up_func() -> void:
 	if G.upgrade_menu_opened:
@@ -46,11 +50,14 @@ func _ready() -> void:
 	upgrade_menu_button.initialize("upgrades", upgrade_menu_button_func, 32)
 	add_child(upgrade_menu_button)
 	var wood_button: PanelButton = b.duplicate()
-	wood_button.initialize("+100", wood_func)
+	wood_button.initialize("w+100", wood_func)
 	add_child(wood_button)
-	var zero_wood: PanelButton = b.duplicate()
-	zero_wood.initialize("w0", zero_wood_func)
-	add_child(zero_wood)
+	var xp_button: PanelButton = b.duplicate()
+	xp_button.initialize("xp+100", xp_func)
+	add_child(xp_button)
+	var zero: PanelButton = b.duplicate()
+	zero.initialize("0", zero_func, 12)
+	add_child(zero)
 	G.lvl_upgrades_highlight_label = G.ui.add_label(lvl_up_button, Vector2.ZERO, "")
 	G.upgrades_highlight_label = G.ui.add_label(upgrade_menu_button, Vector2.ZERO, "")
 	await get_tree().process_frame

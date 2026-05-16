@@ -19,6 +19,8 @@ var bonus_attacks: int = 0
 var spread_damage_ratio: float = 0
 var spread_damage_to: float = 0
 var spawn_tree_on_overheal_chance: int = 0
+var spawn_wood_to_the_right_chance: int = 0
+var cell_lvlup_chance: int = 0
 
 #################
 var bonus_damage: Dictionary = {}
@@ -101,11 +103,12 @@ func _on_pressed() -> void:
 	G.player_cell_pressed.emit(self)
 	
 func add_xp() -> void:
-	xp += data.xp_increase - float(lvl) / 10
-	if xp >= 100:
-		xp = xp - 100
-		add_lvl()
-		
+	manager.xp_added.emit(self)
+#	xp += data.xp_increase - float(lvl) / 10
+#	if xp >= 100:
+#		xp = xp - 100
+#		add_lvl()
+#
 func add_lvl() -> void:
 	lvl += 1
 	lvl_tokens += 1
@@ -245,3 +248,9 @@ func wizard_attack() -> void:
 ##################################
 func druid_attack() -> void:
 	add_dir_projectile(projectile_manager.add_druid_magic)
+
+# executioner
+##################################
+func executioner_attack() -> void:
+	projectile_manager.add_greataxe(get_bullet_crit_chance(), data.crit_mult, projectile_mod_data, bonus_damage, self)
+	#add_dir_projectile(projectile_manager.add_druid_magic)

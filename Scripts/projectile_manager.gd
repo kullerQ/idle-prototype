@@ -6,7 +6,8 @@ enum Types {
 	KNIFE,
 	MAGIC,
 	AXE,
-	DRUID_MAGIC
+	DRUID_MAGIC,
+	GREATAXE,
 	
 }
 var projectile_scenes: Dictionary = {
@@ -15,6 +16,7 @@ var projectile_scenes: Dictionary = {
 	Types.MAGIC: load("uid://dbvm0xe75co22"),
 	Types.AXE: load("uid://fayy1y7iri3x"),
 	Types.DRUID_MAGIC: load("uid://dw7hqy0bhgwaw"),
+	Types.GREATAXE: load("uid://b7cw5v3hfnc34"),
 }
 
 var projectile_data: Dictionary = {
@@ -23,6 +25,7 @@ var projectile_data: Dictionary = {
 	Types.MAGIC: load("uid://cqm1gvin210dd").duplicate(),
 	Types.AXE: load("uid://cwix8ktqxey3o").duplicate(),
 	Types.DRUID_MAGIC: load("uid://ckqurogg2vv7y").duplicate(),
+	Types.GREATAXE: load("uid://cvmku6kcw7ksr").duplicate(),
 	}
 
 var all_damage_data: Dictionary = {
@@ -32,6 +35,7 @@ var all_damage_data: Dictionary = {
 
 var projectile_container: Node2D
 var damage_manager: DamageManager
+var cell_manager: CellManager
 
 func get_data(type: Types) -> ProjectileData:
 	return projectile_data[type]
@@ -82,10 +86,10 @@ func add_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, m
 	bullet.dir = _dir
 	add_projectile(bullet)
 #
-#func add_knife(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
-#	var knife: Knife = new_player_projectle(pos, Types.KNIFE, crit_chance, crit_chance, mod_data, _owner)
-#	knife.dir = _dir
-#	add_projectile(knife)
+func add_knife(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
+	var knife: Knife = new_player_projectle(pos, Types.KNIFE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	knife.dir = _dir
+	add_projectile(knife)
 #
 #func add_magic(pos: Vector2, crit_chance: int, crit_mult: int, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
 #	var magic: Magic = new_player_projectle(pos, Types.MAGIC, crit_chance, crit_chance, mod_data, _owner)
@@ -96,6 +100,18 @@ func add_druid_magic(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vecto
 	var druid_magic: DruidMagic = new_player_projectle(pos, Types.DRUID_MAGIC, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	druid_magic.dir = _dir
 	add_projectile(druid_magic)
+
+func add_greataxe(crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
+	var row_count: int = cell_manager.row_count
+	var start_coords: Vector2i = Vector2i(0, randi_range(0, row_count))
+#	start_coords = Vector2i.ZERO
+	var pos: Vector2 = cell_manager.get_cell_global_center(start_coords)
+	var greataxe: Greataxe = new_player_projectle(pos, Types.GREATAXE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	var target_y: int = start_coords.y + 1 if start_coords.y < row_count else start_coords.y - 1
+	greataxe.target_pos =  cell_manager.get_cell_global_center(Vector2i(greataxe.data.max_range, target_y))
+	prints(pos, greataxe.target_pos, start_coords, Vector2i(greataxe.data.max_range, 0), cell_manager.get_cell_global_center(Vector2i(greataxe.data.max_range, 0)))
+	greataxe.cell_height =  cell_manager.CELL_SIZE.y
+	add_projectile(greataxe)
 #
 func add_resource_axe(pos: Vector2, crit_chance: int, crit_mult: int, _dmg_ratio: float, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array) -> void:
 	var axe: Axe = new_resource_projectule(pos, Types.AXE, crit_chance, crit_mult, mod_data, {}, _ignore)#projectile_scenes[Types.AXE].instantiate()

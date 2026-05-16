@@ -5,6 +5,7 @@ class_name LevelUpgradeNode
 @export var path: int
 @export var locked: bool = true
 @export var next_node: LevelUpgradeNode
+@export var cost: int = 100
 var locked_for: Array = []
 static var manager: UpgradeManager
 
@@ -15,7 +16,7 @@ func _ready() -> void:
 	button.pressed.connect(_on_pressed)
 	
 func _on_mouse_entered() -> void:
-	owner.show_tooltip(type)
+	owner.show_tooltip(type, cost)
 	
 func _on_mouse_exited() -> void:
 	owner.hide_tooltip(type)

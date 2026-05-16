@@ -1,8 +1,9 @@
 extends Control
 class_name UI
 
-@onready var label_wood: Label = $LabelWood
 var si_suffex: Array = ["", "K", "M", "B"]
+@onready var label_xp: Label = $HBoxContainer/LabelXP
+@onready var label_wood: Label = $HBoxContainer/LabelWood
 
 # todo implement ui manager and refactor ui node to add ui manager
 func _enter_tree() -> void:
@@ -41,3 +42,6 @@ func _on_resource_changed(type: Economy.Currencies, value: int) -> void:
 	match type:
 		Economy.Currencies.WOOD:
 			label_wood.text = "w %s" %format_number(value)
+		Economy.Currencies.XP:
+			label_xp.text = "xp %s" %format_number(value)
+			
