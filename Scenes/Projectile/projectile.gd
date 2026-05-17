@@ -17,13 +17,15 @@ var pierced: int = 0
 var ignore: Array = []
 var weakening: bool = false
 var base_mult: int = 1
+var critted: bool = false
+
 static var particle_container: Node2D
 
 func _ready() -> void:
 	collision.shape.radius = data.r
 	area.area_entered.connect(_on_area_entered)
 	init_pos = global_position
-	dmg = data.dmg
+#	dmg = data.dmg
 	spd += data.spd
 	base_mult = damage_data[DamageManager.DamageDataTypes.MULT]
 	if p_owner:
@@ -93,10 +95,9 @@ func apply_effects(cell: CellResource) -> void:
 		if mod_data.reduce_cd_if_weakened:
 			p_owner.reduce_cd_time(mod_data.reduce_cd_if_weakened)
 		
-	
-
-func apply_crit() -> void:
-	if randi() % 100 < crit_chance:
+func apply_crit(chance: int = crit_chance) -> void:
+	if randi() % 100 < chance:
+		critted = true
 		damage_data[DamageManager.DamageDataTypes.MULT] += crit_mult
 		G.crit_label_requested.emit(global_position)
 
@@ -114,12 +115,18 @@ func set_disabled(_disabled: bool) -> void:
 
 func get_dmg() -> float:
 	dmg = 0
-	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
+	for dmg_type in range(DamageManager.DamageDataTypes.MULT): # MULT because it's the last entry of an enum i guess
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
 				dmg += damage_data[dmg_type][type][stat]
 	
 	return dmg
+
+func add_dmg( amount: int) -> void:
+	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
+		for type in damage_data[dmg_type]:
+			for stat in damage_data[dmg_type][type]:
+				damage_data[dmg_type][type][stat] += amount
 
 func div_dmg(amount: int) -> void:
 	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
@@ -127,11 +134,11 @@ func div_dmg(amount: int) -> void:
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] = floor(damage_data[dmg_type][type][stat] / amount)
 
-# todo
 func ricochet(cell: CellResource = null, div_dmg: bool = true) -> bool:
 	damage_data[DamageManager.DamageDataTypes.MULT] = base_mult
 	if get_dmg() <= 0:
 		die()
+		return false
 		
 	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center(cell)
 	if !target_cell_pos:

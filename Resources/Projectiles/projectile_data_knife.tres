@@ -6,6 +6,6 @@
 script = ExtResource("1_vti55")
 spd = 120.0
 max_range = 150.0
-dmg = 1
+dmg = 3.0
 r = 1
 max_piercings = 1

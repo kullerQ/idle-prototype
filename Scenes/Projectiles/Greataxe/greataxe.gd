@@ -6,9 +6,18 @@ var cell_height: int = 0
 var axe_spd: float = 0
 var t: float = 0
 var vel: Vector2 = Vector2(20, 1)
+var damage_bonus_with_backstab: Dictionary = {}
+var default_damage_bonus: Dictionary = {}
 
 func _ready() -> void:
 	super()
+	if !data.backstab:
+		return
+		
+	default_damage_bonus = damage_data[DamageManager.DamageDataTypes.BONUS]
+	damage_bonus_with_backstab = default_damage_bonus.duplicate(true)
+	damage_bonus_with_backstab[DamageManager.Types.HIT][DamageManager.Stats.HP] += data.backstab_bonus_dmg
+
 #	t = init_pos.y
 
 func _physics_process(delta: float) -> void:
@@ -16,13 +25,15 @@ func _physics_process(delta: float) -> void:
 	if abs(global_position.x -  target_pos.x) < 5 && global_position.y != target_pos.y:
 		spd = -spd
 		global_position.y = target_pos.y
+		if data.backstab:
+			damage_data[DamageManager.DamageDataTypes.BONUS] = damage_bonus_with_backstab
 	
 	if global_position.y == target_pos.y && abs(init_pos.x - global_position.x) < 5:
 		queue_free()
 
 func after_hitted(cell: CellResource = null) -> void:
 	particle_container.add_child(HitCircle.new(global_position))
-	if spd < 0:
+	if spd < 0 && data.backstab:
 		return
 		
 	pierced += 1

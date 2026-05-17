@@ -45,7 +45,7 @@ func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int,
 	var projectile: Projectile = projectile_scenes[type].instantiate()
 	projectile.data = projectile_data[type]
 	projectile.crit_chance = crit_chance
-	projectile.crit_mult = crit_mult - 1
+	projectile.crit_mult = crit_mult
 	projectile.global_position = pos
 	var damage_data: Dictionary = damage_manager.get_damage_data(type).duplicate(true)
 	var base_damage_bonus: Dictionary = damage_data[DamageManager.DamageDataTypes.BONUS]
@@ -109,7 +109,6 @@ func add_greataxe(crit_chance: int, crit_mult: int, mod_data: ProjectileDataModi
 	var greataxe: Greataxe = new_player_projectle(pos, Types.GREATAXE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	var target_y: int = start_coords.y + 1 if start_coords.y < row_count else start_coords.y - 1
 	greataxe.target_pos =  cell_manager.get_cell_global_center(Vector2i(greataxe.data.max_range, target_y))
-	prints(pos, greataxe.target_pos, start_coords, Vector2i(greataxe.data.max_range, 0), cell_manager.get_cell_global_center(Vector2i(greataxe.data.max_range, 0)))
 	greataxe.cell_height =  cell_manager.CELL_SIZE.y
 	add_projectile(greataxe)
 #

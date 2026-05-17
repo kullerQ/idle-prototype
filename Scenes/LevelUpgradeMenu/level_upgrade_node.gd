@@ -2,14 +2,15 @@ extends Control
 class_name LevelUpgradeNode
 
 @export var type: LevelUpgradeManager.Types
-@export var path: int
-@export var locked: bool = true
+var path: int
+@export var locked: bool = false
 @export var next_node: LevelUpgradeNode
 @export var cost: int = 100
 var locked_for: Array = []
 static var manager: UpgradeManager
 
 func _ready() -> void:
+	path = int(get_parent().name.split("_")[1])
 	var button: Button = $Button
 	button.mouse_entered.connect(_on_mouse_entered)
 	button.mouse_exited.connect(_on_mouse_exited)
@@ -38,3 +39,4 @@ func unlock_next_node() -> void:
 
 func lock() -> void:
 	locked = true
+	print(get_parent().name)

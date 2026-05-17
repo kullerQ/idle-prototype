@@ -36,6 +36,26 @@ enum Types {
 	DRUID_MAGIC_SPD,
 	DRUID_XP,
 	LUMBERJACK_WOOD_SPANW,
+	ROGUE,
+	ROGUE_COOLDOWN,
+	ROGUE_CRIT,
+	ROGUE_CRIT_MULT,
+	ROGUE_XP,
+	KNIFE_DMG,
+	KNIFE_SPD,
+	KNIFE_PIERCING,
+	EXECUTIONER,
+	EXECUTIONER_COOLDOWN,
+	EXECUTIONER_CRIT,
+	EXECUTIONER_CRIT_MULT,
+	EXECUTIONER_XP,
+	GREATAXE_DMG,
+	GREATAXE_BACKSTAB,
+	GREATAXE_BACKSTAB_DMG,
+	GREATAXE_SPD,
+	GREATAXE_PIERCING,
+	KNIFE_RANGE,
+	GREATAXE_RANGE,
 	}
 
 var cell_manager : CellManager
@@ -75,12 +95,32 @@ var descriptions: Dictionary = {
 	Types.AXE_SPD: "axe speed +10",
 	Types.DRUID: "+1 druid",
 	Types.DRUID_COOLDOWN: "druid cooldown -0.5s",
-	Types.DRUID_CRIT: "druid crit chance +5",
+	Types.DRUID_CRIT: "druid crit chance +5%",
 	Types.DRUID_CRIT_MULT: "druid crit mult +1",
 	Types.DRUID_MAGIC_DMG: "druid magic dmg +1",
 	Types.DRUID_MAGIC_SPD: "druid magic speed +15",
 	Types.DRUID_XP: "druid get +1 xp",
 	Types.LUMBERJACK_WOOD_SPANW: "chance to spawn wood cell after lumberjack +25%",
+	Types.ROGUE: "+1 rogue",
+	Types.ROGUE_COOLDOWN: "rogue cooldown -0.2s",
+	Types.ROGUE_CRIT: "rogue crit chance +5%",
+	Types.ROGUE_CRIT_MULT: "rogue crit multiplier +1",
+	Types.ROGUE_XP: "rogue get +1 xp",
+	Types.KNIFE_DMG: "knife damage +1",
+	Types.KNIFE_SPD: "knife speed +5",
+	Types.KNIFE_RANGE: "knife max range +10",
+	Types.KNIFE_PIERCING: "knife piercing +1",
+	Types.EXECUTIONER: "executioner +1",
+	Types.EXECUTIONER_COOLDOWN: "executioner cooldown -0.5s",
+	Types.EXECUTIONER_CRIT: "executioner crit chance +10%",
+	Types.EXECUTIONER_CRIT_MULT: "executioner crit multiplier +1",
+	Types.EXECUTIONER_XP: "executioner gets +1xp",
+	Types.GREATAXE_DMG: "greataxe damage +2",
+	Types.GREATAXE_BACKSTAB: "greataxe deals 5 more damage and doesnt break if damages a cell from behind",
+	Types.GREATAXE_BACKSTAB_DMG: "greataxe deals +5 more damage from behind",
+	Types.GREATAXE_SPD: "greataxe speed +5",
+	Types.GREATAXE_PIERCING: "greataxe piercing +1",
+	Types.GREATAXE_RANGE: "greataxe max range +1 cell and piercing +1",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -197,6 +237,69 @@ func _on_upgrade_purchased(type: Types) -> void:
 			
 		Types.LUMBERJACK_WOOD_SPANW:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).spawn_wood_chance += 25
+			
+		Types.ROGUE:
+			player_cell_manager.add_tower(PlayerCellData.Types.ROGUE)
+			
+		Types.ROGUE_COOLDOWN:
+			player_cell_manager.get_data(PlayerCellData.Types.ROGUE).cooldown -= 0.2
+			
+		Types.ROGUE_CRIT:
+			player_cell_manager.get_data(PlayerCellData.Types.ROGUE).crit_chance += 5
+			
+		Types.ROGUE_CRIT_MULT:
+			player_cell_manager.get_data(PlayerCellData.Types.ROGUE).crit_mult += 1
+			
+		Types.ROGUE_XP:
+			player_cell_manager.get_data(PlayerCellData.Types.ROGUE).xp_increase += 1
+			
+		Types.KNIFE_DMG:
+			add_projectile_damage(ProjectileManager.Types.KNIFE, 1)
+			
+		Types.KNIFE_SPD:
+			projectile_manager.get_data(ProjectileManager.Types.KNIFE).spd += 5
+			
+		Types.KNIFE_PIERCING:
+			projectile_manager.get_data(ProjectileManager.Types.KNIFE).max_piercings += 1
+			
+		Types.KNIFE_RANGE:
+			projectile_manager.get_data(ProjectileManager.Types.KNIFE).max_range += 10
+			
+		Types.EXECUTIONER:
+			player_cell_manager.add_tower(PlayerCellData.Types.EXECUTIONER)
+			
+		Types.EXECUTIONER_COOLDOWN:
+			player_cell_manager.get_data(PlayerCellData.Types.EXECUTIONER).cooldown -= 0.5
+			
+		Types.EXECUTIONER_CRIT:
+			player_cell_manager.get_data(PlayerCellData.Types.EXECUTIONER).crit_chance += 10
+			
+		Types.EXECUTIONER_CRIT_MULT:
+			player_cell_manager.get_data(PlayerCellData.Types.EXECUTIONER).crit_mult += 1
+			
+		Types.EXECUTIONER_XP:
+			player_cell_manager.get_data(PlayerCellData.Types.EXECUTIONER).xp_increase += 1
+			
+		Types.GREATAXE_DMG:
+			add_projectile_damage(ProjectileManager.Types.GREATAXE, 2)
+			
+		Types.GREATAXE_BACKSTAB:
+			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).backstab = true
+			
+		Types.GREATAXE_BACKSTAB_DMG:
+			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).backstab_bonus_dmg += 2
+			
+		Types.GREATAXE_SPD:
+			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).spd += 10
+			
+		Types.GREATAXE_PIERCING:
+			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_piercings += 1
+			
+		Types.GREATAXE_RANGE:
+			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_piercings += 1
+			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_range += 1
+			
+			
 			
 func add_projectile_damage(type: ProjectileManager.Types, amount: int) -> void:
 	damage_manager.add_flat_damage_bonus(type, 1)

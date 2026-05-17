@@ -14,7 +14,7 @@ func upgrade_menu_button_func() -> void:
 	G.upgrade_menu_close_requested.emit()
 
 func wood_func() -> void:
-	G.economy.add_resource(Economy.Currencies.WOOD, 100)
+	G.economy.add_resource(Economy.Currencies.WOOD, 1000)
 
 func xp_func() -> void:
 	G.economy.add_resource(Economy.Currencies.XP, 100)
@@ -50,7 +50,7 @@ func _ready() -> void:
 	upgrade_menu_button.initialize("upgrades", upgrade_menu_button_func, 32)
 	add_child(upgrade_menu_button)
 	var wood_button: PanelButton = b.duplicate()
-	wood_button.initialize("w+100", wood_func)
+	wood_button.initialize("w+1000", wood_func)
 	add_child(wood_button)
 	var xp_button: PanelButton = b.duplicate()
 	xp_button.initialize("xp+100", xp_func)

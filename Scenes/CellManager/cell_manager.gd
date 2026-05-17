@@ -119,6 +119,7 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 					match i.stat:
 						DamageManager.Stats.HP:
 							var init_cell_hp: int = c.hp
+							print(value)
 							c.sub_hp(value)
 							add_res(cell_data.type, cell_data.value * value)
 						
@@ -153,8 +154,9 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 										add_rand_resource_at(cells.find_key(c) + Vector2i.RIGHT, Types.WOOD) 
 										
 	
-	if cell.hp <= 0:
-		cell_died.emit(cell)
+		if c.hp <= 0:
+			print(c.hp)
+			cell_died.emit(cell)
 
 func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
 	match data._name:
@@ -211,7 +213,7 @@ func get_rand_occupied_cell(exclude: CellResource, type: Types = 0) -> CellResou
 		return null
 	
 	if exclude:
-		target_arr.filter(func(c: CellResource) -> bool: return c != exclude)
+		target_arr = target_arr.filter(func(c: CellResource) -> bool: return c != exclude)
 		if target_arr.is_empty():
 			return null
 	

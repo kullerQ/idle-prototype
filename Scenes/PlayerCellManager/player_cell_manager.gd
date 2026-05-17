@@ -50,10 +50,11 @@ func _ready() -> void:
 			
 		pos.x += 1
 	
-#	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
-#	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
 	await get_tree().process_frame
-	add_starting_cell(PlayerCellData.Types.EXECUTIONER, 0, 0)
+#	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
+	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
+	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 1)
+#	add_starting_cell(PlayerCellData.Types.EXECUTIONER, 0, 0)
 
 	cell_lvled_up.connect(_on_cell_lvled_up)
 	cell_upgraded.connect(_on_cell_upgraded)

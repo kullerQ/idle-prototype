@@ -9,3 +9,5 @@ max_range = 3.0
 dmg = 10.0
 r = 2
 max_piercings = 0
+backstab = false
+backstab_bonus_dmg = 0

@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://beki2ixvgfrwy"]
+[gd_scene load_steps=7 format=3 uid="uid://beki2ixvgfrwy"]
 
 [ext_resource type="Script" path="res://Scenes/LevelUpgradeMenu/level_upgrade_menu.gd" id="1_lr7v8"]
+[ext_resource type="Script" path="res://Scenes/LevelUpgradeMenu/level_upgrade_path.gd" id="2_ienlk"]
 [ext_resource type="PackedScene" uid="uid://bt1oojo2xwns6" path="res://Scenes/LevelUpgradeMenu/LevelUpgradeNode/level_upgrade_node.tscn" id="3_8usvs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d5hbc"]
@@ -11,26 +12,6 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 shadow_size = 1
 shadow_offset = Vector2(1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1tan"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.52549, 0.380392, 0.231373, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_heif2"]
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.8, 0.8, 0.8, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pvthn"]
-bg_color = Color(0.411765, 0.317647, 0.298039, 1)
-
-[sub_resource type="GDScript" id="GDScript_coexc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8spqr"]
 
@@ -51,490 +32,511 @@ offset_right = 88.0
 offset_bottom = 24.0
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="Graphics"]
+[node name="Panel" type="PanelContainer" parent="Graphics"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 172.0
+offset_bottom = 116.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_d5hbc")
 
-[node name="MarginContainer" type="MarginContainer" parent="Graphics"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="Graphics/Panel"]
+layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Graphics/MarginContainer"]
+[node name="UpgradesContainer" type="VBoxContainer" parent="Graphics/Panel/MarginContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="Graphics/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 4)
+[node name="ShooterUpgrades" type="CenterContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer"]
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_f1tan")
-theme_override_styles/fill = SubResource("StyleBoxFlat_heif2")
-value = 34.35
-show_percentage = false
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
-[node name="LabelLvl" type="Label" parent="Graphics/MarginContainer/VBoxContainer/ProgressBar"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -7.0
-offset_right = 20.0
-offset_bottom = 8.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 8
-text = "lvl 1"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ShooterUpgrades" type="CenterContainer" parent="Graphics/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Path0" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades"]
-visible = false
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades"]
 custom_minimum_size = Vector2(64, 36)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 alignment = 1
 
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path0" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root"]
 layout_mode = 2
-type = 1
-path = 1
-locked = false
-next_node = NodePath("../../Path1/VBoxContainer3/VBoxContainer/LevelUpgradeNode2")
+theme_override_constants/separation = 3
+alignment = 1
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path0" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-type = 2
-path = 2
-locked = false
-next_node = NodePath("../../Path1/VBoxContainer3/VBoxContainer2/LevelUpgradeNode2")
-
-[node name="Path1" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades"]
-visible = false
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
-alignment = 1
-
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
 type = 1
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1"]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3"]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root"]
 layout_mode = 2
-size_flags_vertical = 4
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 type = 3
-locked = false
-next_node = NodePath("../LevelUpgradeNode3")
 
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_1"]
 layout_mode = 2
-type = 5
-next_node = NodePath("../LevelUpgradeNode4")
+theme_override_constants/separation = 6
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_1/Root"]
 layout_mode = 2
-next_node = NodePath("../LevelUpgradeNode5")
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
-type = 4
-locked = false
-next_node = NodePath("../LevelUpgradeNode3")
-
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
-next_node = NodePath("../LevelUpgradeNode4")
-
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
-next_node = NodePath("../LevelUpgradeNode5")
-
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="Path2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades"]
-visible = false
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
-alignment = 1
+type = 5
 
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_1/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+type = 4
+
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_2"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_1/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
 type = 2
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2"]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3"]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root"]
 layout_mode = 2
-size_flags_vertical = 4
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 type = 6
-locked = false
-next_node = NodePath("../LevelUpgradeNode3")
 
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_1"]
 layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
 type = 7
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_1/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3"]
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root"]
 layout_mode = 2
-size_flags_vertical = 4
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
-type = 10
-locked = false
-next_node = NodePath("../LevelUpgradeNode3")
-
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
+size_flags_horizontal = 4
 type = 11
-next_node = NodePath("../LevelUpgradeNode4")
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_2"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/ShooterUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_2/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="DruidUpgrades" type="CenterContainer" parent="Graphics/MarginContainer/VBoxContainer"]
-visible = false
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
+type = 10
 
-[node name="Path0" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades"]
-visible = false
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/ShooterUpgrades/Root/Path_2/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="DruidUpgrades" type="CenterContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades"]
 custom_minimum_size = Vector2(64, 36)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 alignment = 1
 
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path0" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root"]
 layout_mode = 2
-type = 8
-path = 1
-locked = false
-next_node = NodePath("../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer/LevelUpgradeNode2")
+theme_override_constants/separation = 3
+alignment = 1
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path0" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-type = 17
-path = 2
-locked = false
-next_node = NodePath("../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2/LevelUpgradeNode2")
-
-[node name="Path1" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades"]
-visible = false
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
-alignment = 1
-
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-type = 8
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
 type = 9
-locked = false
-next_node = NodePath("../LevelUpgradeNode3")
 
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1"]
 layout_mode = 2
-type = 18
-next_node = NodePath("../LevelUpgradeNode4")
+theme_override_constants/separation = 6
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root"]
 layout_mode = 2
-next_node = NodePath("../LevelUpgradeNode5")
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-next_node = NodePath(".")
-
-[node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
-locked = false
-next_node = NodePath("../../../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2/LevelUpgradeNode3")
-
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
-next_node = NodePath("../../../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2/LevelUpgradeNode4")
-
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
-layout_mode = 2
-next_node = NodePath("../../../../../ShooterUpgrades/Path1/VBoxContainer3/VBoxContainer2/LevelUpgradeNode5")
-
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path1/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="Path2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades"]
-visible = false
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
-alignment = 1
+type = 8
 
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1"]
 layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+type = 18
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
 type = 17
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2"]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3"]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root"]
 layout_mode = 2
-size_flags_vertical = 4
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer" node_paths=PackedStringArray("next_node") instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 type = 19
-locked = false
-next_node = NodePath("../LevelUpgradeNode3")
 
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1"]
 layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
 type = 7
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3"]
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+type = 11
+
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+type = 10
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="RogueUpgrades" type="CenterContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-locked = false
-
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/DruidUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="RogueUpgrades" type="CenterContainer" parent="Graphics/MarginContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Path0" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades"]
-visible = false
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades"]
 custom_minimum_size = Vector2(64, 36)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 alignment = 1
 
-[node name="ButtonPath1" type="Button" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path0"]
-custom_minimum_size = Vector2(16, 16)
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root"]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_styles/normal = SubResource("StyleBoxFlat_pvthn")
-action_mode = 0
-script = SubResource("GDScript_coexc")
+theme_override_constants/separation = 3
+alignment = 1
+script = ExtResource("2_ienlk")
 
-[node name="ButtonPath2" type="Button" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path0"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-action_mode = 0
-script = SubResource("GDScript_coexc")
-
-[node name="Path1" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades"]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
-alignment = 1
+type = 20
 
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1"]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-layout_mode = 2
-
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path1/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-
-[node name="Path2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades"]
-visible = false
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
+
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_1"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_2"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
 alignment = 1
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2"]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="VBoxContainer" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3"]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root"]
 layout_mode = 2
-size_flags_vertical = 4
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_1"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_1/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3"]
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_1/Root"]
 layout_mode = 2
-size_flags_vertical = 4
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode2" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="LevelUpgradeNode3" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root"]
 layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="LevelUpgradeNode4" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="LevelUpgradeNode5" parent="Graphics/MarginContainer/VBoxContainer/RogueUpgrades/Path2/VBoxContainer3/VBoxContainer2" instance=ExtResource("3_8usvs")]
-custom_minimum_size = Vector2(16, 16)
+[node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_2"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="LabelTokens" type="Label" parent="Graphics"]
-layout_mode = 1
-offset_left = 92.0
-offset_right = 106.0
-offset_bottom = 15.0
-theme_override_font_sizes/font_size = 10
-vertical_alignment = 1
+[node name="Path_1" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
 
-[node name="Button" type="Button" parent="Graphics"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -9.0
-offset_top = -10.0
-offset_right = 1.0
-grow_horizontal = 0
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_2/Root"]
+layout_mode = 2
+theme_override_constants/separation = 3
+script = ExtResource("2_ienlk")
+
+[node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_2/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="Graphics/Panel"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_8spqr")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ej5yi")
 action_mode = 0
 
-[node name="Label" type="Label" parent="Graphics/Button"]
+[node name="Label" type="Label" parent="Graphics/Panel/Button"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -546,4 +548,12 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 9
 text = "x"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelTokens" type="Label" parent="Graphics"]
+layout_mode = 1
+offset_left = 92.0
+offset_right = 106.0
+offset_bottom = 15.0
+theme_override_font_sizes/font_size = 10
 vertical_alignment = 1

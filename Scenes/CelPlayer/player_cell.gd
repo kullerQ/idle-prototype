@@ -21,7 +21,7 @@ var spread_damage_to: float = 0
 var spawn_tree_on_overheal_chance: int = 0
 var spawn_wood_to_the_right_chance: int = 0
 var cell_lvlup_chance: int = 0
-
+var bonus_crit_chance_on_weakened: int = 0
 #################
 var bonus_damage: Dictionary = {}
 ##############
@@ -37,7 +37,7 @@ var projectile_mod_data: ProjectileDataModifiers
 @onready var panel_highlight: Panel = $PanelHighlight
 
 var cooldown: float = 1
-var upgrade_path: int = 0
+var upgrade_path: Array = []
 var attack_count: int = 0
 var type_name: String
 var xp: float = 0
@@ -60,6 +60,7 @@ func _ready() -> void:
 		ricochet_after_kill,
 		spread_damage_ratio,
 		spread_damage_to,
+		bonus_crit_chance_on_weakened,
 		)
 		
 	if !data:
