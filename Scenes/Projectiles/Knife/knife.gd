@@ -10,7 +10,7 @@ class_name Knife
 #		die()
 #
 func before_hitted(cell: CellResource = null) -> void:
-	if cell.weakened:
+	if cell.is_weakened():
 		apply_crit(crit_chance + mod_data.bonus_crit_chance_on_weakened)
 		return
 		

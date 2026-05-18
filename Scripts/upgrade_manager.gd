@@ -56,6 +56,9 @@ enum Types {
 	GREATAXE_PIERCING,
 	KNIFE_RANGE,
 	GREATAXE_RANGE,
+	UNLOCK_OUTPOST,
+	OUTPOST_WEAKENING_CHANCE,
+	OUTPOST_MULTIATTACKS,
 	}
 
 var cell_manager : CellManager
@@ -92,7 +95,7 @@ var descriptions: Dictionary = {
 	Types.GROVE_VALUE: "grove value per hit +1",
 	Types.SHOOTER_XP: "shooters get +1 xp",
 	Types.AXE_BOUNCE: "axe bounces off empty cells",
-	Types.AXE_SPD: "axe speed +10",
+	Types.AXE_SPD: "axe speed +5",
 	Types.DRUID: "+1 druid",
 	Types.DRUID_COOLDOWN: "druid cooldown -0.5s",
 	Types.DRUID_CRIT: "druid crit chance +5%",
@@ -121,6 +124,9 @@ var descriptions: Dictionary = {
 	Types.GREATAXE_SPD: "greataxe speed +5",
 	Types.GREATAXE_PIERCING: "greataxe piercing +1",
 	Types.GREATAXE_RANGE: "greataxe max range +1 cell and piercing +1",
+	Types.UNLOCK_OUTPOST: "every 20 seconds a shooter outpost appears",
+	Types.OUTPOST_WEAKENING_CHANCE: "outpost chance to shoot weakening bullet +20%",
+	Types.OUTPOST_MULTIATTACKS: "outpost shoots +1 bullet%",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -161,7 +167,11 @@ func _on_upgrade_purchased(type: Types) -> void:
 			projectile_manager.get_data(ProjectileManager.Types.BULLET).spd += 5
 			
 		Types.UNLOCK_LUMBERJACK:
-			timer_manager.add_lumberjack_timer()
+			timer_manager.add_special_cell_spawn_timer(
+				CellManager.Names.SPECIAL_LUMBERJACK, 
+				cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time,
+				Color(0.714, 0.576, 0.373)
+				).start()
 			
 		Types.ADD_LUMBERJACK:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time *= 2
@@ -183,6 +193,19 @@ func _on_upgrade_purchased(type: Types) -> void:
 			
 		Types.LUMBERJACK_CHARGE:
 			building_manager.get_data(BuildingManager.Buildings.LUMBERJACK).charge_per_hit += 1
+			
+		Types.UNLOCK_OUTPOST:
+			timer_manager.add_special_cell_spawn_timer(
+				CellManager.Names.SPECIAL_OUTPOST, 
+				cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).life_time,
+				Color(0.302, 0.365, 0.388)
+				).start()
+			
+		Types.OUTPOST_WEAKENING_CHANCE:
+			cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).weakening_chance += 20
+			
+		Types.OUTPOST_MULTIATTACKS:
+			cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).attacks += 1
 			
 		Types.WOOD_SPAWNRATE:
 			timer_manager.sub_timer_wait_t(TimerManager.Types.CELL_SPAWN, CellManager.Types.WOOD, 0.5)
@@ -212,7 +235,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 			Axe.bounce = true
 			
 		Types.AXE_SPD:
-			projectile_manager.get_data(ProjectileManager.Types.AXE).spd += 10
+			projectile_manager.get_data(ProjectileManager.Types.AXE).spd += 5
 			
 		Types.DRUID:
 			player_cell_manager.add_tower(PlayerCellData.Types.DRUID)

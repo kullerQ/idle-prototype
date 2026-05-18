@@ -69,10 +69,10 @@ static func print_data(data: Dictionary) -> void:
 			for stat in data[damage_type][type]:
 				print("# stat: %s value: %d" %[sk[stat], data[damage_type][type][stat]])
 
-func add_mult(projectile_type: ProjectileManager.Types, amount: int) -> void:
+func add_mult(projectile_type: ProjectileManager.Types, amount: float) -> void:
 	projectile_damage_data[projectile_type][DamageDataTypes.MULT] += amount
 
-func set_mult(projectile_type: ProjectileManager.Types, mult: int = 1) -> void:
+func set_mult(projectile_type: ProjectileManager.Types, mult: float = 1) -> void:
 	projectile_damage_data[projectile_type][DamageDataTypes.MULT] = mult
 
 func initialize() -> void:

@@ -63,9 +63,13 @@ func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int,
 	projectile.mod_data = _mod_data
 	return projectile
 	
-func new_resource_projectule(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array) -> Projectile:
+func new_resource_projectule(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array, _delay: float = 0) -> Projectile:
 	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.ignore = _ignore
+	if _delay:
+		projectile.hide()
+		projectile.delay = _delay
+		
 	return projectile
 
 func new_player_projectle(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> Projectile:
@@ -117,6 +121,11 @@ func add_resource_axe(pos: Vector2, crit_chance: int, crit_mult: int, _dmg_ratio
 	axe.target_pos = _target_pos
 	axe.dmg_ratio = _dmg_ratio
 	add_projectile(axe)
+	
+func add_resource_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array, _delay: float = 0) -> void:
+	var bullet: Bullet = new_resource_projectule(pos, Types.BULLET, crit_chance, crit_mult, mod_data, {}, _ignore, _delay)#projectile_scenes[Types.AXE].instantiate()
+	bullet.dir = _dir
+	add_projectile(bullet)
 	
 
 	

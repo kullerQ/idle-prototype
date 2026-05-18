@@ -18,10 +18,17 @@ var ignore: Array = []
 var weakening: bool = false
 var base_mult: int = 1
 var critted: bool = false
+var delay: float = 0
 
 static var particle_container: Node2D
 
 func _ready() -> void:
+	if delay:
+		set_physics_process(false)
+		await get_tree().create_timer(delay).timeout
+		show()
+		set_physics_process(true)
+		
 	collision.shape.radius = data.r
 	area.area_entered.connect(_on_area_entered)
 	init_pos = global_position
@@ -71,7 +78,7 @@ func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
 	if p_owner:
 		p_owner.add_xp()
 	
-	if cell.weakened:
+	if cell.is_weakened():
 		damage_data[DamageManager.DamageDataTypes.MULT] += mod_data.weakened_dmg_mod
 	
 	_area.hitted.emit(damage_data, get_spread_damage_data())
@@ -82,16 +89,16 @@ func get_spread_damage_data() -> Dictionary:
 
 func apply_effects(cell: CellResource) -> void:
 	if weakening:
-		if cell.weakened:
+		if cell.is_weakened():
 			if mod_data.ricohcet_if_weakened:
 				if ricochet(cell):
 					pierced -= 1
 			
 			return
 			
-		cell.set_weakened(true)
+		cell.set_effect(EffectManager.Effects.WEAKENED, true)
 	
-	if cell.weakened:
+	if cell.is_weakened():
 		if mod_data.reduce_cd_if_weakened:
 			p_owner.reduce_cd_time(mod_data.reduce_cd_if_weakened)
 		

@@ -25,11 +25,17 @@ func _input(event):
 			KEY_T:
 				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_TREE)
 			KEY_Z:
-				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_LUMBERJACK)
+				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_OUTPOST)
 			KEY_B:
 				var cell_manager: CellManager = G.cell_manager
-				cell_manager.lvlup_cell_at(cell_manager.get_cell_coords_from_global_pos(get_global_mouse_position()))
-#				cell_manager.get_cell_from_global_pos(get_global_mouse_position()).set_weakened(true)
+				var cell: CellResource = cell_manager.get_cell_from_global_pos(get_global_mouse_position())
+				cell.set_effect(EffectManager.Effects.BUFFED, !cell.is_buffed())
+			KEY_V:
+				var cell_manager: CellManager = G.cell_manager
+				var cell: CellResource = cell_manager.get_cell_from_global_pos(get_global_mouse_position())
+				cell.set_effect(EffectManager.Effects.WEAKENED, !cell.is_weakened())
+#				cell_manager.lvlup_cell_at(cell_manager.get_cell_coords_from_global_pos(get_global_mouse_position()))
+#				cell_manager.get_cell_from_global_pos(get_global_mouse_position()).set_effect(EffectManager.Effects.WEAKENED, true)
 			KEY_5:
 				var m: CellManager = G.cell_manager
 				for i in range(10):

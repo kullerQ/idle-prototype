@@ -22,6 +22,9 @@ enum Types {
 	DRUID_SPAWN_WOOD_RIGHT,
 	DRUID_OVERHEAL_LVLUP,
 	ROGUE_CRIT_WEAK,
+	DRUID_ADD_RES_ON_ATTACK,
+	DRUID_MULTIATTACK,
+	DRUID_CD_FOR_HEALED,
 }
 
 var descriptions: Dictionary = {
@@ -35,6 +38,9 @@ var descriptions: Dictionary = {
 	Types.SHOOTER_DPS_BULLET_SPD: "bullet speed +30",
 	Types.DRUID_AUTOAIM: "druid shoots 2 projectiles in a direction of a random cell",
 	Types.DRUID_SPREAD: "50% of heal spreads to 2 random cells",
+	Types.DRUID_ADD_RES_ON_ATTACK: "when attacks give random cell's break value",
+	Types.DRUID_MULTIATTACK: "multiattacks +2",
+	Types.DRUID_CD_FOR_HEALED: "when reloads reduce cooldown for 0.05s for every healed cell",
 	Types.SHOOTER_DPS_RICOCHET: "ricochets when kills cell",
 	Types.SHOOTER_DPS_DMG: "bullet speed -30, bullet damage +10",
 	Types.DRUID_OVERHEAL_SPAWN_WEAK: "if overheals: 25% chance to spawn weakened wood resource",
@@ -66,12 +72,21 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 		Types.SHOOTER_DPS_BULLET_SPD:
 			cell.projectile_mod_data.bonus_bullet_spd += 30
 
+		Types.DRUID_MULTIATTACK:
+			cell.bonus_attacks += 2
+
+		Types.DRUID_CD_FOR_HEALED:
+			cell.reduce_cd_if_heal += 0.05
+
 		Types.SHOOTER_DPS_RICOCHET:
 			cell.projectile_mod_data.ricochet_after_kill = true
 
 		Types.DRUID_AUTOAIM:
 			cell.auto_aim = true
 			cell.bonus_attacks += 1
+
+		Types.DRUID_ADD_RES_ON_ATTACK:
+			cell.attack_effects.append(PlayerCellManager.AttackEffects.RES_BREAK_VALUE)
 
 		Types.DRUID_SPREAD:
 			cell.projectile_mod_data.spread_damage_ratio += 0.5

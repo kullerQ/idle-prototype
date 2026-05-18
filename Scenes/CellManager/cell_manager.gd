@@ -2,12 +2,15 @@ extends GridContainer
 class_name CellManager
 
 const CELL_SIZE: Vector2 = Vector2(16, 16)
+
 enum Names {
 	NULL,
 	WOOD_TREE,
 	WOOD_GROVE,
-	SPECIAL_LUMBERJACK
+	SPECIAL_LUMBERJACK,
+	SPECIAL_OUTPOST
 }
+
 enum Types {
 	NULL,
 	WOOD,
@@ -18,6 +21,7 @@ var all_data: Dictionary = {
 	Names.WOOD_TREE: load("uid://flg8f2dfjch1"),
 	Names.WOOD_GROVE: load("uid://cfyepdnjigkxa"),
 	Names.SPECIAL_LUMBERJACK: load("uid://tcqsywu5xh4d"),
+	Names.SPECIAL_OUTPOST: load("uid://bkofoigt7mcgd"),
 }
 
 var row_count: int = 0
@@ -84,19 +88,19 @@ func add_res(type: Types, amount: int) -> void:
 
 func _on_cell_died(cell: CellResource) -> void:
 	var data: CellResourceData = cell.data
-	add_res(data.type, data.break_value)
+	if data.break_value:
+		add_res(data.type, data.break_value)
+		
 	free_cell(cell)
 
-	
 func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
-	if !handle_hit_function(cell.data, cell):
-		return
+#	if !handle_hit_function(cell.data, cell):
+#		return
 	
 	var cells_to_damage: Dictionary = {cell: 1} # cell: damage_ratio
 	if spread_damage_data.to > 0 && spread_damage_data.ratio > 0:
 		cells_to_damage.merge(get_cells_to_spread_damage(cell, spread_damage_data.to, spread_damage_data.ratio))
 	
-#	print(cells_to_damage)
 	var base_damage_data: Dictionary = damage_data[DamageManager.DamageDataTypes.BASE]
 	var bonus_damage_data: Dictionary = damage_data.get(DamageManager.DamageDataTypes.BONUS, {})
 	var damage_mult: float = damage_data[DamageManager.DamageDataTypes.MULT]
@@ -105,7 +109,7 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 		var base_type_data: Dictionary = base_damage_data[type]
 		var bonus_type_data: Dictionary = bonus_damage_data[type]
 		for stat in base_type_data:
-			var damage_value: float = (base_type_data[stat] + bonus_type_data[stat]) * damage_mult#.get(type, {}).get(stat, 0)) * damage_mult
+			var damage_value: int = round((base_type_data[stat] + bonus_type_data[stat]) * damage_mult)#.get(type, {}).get(stat, 0)) * damage_mult
 			if damage_value != 0:
 				compiled_damage.append({"type": type, "stat": stat, "damage_value": damage_value})
 	
@@ -119,9 +123,12 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 					match i.stat:
 						DamageManager.Stats.HP:
 							var init_cell_hp: int = c.hp
-							print(value)
 							c.sub_hp(value)
-							add_res(cell_data.type, cell_data.value * value)
+							if cell_data.value:
+								if c.is_buffed():
+									value *= 2
+
+								add_res(cell_data.type, cell_data.value * value)
 						
 						DamageManager.Stats.LIFE_TIME:
 							c.sub_life_time(value)
@@ -146,32 +153,49 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 											if randi() % 100 < spawn_tree_on_overheal_chance:
 												var new_cell: CellResource = add_rand_resource(Types.WOOD)
 												if randi() % 100 < _owner.weakening_chance:
-													new_cell.set_weakened(true)
+													new_cell.set_effect(EffectManager.Effects.WEAKENED, true)
 													
 								var spawn_wood_to_the_right_chance: int = _owner.spawn_wood_to_the_right_chance
 								if spawn_wood_to_the_right_chance > 0:
 									if randi() % 100 < spawn_wood_to_the_right_chance:
 										add_rand_resource_at(cells.find_key(c) + Vector2i.RIGHT, Types.WOOD) 
-										
+								
+								var reduce_cd_if_heal: float = _owner.reduce_cd_if_heal
+								if reduce_cd_if_heal:
+									_owner.reduce_cd_time(reduce_cd_if_heal)
+									
 	
 		if c.hp <= 0:
-			print(c.hp)
-			cell_died.emit(cell)
+			handle_cell_death_func(cell_data, c)
+			cell_died.emit(c)
 
-func handle_hit_function(data: CellResourceData, cell: CellResource) -> bool:
+func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 	match data._name:
 		Names.SPECIAL_LUMBERJACK:
 			var cell_pos: Vector2 = cell.global_position + CELL_SIZE / 2
 			G.projectile_manager.add_resource_axe(cell_pos, data.crit_chance, 2, data.dmg_ratio,
-			get_rand_occupied_cell_global_center(cell, Types.WOOD), ProjectileDataModifiers.new(1.5, 0),  [cell])
-			free_cell(cell)
+			get_rand_occupied_cell_global_center(cell, Types.WOOD), ProjectileDataModifiers.new(1.5, 0), [cell])
 			if data.spawn_wood_chance > 0:
+				print(data.spawn_wood_chance)
 				if randi() % 100 < data.spawn_wood_chance:
-					add_rand_resource_at(cells.find_key(cell), Types.WOOD)
+					call_deferred("add_rand_resource_at", cells.find_key(cell), Types.WOOD)
 				
-			return false
 			
-	return true
+		Names.SPECIAL_OUTPOST:
+			for i in data.attacks:
+				var cell_pos: Vector2 = cell.global_position + CELL_SIZE / 2
+				G.projectile_manager.add_resource_bullet(cell_pos, 0, 2,
+				cell_pos.direction_to(get_rand_occupied_cell_global_center(cell)), 
+				ProjectileDataModifiers.new(1.5, data.weakening_chance), [cell], 0.1 * i)
+	
+
+func handle_hit_function(data: CellResourceData, cell: CellResource) -> void:
+	pass
+#			if data.spawn_wood_chance > 0:
+#				if randi() % 100 < data.spawn_wood_chance:
+#					add_rand_resource_at(cells.find_key(cell), Types.WOOD)
+#
+			
 
 func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float) -> Dictionary:
 	if occupied_cells.is_empty():
@@ -204,7 +228,7 @@ func get_cell_global_pos(coords: Vector2i) -> Vector2:
 func get_cell_global_center(coords: Vector2i) -> Vector2:
 	return cells[coords].global_position + CELL_SIZE / 2
 	
-func get_rand_occupied_cell(exclude: CellResource, type: Types = 0) -> CellResource:
+func get_rand_occupied_cell(exclude: CellResource = null, type: Types = 0) -> CellResource:
 	if occupied_cells.is_empty():
 		return null
 
@@ -319,7 +343,7 @@ func reset_cell_data(cell: CellResource, data: CellResourceData, old_data: CellR
 	var args: Dictionary = {
 		"sub_hp": old_data.durability - cell.hp, 
 		"sub_life_time": old_data.life_time - cell.timer.time_left, 
-		"effects": [cell.weakened]
+		"effects": [cell.is_weakened()]
 	}
 	set_cell_data(cell, data, args)
 
@@ -344,7 +368,7 @@ func free_cell(cell: CellResource) -> void:
 	if !is_cell_special(_name):
 		return
 		
-	spawned_special_cells[_name].erase(cell)
+#	spawned_special_cells[_name].erase(cell)
 	
 func free_cell_at(coords: Vector2i) -> void:
 	free_cell(cells[coords])
@@ -371,7 +395,7 @@ func occupy_cell(cell: CellResource) -> void:
 	if !is_cell_special(cell.data._name):
 		return
 		
-	spawned_special_cells[cell.data._name].append(cell)
+#	spawned_special_cells[cell.data._name].append(cell)
 
 func respawn_res_at_rand_cell(cell: CellResource) -> void:
 	if free_cells.is_empty():

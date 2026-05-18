@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="OutpostData" load_steps=2 format=3 uid="uid://bkofoigt7mcgd"]
+
+[ext_resource type="Script" path="res://Resources/_scr_cell_outpost_data.gd" id="1_sj7mj"]
+
+[resource]
+script = ExtResource("1_sj7mj")
+type = 2
+_name = 4
+color = Color(0.301961, 0.364706, 0.388235, 1)
+life_time = 12.0
+value = 0
+break_value = 0
+durability = 1

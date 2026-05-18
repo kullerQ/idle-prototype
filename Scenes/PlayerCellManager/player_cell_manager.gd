@@ -2,6 +2,9 @@ extends GridContainer
 class_name PlayerCellManager
 
 const CELLS_IN_COLUMN: int = 13
+enum AttackEffects {
+	RES_BREAK_VALUE,
+}
 var cells: Dictionary = {}
 var all_data: Dictionary = {
 	PlayerCellData.Types.NULL: load("uid://cgk1kaetu6bsg").duplicate(),
@@ -33,11 +36,13 @@ var upgrade_cell_idx: int = 0
 @onready var lvl_upgrades_highlight_label: Label = G.lvl_upgrades_highlight_label
 
 var economy: Economy
+var cell_manager: CellManager
 var damage_manager: DamageManager
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
 signal xp_added(cell: PlayerCell)
+signal cell_attacked(cell: PlayerCell)
 	
 func _ready() -> void:
 	var pos: Vector2i = Vector2i.ZERO
@@ -53,11 +58,12 @@ func _ready() -> void:
 	await get_tree().process_frame
 #	add_starting_cell(PlayerCellData.Types.DRUID, 0, 0)
 	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 0)
-	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 1)
+#	add_starting_cell(PlayerCellData.Types.SHOOTER, 0, 1)
 #	add_starting_cell(PlayerCellData.Types.EXECUTIONER, 0, 0)
 
 	cell_lvled_up.connect(_on_cell_lvled_up)
 	cell_upgraded.connect(_on_cell_upgraded)
+	cell_attacked.connect(_on_cell_attacked)
 	xp_added.connect(_on_xp_added)
 #	fill_grid(PlayerCellData.Types.SHOOTER)
 
@@ -185,3 +191,16 @@ func get_cell_to_upgrade() -> PlayerCell:
 	var cell: PlayerCell = cells_to_upgrade[upgrade_cell_idx]
 	upgrade_cell_idx = (upgrade_cell_idx + 1) % cells_to_upgrade.size()
 	return cell
+
+func _on_cell_attacked(cell: PlayerCell, attack_effects: Array) -> void:
+	if attack_effects.is_empty():
+		return
+		
+	for i in attack_effects:
+		match i:
+			AttackEffects.RES_BREAK_VALUE:
+				var res_cell: CellResource = cell_manager.get_rand_occupied_cell()
+				if res_cell:
+					var cell_data: CellResourceData = res_cell.data
+					cell_manager.add_res(cell_data.type, cell_data.break_value)
+				

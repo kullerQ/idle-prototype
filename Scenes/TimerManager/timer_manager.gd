@@ -38,10 +38,12 @@ func add_cell_spawn_timer(timer: DisplayableTimer, res_type: CellManager.Types) 
 	timer.mytimeout.connect(_on_cell_spawn_timeout)
 	add_timer(timer)
 
-func add_special_cell_spawn_timer(timer: DisplayableTimer, res_name: CellManager.Names) -> void:
+func add_special_cell_spawn_timer(res_name: CellManager.Names, wait_t: float, color: Color = Color("#9c0a00") ) -> Timer:
+	var timer: DisplayableTimer = DisplayableTimer.new( wait_t, color )
 	timers[Types.CELL_SPAWN][timer] = res_name
 	timer.mytimeout.connect(_on_special_cell_spawn_timeout)
 	add_timer(timer)
+	return timer
 
 func _on_special_cell_spawn_timeout(timer: DisplayableTimer) -> void:
 	cell_manager.add_resource(timers[Types.CELL_SPAWN][timer]) 
@@ -66,11 +68,18 @@ func sub_timer_wait_t(timer_type: Types, value: int, amount: float) -> void:
 	var timer: DisplayableTimer = get_timer(timer_type, value)
 	timer.wait_time = max(0.1, timer.wait_time - amount)
 
-func add_lumberjack_timer() -> void:
-	var wait_t: float = cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time
-	var timer: DisplayableTimer = DisplayableTimer.new( wait_t, Color(0.714, 0.576, 0.373) )
-	add_special_cell_spawn_timer(timer, CellManager.Names.SPECIAL_LUMBERJACK)
-	timer.start()
+#func add_lumberjack_timer() -> void:
+#	var wait_t: float = cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time
+#	var timer: DisplayableTimer = DisplayableTimer.new( wait_t,  )
+#	add_special_cell_spawn_timer(timer, CellManager.Names.SPECIAL_LUMBERJACK)
+#	timer.start()
+#
+#func add_outpost_timer() -> void:
+#	var wait_t: float = cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).life_time
+#	var timer: DisplayableTimer = DisplayableTimer.new( wait_t, Color(0.714, 0.576, 0.373) )
+#	add_special_cell_spawn_timer(timer, CellManager.Names.SPECIAL_LUMBERJACK)
+#	timer.start()
+	
 		
 #	var timer: DisplayableTimer = DisplayableTimer.new( 15, Color(0.714, 0.576, 0.373) )
 #	add_timer(timer, CellManager.Names.SPECIAL_LUMBERJACK, Types.CELL_SPAWN)

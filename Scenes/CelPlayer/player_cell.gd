@@ -22,6 +22,8 @@ var spawn_tree_on_overheal_chance: int = 0
 var spawn_wood_to_the_right_chance: int = 0
 var cell_lvlup_chance: int = 0
 var bonus_crit_chance_on_weakened: int = 0
+var attack_effects: Array = []
+var reduce_cd_if_heal: float = 0
 #################
 var bonus_damage: Dictionary = {}
 ##############
@@ -135,6 +137,7 @@ func attack() -> void:
 		return
 		
 	call(type_name + "_attack")
+	manager.cell_attacked.emit(self, attack_effects)
 	if auto_weakening_chance > 0:
 		if special_attack_count < 1:
 			special_attack_count += 1
@@ -249,7 +252,7 @@ func wizard_attack() -> void:
 ##################################
 func druid_attack() -> void:
 	add_dir_projectile(projectile_manager.add_druid_magic)
-
+	
 # executioner
 ##################################
 func executioner_attack() -> void:

@@ -44,6 +44,7 @@ func initialize() -> void:
 	player_cell_manager.name = "PlayerCellManager"
 	player_cell_manager.economy = economy
 	player_cell_manager.damage_manager = damage_manager
+	player_cell_manager.cell_manager = cell_manager
 	#
 	timer_manager = load("uid://bd2s6jemxrplh").instantiate()
 	timer_manager.name = "TimerManager"

@@ -16,9 +16,22 @@ var hp: int = 1
 @onready var default_color_bg: Color = progress_bar_hp_bg.bg_color
 @onready var default_color_fill: Color = progress_bar_hp_fill.bg_color
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
-@onready var panel_weaken: ProgressBar = $PanelWeaken
-var weakened: bool = false
-@onready var timer_weaken: Timer = $TimerWeaken
+var effects: Array = []
+@onready var effect_graphics: Dictionary = {
+	EffectManager.Effects.WEAKENED: [$PanelWeaken],
+	EffectManager.Effects.BUFFED: [$BuffedGraphics],
+}
+
+@onready var effect_progress_bars: Dictionary = {
+	EffectManager.Effects.WEAKENED: $PanelWeaken
+}
+
+@onready var effect_timers: Dictionary = {
+	EffectManager.Effects.WEAKENED: $TimerWeaken,
+#	EffectManager.Effects.BUFFED: null,
+}
+
+signal effect_timeout(effect: EffectManager.Effects)
 
 func _ready() -> void:
 	timer.timeout.connect(_on_timeout)
@@ -28,14 +41,32 @@ func _ready() -> void:
 	set_physics_process(false)
 	progress_bar.hide()
 	progress_bar_hp.hide()
-	panel_weaken.hide()
+#	panel_weaken.hide()
 	cell_hitbox.hitted.connect(_on_hitted)
 	# todo change to effect_timers dic 
-	timer_weaken.timeout.connect(_on_weaken_timeout)
+	
+	for arr in effect_graphics.values():
+		for node in arr:
+			node.hide()
+			
+	for e in effect_timers.keys():
+		if !effect_timers[e]:
+			continue
+			
+		effect_timers[e].timeout.connect(func() -> void: _on_effect_timeout(e))
+	
+#	timer_weaken.timeout.connect(_on_weaken_timeout)
 
 func _physics_process(delta) -> void:
 	progress_bar.value = timer.time_left / data.life_time 
-	panel_weaken.value = timer_weaken.time_left / timer_weaken.wait_time
+	for i in effects:
+		if !effect_progress_bars.has(i):
+			continue
+			
+		var pb: ProgressBar = effect_progress_bars[i]
+		var timer: Timer = effect_timers[i]
+		pb.value = timer.time_left / timer.wait_time
+#	panel_weaken.value = timer_weaken
 
 func _on_hitted(damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
 	if !data:
@@ -88,15 +119,15 @@ func set_disabled(_disabled: bool) -> void:
 		panel_style.bg_color = default_color_bg
 		progress_bar.hide()
 		progress_bar_hp.hide()
-		panel_weaken.hide()
+		
 #		progress_bar_hp_bg.bg_color = default_color
 #		progress_bar_hp.value = 0
-		set_physics_process(false)
 	else:
 		progress_bar.show()
-		panel_weaken.show()
 		progress_bar_hp.show()
-		set_physics_process(true)
+		
+	set_physics_process(!_disabled)
+	clear_effects()
 
 func _on_timeout() -> void:
 	manager.free_cell(self)
@@ -104,24 +135,45 @@ func _on_timeout() -> void:
 	set_disabled(true)
 
 func clear_effects() -> void:
-	set_weakened(false)
-
-func set_weakened(enabled: bool) -> void:
-	if weakened == enabled:
-		return
-		
-	weakened = enabled
-	if weakened:
-		panel_weaken.show()
-		panel_weaken.value = 1
-		timer_weaken.start()
-	else:
-		panel_weaken.hide()
-		panel_weaken.value = 0
-		timer_weaken.stop()
+	for e in range(1, EffectManager.Effects.size()):
+		set_effect(e, false)
 	
+	for timer in effect_timers.values():
+		if !timer:
+			continue
+			
+		timer.stop()
+		
+func set_effect(effect: EffectManager.Effects, enabled: bool) -> void:
+	var timer: Timer
+	if effect_timers.has(effect):
+		timer = effect_timers[effect]
+		
+	if !enabled:
+		if !effects.has(effect):
+			return
+		
+		effects.erase(effect)
+		if timer:
+			timer.stop()
+	else:
+		if effects.has(effect):
+			return
+			
+		effects.append(effect)
+		if timer:
+			timer.start()
+	
+	for i in effect_graphics[effect]:
+		i.visible = enabled
+		if i is ProgressBar:
+			i.value = 0 if !enabled else 1
+		
+func _on_effect_timeout(effect: EffectManager.Effects) -> void:
+	set_effect(effect, false)
+		
 func _on_weaken_timeout() -> void:
-	set_weakened(false)
+	set_effect(EffectManager.Effects.WEAKENED, false)
 
 # retunrs overheal
 func add_life_time(amount: float) -> float:
@@ -149,3 +201,10 @@ func sub_life_time(amount: float) -> float:
 	timer.wait_time = new_time_left
 	timer.start()
 	return 0
+
+func is_weakened() -> bool:
+	return effects.has(EffectManager.Effects.WEAKENED)
+
+func is_buffed() -> bool:
+	return effects.has(EffectManager.Effects.BUFFED)
+	

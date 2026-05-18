@@ -125,6 +125,32 @@ type = 3
 max_lvl = 5
 wood = PackedInt64Array(10, 15, 25, 35, 60)
 
+[node name="ShooterOutpost" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown" instance=ExtResource("3_xkrix")]
+offset_left = 48.0
+offset_top = -32.0
+offset_right = 64.0
+offset_bottom = -16.0
+type = 55
+wood = PackedInt64Array(50)
+
+[node name="OutpostWeakeningChance" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown/ShooterOutpost" instance=ExtResource("3_xkrix")]
+offset_left = 24.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = -16.0
+type = 56
+max_lvl = 5
+wood = PackedInt64Array(20, 20, 25, 25, 30)
+
+[node name="OutpostMultiattacks" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown/ShooterOutpost" instance=ExtResource("3_xkrix")]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = -8.0
+offset_bottom = -16.0
+type = 57
+max_lvl = 5
+wood = PackedInt64Array(50, 100, 100, 150, 150)
+
 [node name="BuletDmg" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
 offset_left = -48.0
 offset_right = -32.0
