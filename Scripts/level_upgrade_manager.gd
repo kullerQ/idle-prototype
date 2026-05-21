@@ -25,6 +25,7 @@ enum Types {
 	DRUID_ADD_RES_ON_ATTACK,
 	DRUID_MULTIATTACK,
 	DRUID_CD_FOR_HEALED,
+	DRUID_OBELISK_CHANCE,
 }
 
 var descriptions: Dictionary = {
@@ -47,6 +48,7 @@ var descriptions: Dictionary = {
 	Types.DRUID_SPAWN_WOOD_RIGHT: "+10% chance to spawn wood to the right of healed cell",
 	Types.DRUID_OVERHEAL_LVLUP: "if overheals: 35% chance to upgrade cell",
 	Types.ROGUE_CRIT_WEAK: "+30% crit chance if cell is weakened",
+	Types.DRUID_OBELISK_CHANCE: "+10% chance to add 1 druid obelisk if overheals",
 }
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
@@ -108,6 +110,9 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 			
 		Types.ROGUE_CRIT_WEAK:
 			cell.projectile_mod_data.bonus_crit_chance_on_weakened += 30
+			
+		Types.DRUID_OBELISK_CHANCE:
+			cell.obelisk_spawn_chance += 10
 			
 #			"if overheals: 25% chance to spawn weakened wood resource",
 #			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}

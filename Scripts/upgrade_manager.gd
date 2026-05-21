@@ -59,6 +59,7 @@ enum Types {
 	UNLOCK_OUTPOST,
 	OUTPOST_WEAKENING_CHANCE,
 	OUTPOST_MULTIATTACKS,
+	GROVE_BUFFED,
 	}
 
 var cell_manager : CellManager
@@ -127,6 +128,7 @@ var descriptions: Dictionary = {
 	Types.UNLOCK_OUTPOST: "every 20 seconds a shooter outpost appears",
 	Types.OUTPOST_WEAKENING_CHANCE: "outpost chance to shoot weakening bullet +20%",
 	Types.OUTPOST_MULTIATTACKS: "outpost shoots +1 bullet%",
+	Types.GROVE_BUFFED: "+5% for grove to spawn buffed%",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -228,6 +230,9 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.GROVE_VALUE:
 			cell_manager.get_data(CellManager.Names.WOOD_GROVE).value += 1
 			
+		Types.GROVE_BUFFED:
+			cell_manager.get_data(CellManager.Names.WOOD_GROVE).buffed_chance += 5
+			
 		Types.SHOOTER_XP:
 			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).xp_increase += 1
 			
@@ -321,6 +326,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.GREATAXE_RANGE:
 			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_piercings += 1
 			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_range += 1
+			
 			
 			
 			

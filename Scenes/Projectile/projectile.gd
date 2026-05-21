@@ -147,7 +147,7 @@ func ricochet(cell: CellResource = null, div_dmg: bool = true) -> bool:
 		die()
 		return false
 		
-	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center(cell)
+	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center([cell])
 	if !target_cell_pos:
 		return false
 		

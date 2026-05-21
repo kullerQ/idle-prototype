@@ -8,3 +8,4 @@ class_name CellResourceData
 @export var value: int
 @export var break_value: int 
 @export var durability: int
+@export var buffed_chance: int

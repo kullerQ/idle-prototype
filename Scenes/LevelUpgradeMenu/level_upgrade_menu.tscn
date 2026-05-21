@@ -363,7 +363,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 11
+type = 24
 
 [node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2"]
 layout_mode = 2

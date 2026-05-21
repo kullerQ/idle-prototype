@@ -221,6 +221,15 @@ type = 23
 max_lvl = 5
 wood = PackedInt64Array(200, 500, 1000, 1600, 2100)
 
+[node name="GroveBuffed" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveValue" instance=ExtResource("3_xkrix")]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = -8.0
+offset_bottom = -16.0
+type = 58
+max_lvl = 6
+wood = PackedInt64Array(1000, 1000, 2000, 2000, 3000, 3000)
+
 [node name="GroveSpawnChance" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd" instance=ExtResource("3_xkrix")]
 offset_left = -48.0
 offset_right = -32.0
@@ -263,19 +272,19 @@ type = 39
 max_lvl = 5
 wood = PackedInt64Array(500, 500, 500, 500, 500)
 
-[node name="KnifeSpd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2" instance=ExtResource("3_xkrix")]
-offset_top = -32.0
-offset_bottom = -16.0
-type = 41
-max_lvl = 3
-wood = PackedInt64Array(250, 250, 250)
-
-[node name="KnifeRange" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2/KnifeSpd" instance=ExtResource("3_xkrix")]
+[node name="KnifeRange" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 53
 max_lvl = 6
 wood = PackedInt64Array(150, 200, 250, 300, 300, 300)
+
+[node name="KnifeSpd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2/KnifeRange" instance=ExtResource("3_xkrix")]
+offset_top = -32.0
+offset_bottom = -16.0
+type = 41
+max_lvl = 3
+wood = PackedInt64Array(250, 250, 250)
 
 [node name="RogueCooldown" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
 offset_top = -64.0

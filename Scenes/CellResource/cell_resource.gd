@@ -105,11 +105,13 @@ func set_data(_data: CellResourceData, args: Dictionary) -> void:
 		timer.wait_time = data.life_time - args.sub_life_time
 		timer.start()
 		progress_bar.value = timer.time_left / data.life_time
-	
 		
 	if args.effects.is_empty():
 		clear_effects()
-	
+	else:
+		for e in args.effects:
+			set_effect(e, true)
+		
 	set_hp(data.durability - args.sub_hp)
 	manager.occupy_cell(self)
 
@@ -119,7 +121,7 @@ func set_disabled(_disabled: bool) -> void:
 		panel_style.bg_color = default_color_bg
 		progress_bar.hide()
 		progress_bar_hp.hide()
-		
+		clear_effects()
 #		progress_bar_hp_bg.bg_color = default_color
 #		progress_bar_hp.value = 0
 	else:
@@ -127,7 +129,6 @@ func set_disabled(_disabled: bool) -> void:
 		progress_bar_hp.show()
 		
 	set_physics_process(!_disabled)
-	clear_effects()
 
 func _on_timeout() -> void:
 	manager.free_cell(self)
@@ -172,11 +173,11 @@ func set_effect(effect: EffectManager.Effects, enabled: bool) -> void:
 func _on_effect_timeout(effect: EffectManager.Effects) -> void:
 	set_effect(effect, false)
 		
-func _on_weaken_timeout() -> void:
-	set_effect(EffectManager.Effects.WEAKENED, false)
-
 # retunrs overheal
 func add_life_time(amount: float) -> float:
+	if !data.life_time:
+		return 0
+		
 	var time_left: float = timer.time_left
 	var new_time_left: float = time_left + amount
 	var overheal: float = 0

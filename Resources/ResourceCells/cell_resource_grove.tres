@@ -11,3 +11,4 @@ life_time = 20.0
 value = 3
 break_value = 40
 durability = 100
+buffed_chance = 0

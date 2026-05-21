@@ -23,13 +23,14 @@ func _input(event):
 				Engine.time_scale = 4
 	# resource cells
 			KEY_T:
-				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_TREE)
+				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_GROVE)
 			KEY_Z:
-				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_OUTPOST)
+				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_DRUID_OBELISK)
 			KEY_B:
 				var cell_manager: CellManager = G.cell_manager
 				var cell: CellResource = cell_manager.get_cell_from_global_pos(get_global_mouse_position())
-				cell.set_effect(EffectManager.Effects.BUFFED, !cell.is_buffed())
+#				cell.set_effect(EffectManager.Effects.BUFFED, !cell.is_buffed())
+				cell.set_effect(EffectManager.Effects.WEAKENED, !cell.is_weakened())
 			KEY_V:
 				var cell_manager: CellManager = G.cell_manager
 				var cell: CellResource = cell_manager.get_cell_from_global_pos(get_global_mouse_position())

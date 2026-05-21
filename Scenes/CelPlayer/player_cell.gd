@@ -24,6 +24,9 @@ var cell_lvlup_chance: int = 0
 var bonus_crit_chance_on_weakened: int = 0
 var attack_effects: Array = []
 var reduce_cd_if_heal: float = 0
+var max_obelisks: int = 1
+var obelisk_spawn_chance: int = 0
+var obelisks: Array = []
 #################
 var bonus_damage: Dictionary = {}
 ##############

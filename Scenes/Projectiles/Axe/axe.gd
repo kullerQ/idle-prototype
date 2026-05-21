@@ -17,7 +17,7 @@ func move(delta: float) -> void:
 			return
 		
 		if bounce:
-			target_pos = G.cell_manager.get_rand_occupied_cell_global_center(null, CellManager.Types.WOOD)
+			target_pos = G.cell_manager.get_rand_occupied_cell_global_center([], CellManager.Types.WOOD)
 			if target_pos:
 				spd = data.spd
 				set_physics_process(true)
