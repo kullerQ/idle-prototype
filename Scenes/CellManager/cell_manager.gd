@@ -394,8 +394,13 @@ func reset_cell_data(cell: CellResource, data: CellResourceData, old_data: CellR
 	var args: Dictionary = {
 		"sub_hp": old_data.durability - cell.hp, 
 		"sub_life_time": old_data.life_time - cell.timer.time_left, 
-		"effects": [cell.is_weakened()]
+		"effects": []
 	}
+
+	# Temporary fix
+	args.effects.append(EffectManager.Effects.BUFFED) if cell.is_buffed() else null
+	args.effects.append(EffectManager.Effects.WEAKENED) if cell.is_weakened() else null
+
 	set_cell_data(cell, data, args)
 
 func set_cell_data(cell: CellResource, data: CellResourceData, args: Dictionary = {"sub_hp": 0, "sub_life_time": 0, "effects": [] })  -> void:
