@@ -43,8 +43,21 @@ func add_special_cell_spawn_timer(res_name: CellManager.Names, wait_t: float, co
 	timers[Types.CELL_SPAWN][timer] = res_name
 	timer.mytimeout.connect(_on_special_cell_spawn_timeout)
 	add_timer(timer)
+	if !G.in_expedition:
+		timer.start()
+		
 	return timer
 
+func stop_timers() -> void:
+	for i in timers.values():
+		for timer in i:
+			timer.stop()
+	
+func start_timers() -> void:
+	for i in timers.values():
+		for timer in i:
+			timer.start()
+	
 func _on_special_cell_spawn_timeout(timer: DisplayableTimer) -> void:
 	cell_manager.add_resource(timers[Types.CELL_SPAWN][timer]) 
 	

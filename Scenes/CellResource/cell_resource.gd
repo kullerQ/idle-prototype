@@ -79,6 +79,7 @@ func _on_hitted(damage_data: Dictionary, spread_damage_data: Dictionary) -> void
 func sub_hp(v: int) -> void:
 	if !data:
 		return
+	
 	set_hp(hp - v)
 	
 func add_hp(v: int) -> void:

@@ -86,7 +86,7 @@ func initialize() -> void:
 			for type in Types.size():
 				projectile_damage_data[projcetile][damage_data_type][type] = {}
 		
-	new_base_data(ProjectileManager.Types.BULLET, new_data(), new_data(1))
+	new_base_data(ProjectileManager.Types.BULLET, new_data(), new_data(100))
 	new_base_data(ProjectileManager.Types.KNIFE, new_data(), new_data(3))
 	new_base_data(ProjectileManager.Types.DRUID_MAGIC, new_data(0, 1))
 	new_base_data(ProjectileManager.Types.GREATAXE, new_data(), new_data(10))

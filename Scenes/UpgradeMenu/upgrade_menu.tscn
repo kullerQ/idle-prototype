@@ -14,9 +14,10 @@ offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3axdk")
+type = 1
 metadata/_edit_lock_ = true
 
-[node name="Control" type="Control" parent="."]
+[node name="Graphics" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +26,7 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_lock_ = true
 
-[node name="ColorRect" type="ColorRect" parent="Control"]
+[node name="ColorRect" type="ColorRect" parent="Graphics"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,7 +36,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.760784)
 metadata/_edit_lock_ = true
 
-[node name="Graphics" type="Control" parent="Control"]
+[node name="Tree" type="Control" parent="Graphics"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,7 +46,7 @@ grow_vertical = 2
 script = ExtResource("2_11oit")
 metadata/_edit_lock_ = true
 
-[node name="UpgradeNode" parent="Control/Graphics" instance=ExtResource("3_xkrix")]
+[node name="UpgradeNode" parent="Graphics/Tree" instance=ExtResource("3_xkrix")]
 offset_left = 128.0
 offset_top = 64.0
 offset_right = 144.0
@@ -54,25 +55,25 @@ type = 2
 lvl = 1
 locked = false
 
-[node name="AddTowerCell" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell" parent="Graphics/Tree/UpgradeNode" instance=ExtResource("3_xkrix")]
 offset_left = -48.0
 offset_right = -32.0
 type = 1
 wood = PackedInt64Array(5)
 
-[node name="AddTowerCell2" parent="Control/Graphics/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell2" parent="Graphics/Tree/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 1
 wood = PackedInt64Array(15)
 
-[node name="AddTowerCell3" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell3" parent="Graphics/Tree/UpgradeNode/AddTowerCell/AddTowerCell2" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 1
 wood = PackedInt64Array(25)
 
-[node name="AddTowerCell4" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell4" parent="Graphics/Tree/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_top = -16.0
 offset_right = -24.0
@@ -80,7 +81,7 @@ offset_bottom = 0.0
 type = 1
 wood = PackedInt64Array(50)
 
-[node name="AddTowerCell5" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell5" parent="Graphics/Tree/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_top = -8.0
 offset_right = -24.0
@@ -88,13 +89,13 @@ offset_bottom = 8.0
 type = 1
 wood = PackedInt64Array(120)
 
-[node name="AddTowerCell6" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4/AddTowerCell5" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell6" parent="Graphics/Tree/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4/AddTowerCell5" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 1
 wood = PackedInt64Array(200)
 
-[node name="AddTowerCell7" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4/AddTowerCell5/AddTowerCell6" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell7" parent="Graphics/Tree/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4/AddTowerCell5/AddTowerCell6" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_top = 16.0
 offset_right = -24.0
@@ -102,7 +103,7 @@ offset_bottom = 32.0
 type = 1
 wood = PackedInt64Array(300)
 
-[node name="AddTowerCell8" parent="Control/Graphics/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4/AddTowerCell5/AddTowerCell6/AddTowerCell7" instance=ExtResource("3_xkrix")]
+[node name="AddTowerCell8" parent="Graphics/Tree/UpgradeNode/AddTowerCell/AddTowerCell2/AddTowerCell3/AddTowerCell4/AddTowerCell5/AddTowerCell6/AddTowerCell7" instance=ExtResource("3_xkrix")]
 offset_left = -32.0
 offset_top = 24.0
 offset_right = -16.0
@@ -110,7 +111,7 @@ offset_bottom = 40.0
 type = 1
 wood = PackedInt64Array(350)
 
-[node name="Shooter" parent="Control/Graphics/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
+[node name="Shooter" parent="Graphics/Tree/UpgradeNode/AddTowerCell" instance=ExtResource("3_xkrix")]
 offset_top = -40.0
 offset_bottom = -24.0
 type = 2
@@ -118,14 +119,14 @@ unlock_lvl = 0
 wood = PackedInt64Array(5)
 free_cells = PackedInt64Array(1)
 
-[node name="ShooterCooldown" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
+[node name="ShooterCooldown" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_right = 64.0
 type = 3
 max_lvl = 5
 wood = PackedInt64Array(10, 15, 25, 35, 60)
 
-[node name="ShooterOutpost" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown" instance=ExtResource("3_xkrix")]
+[node name="ShooterOutpost" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_top = -32.0
 offset_right = 64.0
@@ -133,7 +134,7 @@ offset_bottom = -16.0
 type = 55
 wood = PackedInt64Array(50)
 
-[node name="OutpostWeakeningChance" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown/ShooterOutpost" instance=ExtResource("3_xkrix")]
+[node name="OutpostWeakeningChance" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown/ShooterOutpost" instance=ExtResource("3_xkrix")]
 offset_left = 24.0
 offset_top = -32.0
 offset_right = 40.0
@@ -142,7 +143,7 @@ type = 56
 max_lvl = 5
 wood = PackedInt64Array(20, 20, 25, 25, 30)
 
-[node name="OutpostMultiattacks" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown/ShooterOutpost" instance=ExtResource("3_xkrix")]
+[node name="OutpostMultiattacks" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/ShooterCooldown/ShooterOutpost" instance=ExtResource("3_xkrix")]
 offset_left = -24.0
 offset_top = -32.0
 offset_right = -8.0
@@ -151,42 +152,42 @@ type = 57
 max_lvl = 5
 wood = PackedInt64Array(50, 100, 100, 150, 150)
 
-[node name="BuletDmg" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
+[node name="BuletDmg" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
 offset_left = -48.0
 offset_right = -32.0
 type = 7
 max_lvl = 5
 wood = PackedInt64Array(10, 100, 150, 350, 500)
 
-[node name="Shooter2" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
+[node name="Shooter2" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 2
 wood = PackedInt64Array(60)
 free_cells = PackedInt64Array(1)
 
-[node name="BulletSpd" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
+[node name="BulletSpd" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_right = 64.0
 type = 9
 max_lvl = 5
 wood = PackedInt64Array(20, 40, 60, 80, 100)
 
-[node name="ShooterCrit" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
+[node name="ShooterCrit" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
 offset_left = -48.0
 offset_right = -32.0
 type = 5
 max_lvl = 5
 wood = PackedInt64Array(25, 60, 95, 130, 170)
 
-[node name="ShooterCritMult" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2/ShooterCrit" instance=ExtResource("3_xkrix")]
+[node name="ShooterCritMult" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/Shooter2/ShooterCrit" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 6
 max_lvl = 3
 wood = PackedInt64Array(200, 500, 1000)
 
-[node name="ShooterXP" parent="Control/Graphics/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
+[node name="ShooterXP" parent="Graphics/Tree/UpgradeNode/AddTowerCell/Shooter/Shooter2" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 24
@@ -194,34 +195,34 @@ max_lvl = 5
 wood = PackedInt64Array(100, 100, 100, 150, 150)
 free_cells = PackedInt64Array(1)
 
-[node name="TreeLifetimer" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+[node name="TreeLifetimer" parent="Graphics/Tree/UpgradeNode" instance=ExtResource("3_xkrix")]
 offset_top = 40.0
 offset_bottom = 56.0
 type = 19
 max_lvl = 5
 wood = PackedInt64Array(20, 30, 40, 50, 60)
 
-[node name="TreeDurability" parent="Control/Graphics/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
+[node name="TreeDurability" parent="Graphics/Tree/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
 offset_top = 64.0
 offset_bottom = 80.0
 type = 20
 max_lvl = 10
 wood = PackedInt64Array(10, 20, 30, 40, 60, 150, 300, 400, 550, 650)
 
-[node name="GroveAdd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability" instance=ExtResource("3_xkrix")]
+[node name="GroveAdd" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability" instance=ExtResource("3_xkrix")]
 offset_left = -56.0
 offset_right = -40.0
 type = 21
 wood = PackedInt64Array(1000)
 
-[node name="GroveValue" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd" instance=ExtResource("3_xkrix")]
+[node name="GroveValue" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 23
 max_lvl = 5
 wood = PackedInt64Array(200, 500, 1000, 1600, 2100)
 
-[node name="GroveBuffed" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveValue" instance=ExtResource("3_xkrix")]
+[node name="GroveBuffed" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveValue" instance=ExtResource("3_xkrix")]
 offset_left = -24.0
 offset_top = -32.0
 offset_right = -8.0
@@ -230,127 +231,133 @@ type = 58
 max_lvl = 6
 wood = PackedInt64Array(1000, 1000, 2000, 2000, 3000, 3000)
 
-[node name="GroveSpawnChance" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd" instance=ExtResource("3_xkrix")]
+[node name="GroveSpawnChance" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd" instance=ExtResource("3_xkrix")]
 offset_left = -48.0
 offset_right = -32.0
 type = 22
 max_lvl = 5
 wood = PackedInt64Array(200, 200, 400, 400, 800)
 
-[node name="Rogue" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance" instance=ExtResource("3_xkrix")]
+[node name="Rogue" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 35
 wood = PackedInt64Array(200)
 free_cells = PackedInt64Array(1)
 
-[node name="RogueCritChance" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue" instance=ExtResource("3_xkrix")]
+[node name="RogueCritChance" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 37
 max_lvl = 5
 wood = PackedInt64Array(200, 200, 200, 300, 300, 300)
 
-[node name="RogueCritMult" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
+[node name="RogueCritMult" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 38
 max_lvl = 3
 wood = PackedInt64Array(500, 1500, 3000)
 
-[node name="Rogue2" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult" instance=ExtResource("3_xkrix")]
+[node name="Rogue2" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 35
 wood = PackedInt64Array(100)
 free_cells = PackedInt64Array(1)
 
-[node name="RogueXp" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2" instance=ExtResource("3_xkrix")]
+[node name="RogueXp" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 39
 max_lvl = 5
 wood = PackedInt64Array(500, 500, 500, 500, 500)
 
-[node name="KnifeRange" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2" instance=ExtResource("3_xkrix")]
+[node name="KnifeRange" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 53
 max_lvl = 6
 wood = PackedInt64Array(150, 200, 250, 300, 300, 300)
 
-[node name="KnifeSpd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2/KnifeRange" instance=ExtResource("3_xkrix")]
+[node name="KnifeSpd" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance/RogueCritMult/Rogue2/KnifeRange" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 41
 max_lvl = 3
 wood = PackedInt64Array(250, 250, 250)
 
-[node name="RogueCooldown" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
+[node name="RogueCooldown" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
 offset_top = -64.0
 offset_bottom = -48.0
 type = 36
 max_lvl = 5
 wood = PackedInt64Array(600, 600, 600, 600, 600)
 
-[node name="KnifePiercing" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
-offset_top = 32.0
-offset_bottom = 48.0
+[node name="KnifePiercing" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
+offset_left = 40.0
+offset_top = -32.0
+offset_right = 56.0
+offset_bottom = -16.0
 type = 42
 max_lvl = 3
 wood = PackedInt64Array(1000, 1500, 3000)
 
-[node name="KnifeDmg" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
+[node name="KnifeDmg" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/RogueCritChance" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
 offset_right = -24.0
 type = 40
 max_lvl = 6
 wood = PackedInt64Array(300, 1000, 2000, 4000, 4000, 4000)
 
-[node name="Executioner" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue" instance=ExtResource("3_xkrix")]
+[node name="Executioner" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue" instance=ExtResource("3_xkrix")]
 offset_top = 48.0
 offset_bottom = 64.0
 type = 43
 wood = PackedInt64Array(400)
 free_cells = PackedInt64Array(1)
 
-[node name="GreataxePiercing" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner" instance=ExtResource("3_xkrix")]
+[node name="GreataxePiercing" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner" instance=ExtResource("3_xkrix")]
 offset_top = 32.0
 offset_bottom = 48.0
 type = 52
 max_lvl = 4
 wood = PackedInt64Array(200, 200, 200, 300)
 
-[node name="GreataxeDmg" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing" instance=ExtResource("3_xkrix")]
+[node name="GreataxeDmg" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing" instance=ExtResource("3_xkrix")]
 offset_left = -40.0
+offset_top = 16.0
 offset_right = -24.0
+offset_bottom = 32.0
 type = 48
 max_lvl = 5
 wood = PackedInt64Array(500, 1500, 3000, 3000, 3000)
 
-[node name="ExecutionerCritChance" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeDmg" instance=ExtResource("3_xkrix")]
-offset_left = -40.0
-offset_right = -24.0
-type = 45
-max_lvl = 5
-wood = PackedInt64Array(250, 250, 400, 400, 500)
-
-[node name="ExecutionerCritMult" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeDmg" instance=ExtResource("3_xkrix")]
-offset_left = -40.0
-offset_top = -24.0
-offset_right = -24.0
-offset_bottom = -8.0
+[node name="ExecutionerCritMult" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeDmg" instance=ExtResource("3_xkrix")]
+offset_left = -32.0
+offset_top = 32.0
+offset_right = -16.0
+offset_bottom = 48.0
 type = 46
 max_lvl = 3
 wood = PackedInt64Array(2000, 3000, 4000)
 
-[node name="GreataxeBackstab" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing" instance=ExtResource("3_xkrix")]
+[node name="ExecutionerCritChance" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeDmg" instance=ExtResource("3_xkrix")]
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 24.0
+type = 45
+max_lvl = 5
+wood = PackedInt64Array(250, 250, 400, 400, 500)
+
+[node name="GreataxeBackstab" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing" instance=ExtResource("3_xkrix")]
 offset_top = 32.0
 offset_bottom = 48.0
 type = 49
 wood = PackedInt64Array(800)
 
-[node name="GreataxeBackstabDmg" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeBackstab" instance=ExtResource("3_xkrix")]
+[node name="GreataxeBackstabDmg" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeBackstab" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_top = 16.0
 offset_right = 64.0
@@ -359,7 +366,7 @@ type = 50
 max_lvl = 5
 wood = PackedInt64Array(300, 300, 350, 350, 400)
 
-[node name="GreataxeRange" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing" instance=ExtResource("3_xkrix")]
+[node name="GreataxeRange" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_right = 64.0
 type = 54
@@ -367,7 +374,7 @@ max_lvl = 5
 unlock_lvl = 4
 wood = PackedInt64Array(450, 500, 500, 600, 600, 750)
 
-[node name="Executioner2" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeRange" instance=ExtResource("3_xkrix")]
+[node name="Executioner2" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeRange" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_top = -16.0
 offset_right = 64.0
@@ -375,7 +382,7 @@ offset_bottom = 0.0
 type = 43
 wood = PackedInt64Array(600)
 
-[node name="ExecutionerXp" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeRange/Executioner2" instance=ExtResource("3_xkrix")]
+[node name="ExecutionerXp" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeRange/Executioner2" instance=ExtResource("3_xkrix")]
 offset_left = 32.0
 offset_top = -24.0
 offset_right = 48.0
@@ -384,7 +391,7 @@ type = 47
 max_lvl = 5
 wood = PackedInt64Array(1200, 1200, 1800, 1800, 2500)
 
-[node name="GreataxeSpd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeRange" instance=ExtResource("3_xkrix")]
+[node name="GreataxeSpd" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/Rogue/Executioner/GreataxePiercing/GreataxeRange" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_top = 16.0
 offset_right = 64.0
@@ -393,7 +400,42 @@ type = 51
 max_lvl = 5
 wood = PackedInt64Array(500, 500, 700, 700, 700)
 
-[node name="TreeSpawnrate" parent="Control/Graphics/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
+[node name="ForestAdd" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance" instance=ExtResource("3_xkrix")]
+offset_left = -72.0
+offset_top = 32.0
+offset_right = -56.0
+offset_bottom = 48.0
+type = 59
+wood = PackedInt64Array(2000)
+
+[node name="GroveValue" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/ForestAdd" instance=ExtResource("3_xkrix")]
+offset_left = -40.0
+offset_top = 8.0
+offset_right = -24.0
+offset_bottom = 24.0
+type = 23
+max_lvl = 5
+wood = PackedInt64Array(200, 500, 1000, 1600, 2100)
+
+[node name="GroveBuffed" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/ForestAdd/GroveValue" instance=ExtResource("3_xkrix")]
+offset_left = -40.0
+offset_top = -16.0
+offset_right = -24.0
+offset_bottom = 0.0
+type = 58
+max_lvl = 6
+wood = PackedInt64Array(1000, 1000, 2000, 2000, 3000, 3000)
+
+[node name="GroveSpawnChance" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/TreeDurability/GroveAdd/GroveSpawnChance/ForestAdd" instance=ExtResource("3_xkrix")]
+offset_left = -56.0
+offset_top = 32.0
+offset_right = -40.0
+offset_bottom = 48.0
+type = 22
+max_lvl = 5
+wood = PackedInt64Array(200, 200, 400, 400, 800)
+
+[node name="TreeSpawnrate" parent="Graphics/Tree/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
 offset_left = 40.0
 offset_top = 32.0
 offset_right = 56.0
@@ -402,69 +444,69 @@ type = 18
 max_lvl = 8
 wood = PackedInt64Array(20, 25, 35, 45, 60, 80, 90, 100)
 
-[node name="Druid" parent="Control/Graphics/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
+[node name="Druid" parent="Graphics/Tree/UpgradeNode/TreeLifetimer" instance=ExtResource("3_xkrix")]
 offset_left = 64.0
 offset_right = 80.0
 type = 27
 wood = PackedInt64Array(15)
 free_cells = PackedInt64Array(1)
 
-[node name="DruidMagicDmg" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid" instance=ExtResource("3_xkrix")]
+[node name="DruidMagicDmg" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid" instance=ExtResource("3_xkrix")]
 offset_left = 56.0
 offset_right = 72.0
 type = 31
 max_lvl = 5
 wood = PackedInt64Array(20, 30, 40, 50, 60)
 
-[node name="DruidMagicSpd" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg" instance=ExtResource("3_xkrix")]
+[node name="DruidMagicSpd" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg" instance=ExtResource("3_xkrix")]
 offset_top = 32.0
 offset_bottom = 48.0
 type = 32
 max_lvl = 5
 wood = PackedInt64Array(25, 50, 100, 180, 260)
 
-[node name="DruidCooldown" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg" instance=ExtResource("3_xkrix")]
+[node name="DruidCooldown" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_right = 64.0
 type = 28
 max_lvl = 5
 wood = PackedInt64Array(20, 30, 40, 50, 60)
 
-[node name="Druid2" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown" instance=ExtResource("3_xkrix")]
+[node name="Druid2" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown" instance=ExtResource("3_xkrix")]
 offset_left = 40.0
 offset_right = 56.0
 type = 27
 wood = PackedInt64Array(100)
 free_cells = PackedInt64Array(1)
 
-[node name="DruidXp" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown/Druid2" instance=ExtResource("3_xkrix")]
+[node name="DruidXp" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown/Druid2" instance=ExtResource("3_xkrix")]
 offset_top = 32.0
 offset_bottom = 48.0
 type = 33
 max_lvl = 5
 wood = PackedInt64Array(80, 100, 150, 200, 250)
 
-[node name="DruidCrit" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown/Druid2" instance=ExtResource("3_xkrix")]
+[node name="DruidCrit" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown/Druid2" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 29
 max_lvl = 5
 wood = PackedInt64Array(50, 50, 100, 100, 150)
 
-[node name="DruidCritMult" parent="Control/Graphics/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown/Druid2/DruidCrit" instance=ExtResource("3_xkrix")]
+[node name="DruidCritMult" parent="Graphics/Tree/UpgradeNode/TreeLifetimer/Druid/DruidMagicDmg/DruidCooldown/Druid2/DruidCrit" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 30
 max_lvl = 2
 wood = PackedInt64Array(200, 200)
 
-[node name="UnlockLumberjack" parent="Control/Graphics/UpgradeNode" instance=ExtResource("3_xkrix")]
+[node name="UnlockLumberjack" parent="Graphics/Tree/UpgradeNode" instance=ExtResource("3_xkrix")]
 offset_left = 48.0
 offset_right = 64.0
 type = 10
 wood = PackedInt64Array(15)
 
-[node name="LumberjackDmg" parent="Control/Graphics/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
+[node name="LumberjackDmg" parent="Graphics/Tree/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
 offset_left = 40.0
 offset_top = -16.0
 offset_right = 56.0
@@ -473,27 +515,27 @@ type = 16
 max_lvl = 6
 wood = PackedInt64Array(20, 20, 20, 60, 60, 60)
 
-[node name="LumberjackSpd" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
+[node name="LumberjackSpd" parent="Graphics/Tree/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
 offset_left = 40.0
 offset_right = 56.0
 type = 26
 max_lvl = 5
 wood = PackedInt64Array(50, 50, 50, 80, 80)
 
-[node name="AxeBounce" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
+[node name="AxeBounce" parent="Graphics/Tree/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 25
 wood = PackedInt64Array(180)
 
-[node name="LumberjackSpawnWood" parent="Control/Graphics/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
+[node name="LumberjackSpawnWood" parent="Graphics/Tree/UpgradeNode/UnlockLumberjack/LumberjackDmg" instance=ExtResource("3_xkrix")]
 offset_top = 32.0
 offset_bottom = 48.0
 type = 34
 max_lvl = 4
 wood = PackedInt64Array(250, 250, 250, 250)
 
-[node name="LumberjackCrit" parent="Control/Graphics/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
+[node name="LumberjackCrit" parent="Graphics/Tree/UpgradeNode/UnlockLumberjack" instance=ExtResource("3_xkrix")]
 offset_top = -32.0
 offset_bottom = -16.0
 type = 15

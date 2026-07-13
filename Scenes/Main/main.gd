@@ -23,7 +23,7 @@ func _input(event):
 				Engine.time_scale = 4
 	# resource cells
 			KEY_T:
-				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_GROVE)
+				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.WOOD_FOREST)
 			KEY_Z:
 				G.cell_manager.add_resource_at_global(get_global_mouse_position(), CellManager.Names.SPECIAL_DRUID_OBELISK)
 			KEY_B:
@@ -43,6 +43,9 @@ func _input(event):
 					m.add_rand_resource(CellManager.Types.WOOD)
 			KEY_X:
 				G.cell_manager.free_cell_at_global(get_global_mouse_position())
+			
+			KEY_K:
+				G.cell_manager.kill_grid()
 			
 	# player cells
 			KEY_1:
@@ -73,4 +76,17 @@ func _input(event):
 #				DamageManager.add_hit_hp(cell.bonus_damage, 1)
 #				G.player_cell_manager.set_cell_bonus_damage_preset(cell, DamageManager.TowerPresets.DRUID_DURAB)
 
+	# expeditions
+			KEY_KP_1:
+				if !G.in_expedition:
+					G.expedition_manager.select_expedition(ExpeditionManager.Types.WHITE_TREE, 1)
+					return
+					
+				G.expedition_manager.complete_expedition()
+				
+	# ui
+			KEY_O:
+				G.ui_layout_change_requested.emit(UIPP.Layouts.BASE)
+			KEY_P:
+				G.ui_layout_change_requested.emit(UIPP.Layouts.EXPEDITION)
 				

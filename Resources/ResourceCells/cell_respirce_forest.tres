@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ForestData" load_steps=2 format=3 uid="uid://co3h5t00833iw"]
+
+[ext_resource type="Script" path="res://Resources/_scr_cell_forest_data.gd" id="1_6ckrp"]
+
+[resource]
+script = ExtResource("1_6ckrp")
+min_add_cells = 1
+max_add_cells = 2
+type = 1
+_name = 6
+color = Color(0.172549, 0.294118, 0.184314, 1)
+life_time = 25.0
+value = 5
+break_value = 80
+durability = 190
+buffed_chance = 0

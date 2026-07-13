@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://tb22m3814na3"]
 
-[ext_resource type="Script" path="res://Scenes/Game/button_upgrades.gd" id="1_7kvol"]
-[ext_resource type="Script" path="res://Scenes/PanelButton/panel_button.gd" id="1_rqo2n"]
+[ext_resource type="Script" path="res://Scenes/ButtonAnimated/animated_button.gd" id="1_w2tqq"]
+[ext_resource type="Script" path="res://Scenes/Game/button_upgrades.gd" id="2_8inwq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wjxge"]
 bg_color = Color(0.121569, 0.121569, 0.121569, 1)
@@ -41,13 +41,13 @@ corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4cv7d"]
 
-[node name="PanelButton" type="Control"]
+[node name="AnimatedButton" type="Control"]
 custom_minimum_size = Vector2(25, 8)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 25.0
 offset_bottom = 8.0
-script = ExtResource("1_rqo2n")
+script = ExtResource("1_w2tqq")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
@@ -62,4 +62,4 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_poume")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_tw4ve")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_4cv7d")
 action_mode = 0
-script = ExtResource("1_7kvol")
+script = ExtResource("2_8inwq")

@@ -1,0 +1,546 @@
+[gd_scene load_steps=4 format=3 uid="uid://bf8jqj25r6w8t"]
+
+[ext_resource type="Script" path="res://Scenes/ExpeditionEditor/expedition_editor.gd" id="1_xx0i5"]
+[ext_resource type="PackedScene" uid="uid://dudk7nqk514vr" path="res://Scenes/CellResource/cell_resource.tscn" id="2_2fsvh"]
+[ext_resource type="Script" path="res://Scenes/ExpeditionEditor/expedition_editor_cell_resource.gd" id="3_78leq"]
+
+[node name="ExpeditionEditor" type="GridContainer"]
+offset_left = 102.0
+offset_top = 8.0
+offset_right = 318.0
+offset_bottom = 164.0
+mouse_filter = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 11
+script = ExtResource("1_xx0i5")
+type = 1
+goal = 2
+
+[node name="CellResource" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource2" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource3" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource4" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource5" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource6" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource7" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource8" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource9" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource10" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource11" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource12" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource13" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource14" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource15" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource16" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource17" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 5
+target = false
+
+[node name="CellResource18" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource19" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource20" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource21" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource22" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource23" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource24" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource25" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource26" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource27" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource28" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 5
+target = true
+
+[node name="CellResource29" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource30" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource31" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource32" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource33" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource34" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource35" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource36" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource37" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource38" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 5
+target = false
+
+[node name="CellResource39" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 5
+target = false
+
+[node name="CellResource40" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 5
+target = false
+
+[node name="CellResource41" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource42" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource43" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource44" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource45" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource46" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource47" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource48" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource49" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource50" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource51" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource52" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource53" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource54" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource55" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource56" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource57" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource58" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource59" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource60" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource61" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource62" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 1
+target = false
+
+[node name="CellResource63" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource64" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource65" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource66" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource67" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource68" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource69" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource70" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource71" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource72" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource73" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource74" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource75" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource76" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource77" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource78" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource79" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource80" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource81" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource82" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource83" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource84" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource85" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource86" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource87" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false
+
+[node name="CellResource88" parent="." instance=ExtResource("2_2fsvh")]
+layout_mode = 2
+script = ExtResource("3_78leq")
+cell_name = 0
+target = false

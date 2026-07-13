@@ -1,0 +1,2 @@
+extends NodePopupMenu
+class_name ExpeditionMenu

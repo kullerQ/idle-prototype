@@ -141,7 +141,7 @@ func show_upgrade_path() -> void:
 			
 	
 func _on_level_upgrade_menu_open_requested(_cell: PlayerCell) -> void:
-	if G.upgrade_menu_opened:
+	if G.opened_menu_type:
 		return
 		
 	if !nodes_to_hide.is_empty():

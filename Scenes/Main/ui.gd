@@ -1,6 +1,13 @@
 extends Control
 class_name UI
 
+enum Menus {
+	NULL,
+	UPGRADE,
+	EXPEDITION,
+	EXPEDITION_END,
+}
+
 var si_suffex: Array = ["", "K", "M", "B"]
 @onready var label_xp: Label = $HBoxContainer/LabelXP
 @onready var label_wood: Label = $HBoxContainer/LabelWood

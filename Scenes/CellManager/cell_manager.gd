@@ -7,6 +7,7 @@ enum Names {
 	NULL,
 	WOOD_TREE,
 	WOOD_GROVE,
+	WOOD_FOREST,
 	SPECIAL_LUMBERJACK,
 	SPECIAL_OUTPOST,
 	SPECIAL_DRUID_OBELISK,
@@ -21,6 +22,7 @@ enum Types {
 var all_data: Dictionary = {
 	Names.WOOD_TREE: load("uid://flg8f2dfjch1").duplicate(),
 	Names.WOOD_GROVE: load("uid://cfyepdnjigkxa").duplicate(),
+	Names.WOOD_FOREST: load("uid://co3h5t00833iw").duplicate(),
 	Names.SPECIAL_LUMBERJACK: load("uid://tcqsywu5xh4d").duplicate(),
 	Names.SPECIAL_OUTPOST: load("uid://bkofoigt7mcgd").duplicate(),
 	Names.SPECIAL_DRUID_OBELISK: load("uid://dim8xt8cu1j1i").duplicate(),
@@ -41,23 +43,30 @@ var tiers: Dictionary = {
 		0: 0, # total weight
 		Names.WOOD_TREE: {"weight": 20, "tier": 1},
 		Names.WOOD_GROVE: {"weight": 0, "tier": 2},
+		Names.WOOD_FOREST: {"weight": 0, "tier": 3},
 		
 	},
 }
 
-var obelisk_links: Dictionary = {} # key: obelisk: owner
-var druid_obelisks: Dictionary = {} # key: DriodObeliskCelll values:  [buffed_cells ...]
+var obelisk_links: Dictionary = {}  	 # key: obelisk: owner
+var druid_obelisks: Dictionary = {} 	 # key: DriodObeliskCelll values:  [buffed_cells ...]
 var free_druid_obelisks: Dictionary = {} # key: obelisk; value available buffs amount
+
+var first_forest_broken: bool = false
 
 var separation: Vector2
 var max_lumberjack_count: int = 1
 var economy : Economy
 
-signal cell_hitted(cell: CellResource, damage: Dictionary)
+signal cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary)
+signal hit_handled(cell: CellResource, data: CellResourceData)
 signal cell_died(cell: CellResource)
 signal cell_occupied(cell: CellResource) 
 
 func _ready():
+	for i in all_data:
+		all_data[i]._name = i
+		
 	separation = Vector2i(get("theme_override_constants/h_separation"), get("theme_override_constants/v_separation"))
 	free_cells = get_children()
 	var coords: Vector2i = Vector2i.ZERO
@@ -75,8 +84,9 @@ func _ready():
 	
 	row_count = cells.keys().back().y
 	for curr in tiers.values():
+		var values: Array = curr.values()
 		for i in range(1, curr.size()):
-			curr[0] += curr[i].weight
+			curr[0] += values[i].weight
 	
 	for i in range(1, Types.size()):
 		occupied_cells_types[i] = []
@@ -84,11 +94,17 @@ func _ready():
 	cell_hitted.connect(_on_cell_hitted)
 	cell_died.connect(_on_cell_died)
 	cell_occupied.connect(_on_cell_occupied)
+	add_start_cells()
+	
+func add_start_cells() -> void:
 	add_rand_resource(Types.WOOD)
 #	add_resource(Names.WOOD_GROVE)
 #	add_resource(Names.SPECIAL_LUMBERJACK)
 	
 func add_res(type: Types, amount: int) -> void:
+	if G.in_expedition:
+		return
+		
 	match type:
 		Types.WOOD:
 			economy.add_resource(Economy.Currencies.WOOD, amount)
@@ -100,34 +116,24 @@ func _on_cell_died(cell: CellResource) -> void:
 		
 	free_cell(cell)
 			
-#	if !buffed_by_druid_obelisk.has(cell):
-#		return
-#
-#	buffed_by_druid_obelisk.erase(cell)
-#	var new_buff_target: CellResource =  get_rand_occupied_cell(buffed_by_druid_obelisk)
-#	if !new_buff_target:
-#		return
-#
-#	buffed_by_druid_obelisk.append(new_buff_target)
-#	new_buff_target.set_effect(EffectManager.Effects.BUFFED, true)
-	
 func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
 #	if !handle_hit_function(cell.data, cell):
 #		return
 	
 	var cells_to_damage: Dictionary = {cell: 1} # cell: damage_ratio
-	if spread_damage_data.to > 0 && spread_damage_data.ratio > 0:
-		cells_to_damage.merge(get_cells_to_spread_damage(cell, spread_damage_data.to, spread_damage_data.ratio))
-	
+	if !spread_damage_data.is_empty():
+		if spread_damage_data.to > 0 && spread_damage_data.ratio > 0:
+			cells_to_damage.merge(get_cells_to_spread_damage(cell, spread_damage_data.to, spread_damage_data.ratio))
+		
 	var base_damage_data: Dictionary = damage_data[DamageManager.DamageDataTypes.BASE]
 	var bonus_damage_data: Dictionary = damage_data.get(DamageManager.DamageDataTypes.BONUS, {})
-	var damage_mult: float = damage_data[DamageManager.DamageDataTypes.MULT]
+	var damage_mult: float = damage_data.get(DamageManager.DamageDataTypes.MULT, 1)
 	var compiled_damage: Array = []
 	for type in base_damage_data:
 		var base_type_data: Dictionary = base_damage_data[type]
-		var bonus_type_data: Dictionary = bonus_damage_data[type]
+		var bonus_type_data: Dictionary = bonus_damage_data.get(type, {})
 		for stat in base_type_data:
-			var damage_value: int = round((base_type_data[stat] + bonus_type_data[stat]) * damage_mult)#.get(type, {}).get(stat, 0)) * damage_mult
+			var damage_value: int = round((base_type_data[stat] + bonus_type_data.get(stat, 0)) * damage_mult)#.get(type, {}).get(stat, 0)) * damage_mult
 			if damage_value != 0:
 				compiled_damage.append({"type": type, "stat": stat, "damage_value": damage_value})
 	
@@ -190,31 +196,45 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 								var reduce_cd_if_heal: float = _owner.reduce_cd_if_heal
 								if reduce_cd_if_heal:
 									_owner.reduce_cd_time(reduce_cd_if_heal)
-									
 	
+		hit_handled.emit(c, cell_data)
 		if c.hp <= 0:
 			handle_cell_death_func(cell_data, c)
 			cell_died.emit(c)
 
 func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 	match data._name:
+		Names.WOOD_FOREST:
+			if first_forest_broken:
+				return
+			
+			first_forest_broken = true
+			
 		Names.SPECIAL_LUMBERJACK:
 			var cell_pos: Vector2 = cell.global_position + CELL_SIZE / 2
 			G.projectile_manager.add_resource_axe(cell_pos, data.crit_chance, 2, data.dmg_ratio,
 			get_rand_occupied_cell_global_center([cell], Types.WOOD), ProjectileDataModifiers.new(1.5, 0), [cell])
 			if data.spawn_wood_chance > 0:
-				print(data.spawn_wood_chance)
 				if randi() % 100 < data.spawn_wood_chance:
 					call_deferred("add_rand_resource_at", cells.find_key(cell), Types.WOOD)
+			return
 				
-			
 		Names.SPECIAL_OUTPOST:
 			for i in data.attacks:
 				var cell_pos: Vector2 = cell.global_position + CELL_SIZE / 2
 				G.projectile_manager.add_resource_bullet(cell_pos, 0, 2,
 				cell_pos.direction_to(get_rand_occupied_cell_global_center([cell])), 
 				ProjectileDataModifiers.new(1.5, data.weakening_chance), [cell], 0.1 * i)
+			return
 	
+
+func kill_grid() -> void:
+	for i in range(occupied_cells.size() - 1, -1, -1):
+		var c: CellResource = occupied_cells[i]
+		c._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(c.data.durability))}, {})
+
+func kill_cell(target: CellResource) -> void:
+	target._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(target.data.durability))}, {})
 
 func handle_hit_function(data: CellResourceData, cell: CellResource) -> void:
 	pass
@@ -344,12 +364,13 @@ func add_resource(_name: Names) -> CellResource:
 	set_cell_data(cell, all_data[_name])
 	return cell
 	
-func add_resource_at(coords: Vector2i, _name: Names) -> void:
-	var cell: CellResource = cells[coords]
-	if !free_cells.has(cell):
-		return
+func add_resource_at(coords: Vector2i, _name: Names) -> CellResource:
+	var cell: CellResource = cells.get(coords, null)
+	if !is_instance_valid(cell) || !free_cells.has(cell):
+		return null
 	
 	set_cell_data(cell, all_data[_name])
+	return cell
 
 func add_resource_at_global(pos: Vector2, _name: Names) -> void:
 	add_resource_at(get_cell_coords_from_global_pos(pos), _name)
@@ -384,7 +405,7 @@ func set_cell_data(cell: CellResource, data: CellResourceData, args: Dictionary 
 		
 		if randi() % 100 < data.buffed_chance:
 			args.effects.append(EffectManager.Effects.BUFFED)
-			
+	
 	cell.set_data(data, args)
 	
 func free_cell(cell: CellResource) -> void:
@@ -430,16 +451,20 @@ func free_cell(cell: CellResource) -> void:
 func free_druid_obelisk(obelisk: CellResource) -> void:
 	if !druid_obelisks.has(obelisk):
 		return
-		
-	obelisk_links[obelisk].obelisks.erase(obelisk)
-	obelisk_links.erase(obelisk)
 	
+	var druid: PlayerCell = obelisk_links.get(obelisk)
+	if is_instance_valid(druid): 
+		druid.obelisks.erase(obelisk)
+		
+	obelisk_links.erase(obelisk)
+	if free_druid_obelisks.has(obelisk):
+		free_druid_obelisks.erase(obelisk)
+		
 	for buffed_cell in druid_obelisks[obelisk]:
 		buffed_cell.set_effect(EffectManager.Effects.BUFFED, false)
 			
 		druid_obelisks.erase(obelisk)
 		
-
 #	if !is_cell_special(_name):
 #		return
 		
@@ -510,6 +535,18 @@ func _on_cell_occupied(cell: CellResource) -> void:
 	var _name: Names = cell.data._name
 	
 	match _name:
+		Names.WOOD_FOREST:
+			var data: ForestData = all_data[Names.WOOD_FOREST]
+			var coords: Vector2i = cells.find_key(cell)
+			var directions: Array = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+			for i in range(randi_range(data.min_add_cells, data.max_add_cells)):
+				if directions.is_empty():
+					return
+					
+				var dir: Vector2i = directions.pick_random()
+				directions.erase(dir)
+				add_resource_at(coords + dir, Names.WOOD_GROVE)
+			
 		Names.SPECIAL_DRUID_OBELISK:
 			druid_obelisks[cell] = []#.append(cell)
 			var buff_cell_amount: int = cell.data.buff_cell_amount
@@ -569,6 +606,10 @@ func handle_obelisk_buff(obelisk: CellResource, buff_cell_amount: int) -> int:
 
 	return buff_cell_amount
 		
+func free_grid() -> void:
+	for i in range(occupied_cells.size() - 1, -1, -1):
+		free_cell(occupied_cells[i])
+	
 func get_exclude_for_druid_obelisk() -> Array:
 	var exclude: Array = druid_obelisks.keys()
 	for i in occupied_cells:
@@ -579,23 +620,9 @@ func get_exclude_for_druid_obelisk() -> Array:
 	
 	return exclude
 	
-#			var exclude: Array = druid_obelisks.keys()
-#			for i in occupied_cells:
-#				if !i.is_buffed():
-#					continue
-#
-#				exclude.append(i)
-			
-			
-			
-#	var _name: Names = cell.data._name
-#	if !is_cell_special(_name):
-#		return
-#
-#	match _name:
-#		Names.SPECIAL_LUMBERJACK:
-					
-#				for i in range(lumberjack_count, max_lumberjack_count, -1):
-#					free_cell(spawned_special_cells[Names.SPECIAL_LUMBERJACK][i - 1]) 
-				
-		
+func get_grid_total_hp() -> int:
+	var total: int = 0
+	for i in occupied_cells:
+		total += i.hp
+	
+	return total

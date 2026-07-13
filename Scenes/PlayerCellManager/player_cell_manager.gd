@@ -82,7 +82,7 @@ func _on_level_upgrade_menu_close_requested() -> void:
 	highlighted_cell = null
 
 func _on_cell_pressed(cell: PlayerCell) -> void:
-	if G.upgrade_menu_opened:
+	if G.opened_menu_type:
 		return
 	
 	if highlighted_cell == cell:

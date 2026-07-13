@@ -37,6 +37,10 @@ var projectile_container: Node2D
 var damage_manager: DamageManager
 var cell_manager: CellManager
 
+func free_all_projectiles() -> void:
+	for i in projectile_container.get_children():
+		i.call_deferred("queue_free")
+
 func get_data(type: Types) -> ProjectileData:
 	return projectile_data[type]
 	

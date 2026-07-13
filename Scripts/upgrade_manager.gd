@@ -60,6 +60,7 @@ enum Types {
 	OUTPOST_WEAKENING_CHANCE,
 	OUTPOST_MULTIATTACKS,
 	GROVE_BUFFED,
+	FOREST_ADD,
 	}
 
 var cell_manager : CellManager
@@ -129,6 +130,7 @@ var descriptions: Dictionary = {
 	Types.OUTPOST_WEAKENING_CHANCE: "outpost chance to shoot weakening bullet +20%",
 	Types.OUTPOST_MULTIATTACKS: "outpost shoots +1 bullet%",
 	Types.GROVE_BUFFED: "+5% for grove to spawn buffed%",
+	Types.FOREST_ADD: "tree has a chance to become a forest",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -173,7 +175,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 				CellManager.Names.SPECIAL_LUMBERJACK, 
 				cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time,
 				Color(0.714, 0.576, 0.373)
-				).start()
+				)
 			
 		Types.ADD_LUMBERJACK:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time *= 2
@@ -201,7 +203,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 				CellManager.Names.SPECIAL_OUTPOST, 
 				cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).life_time,
 				Color(0.302, 0.365, 0.388)
-				).start()
+				)
 			
 		Types.OUTPOST_WEAKENING_CHANCE:
 			cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).weakening_chance += 20
@@ -223,7 +225,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.GROVE_ADD:
 			cell_manager.add_cell_weight(CellManager.Names.WOOD_GROVE, 3, CellManager.Types.WOOD)
 			cell_manager.add_resource(CellManager.Names.WOOD_GROVE)
-			
+
 		Types.GROVE_SPAWN:
 			cell_manager.add_cell_weight(CellManager.Names.WOOD_GROVE, 1, CellManager.Types.WOOD)
 			
@@ -327,7 +329,9 @@ func _on_upgrade_purchased(type: Types) -> void:
 			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_piercings += 1
 			projectile_manager.get_data(ProjectileManager.Types.GREATAXE).max_range += 1
 			
-			
+		Types.FOREST_ADD:
+			cell_manager.add_cell_weight(CellManager.Names.WOOD_FOREST, 3, CellManager.Types.WOOD)
+			cell_manager.add_resource(CellManager.Names.WOOD_FOREST)
 			
 			
 func add_projectile_damage(type: ProjectileManager.Types, amount: int) -> void:

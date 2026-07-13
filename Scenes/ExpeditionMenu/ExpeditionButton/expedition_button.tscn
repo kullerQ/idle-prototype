@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://devaw75wfpsh1"]
+
+[ext_resource type="Script" path="res://Scenes/ExpeditionMenu/ExpeditionButton/expedition_button.gd" id="1_x53gv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kt4ax"]
+bg_color = Color(0.337255, 0.337255, 0.337255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bee54"]
+bg_color = Color(0.490196, 0.490196, 0.490196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pgvpc"]
+bg_color = Color(0.239216, 0.239216, 0.239216, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g6dpw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7mcr2"]
+
+[node name="ExpeditionButton" type="Control"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+script = ExtResource("1_x53gv")
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_kt4ax")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bee54")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pgvpc")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_g6dpw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_7mcr2")

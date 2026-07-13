@@ -1,11 +1,11 @@
 extends Control
-class_name PanelButton
+class_name AnimatedButton
 
 var label: Label
-var text: String
+@export var text: String
 @onready var button = $Button
 var pressed_func: Callable
-static var container: ButtonContainer
+@onready var _owner: Node = owner
 
 var tw: Tween
 
@@ -15,12 +15,20 @@ func initialize(_text: String, _pressed_func: Callable, xsize: int = 25) -> void
 	pressed_func = _pressed_func
 
 func _ready() -> void:
-	if !container.is_node_ready():
-		await container.ready
-	
+	if !_owner.is_node_ready():
+		await _owner.ready
+
 	await get_tree().process_frame
-	label = G.ui.add_label(self, global_position - Vector2(0, 1), text)
+
+	if text != "":
+		label = G.ui.add_label(self, global_position - Vector2(0, 1), text)
+	
+	_owner.visibility_changed.connect(_on_visibility_changed)
+	label.visible = _owner.visible
 	button.pressed.connect(_on_pressed)
+	
+func _on_visibility_changed() -> void:
+	label.visible = _owner.visible
 	
 func _on_pressed() -> void:
 	if tw:

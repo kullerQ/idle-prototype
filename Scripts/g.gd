@@ -1,22 +1,35 @@
 extends Node
 
+var menu_signals: Dictionary = {
+	UI.Menus.UPGRADE: [upgrade_menu_open_requested, upgrade_menu_close_requested],
+	UI.Menus.EXPEDITION: [expedition_menu_open_requested, expedition_menu_close_requested],
+	UI.Menus.EXPEDITION_END: [expedition_end_open_requested, expedition_end_close_requested],
+}
+
 var economy: Economy
 var damage_manager: DamageManager
 var ui: UI
-var upgrade_menu_opened: bool = false
+var uipp: UIPP
 var upgrade_manager: UpgradeManager
 var player_cell_manager: PlayerCellManager
-var cell_manager: CellManager
 var timer_manager: TimerManager
+var cell_manager: CellManager
 var projectile_manager: ProjectileManager
 var building_manager: BuildingManager
-var timer_ui: TimerUI
+var level_upgrade_manager: LevelUpgradeManager
+var expedition_manager: ExpeditionManager
 var upgrades_highlight_label: Label
 var lvl_upgrades_highlight_label: Label
-var level_upgrade_manager: LevelUpgradeManager
+
+var opened_menu_type: UI.Menus = 0
+var in_expedition: bool = false
 
 signal upgrade_menu_open_requested
 signal upgrade_menu_close_requested
+signal expedition_menu_open_requested
+signal expedition_menu_close_requested
+signal expedition_end_open_requested
+signal expedition_end_close_requested
 signal tooltip_requested(text: String)
 signal tooltip_close_required
 signal crit_label_requested(pos: Vector2)
@@ -24,9 +37,9 @@ signal cell_hitted(type: CellManager.Types, _name: CellManager.Names)
 signal player_cell_pressed(cell: PlayerCell)
 signal level_upgrade_menu_close_requested
 signal level_upgrade_menu_open_requested(cell: PlayerCell)
+signal ui_layout_change_requested(new_layout: UIPP.Layouts)
 
 func initialize() -> void:
-	upgrade_menu_opened = false
 	########################################
 	economy = Economy.new()
 #	CellResource.economy = economy
@@ -70,10 +83,40 @@ func initialize() -> void:
 	PlayerCell.projectile_manager = projectile_manager
 	upgrade_manager.projectile_manager = projectile_manager
 	########################################
-	timer_ui = load("uid://cd2muxujuqyi3").instantiate()
-	timer_ui.name = "TimerUI"
-	timer_ui.initialize(timer_manager)
-	########################################
 	level_upgrade_manager = LevelUpgradeManager.new()
-	
+	########################################
+	expedition_manager = ExpeditionManager.new()
+	expedition_manager.name = "ExpeditionManager"
+	expedition_manager.cell_manager = cell_manager
+	expedition_manager.projectile_manager = projectile_manager
+	expedition_manager.timer_manager = timer_manager
+	ExpeditionButton.manager = expedition_manager
+	########################################
+
 	Axe.bounce = false
+
+func toggle_menu(menu_type: UI.Menus) -> void:
+	if opened_menu_type:
+		if opened_menu_type == menu_type:
+			menu_signals[menu_type][1].emit() # close signal
+			opened_menu_type = 0
+			return
+		else:
+			menu_signals[opened_menu_type][1].emit() # close signal
+	
+	menu_signals[menu_type][0].emit() # open signal
+	opened_menu_type = menu_type
+
+func open_menu(menu_type: UI.Menus) -> void:
+	if opened_menu_type == menu_type:
+		return
+	
+	menu_signals[menu_type][0].emit() # open signal
+	opened_menu_type = menu_type	
+
+func close_menu(menu_type: UI.Menus) -> void:
+	if opened_menu_type != menu_type:
+		return
+	
+	menu_signals[opened_menu_type][1].emit() # close signal
+	opened_menu_type = 0
