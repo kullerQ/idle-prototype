@@ -5,31 +5,23 @@ const MAX_ACCURACY: int = 12
 var data: PlayerCellData
 # individual data
 var cooldown_reduction: float = 0
-var weakening_chance: int = 0
 var weakened_dmg_mod: float = 0.4
-var ricohcet_if_weakened: bool = false
-var reduce_cd_if_weakened: float = 0
 var auto_weakening_chance: int = 0
 var special_attack_count: int = 0
-var bonus_bullet_spd: int = 0
 var bonus_crit_chance: int = 0
-var ricochet_after_kill: bool = false
 var auto_aim: bool = false
 var bonus_attacks: int = 0
-var spread_damage_ratio: float = 0
-var spread_damage_to: float = 0
 var spawn_tree_on_overheal_chance: int = 0
 var spawn_wood_to_the_right_chance: int = 0
 var cell_lvlup_chance: int = 0
-var bonus_crit_chance_on_weakened: int = 0
 var attack_effects: Array = []
 var reduce_cd_if_heal: float = 0
 var max_obelisks: int = 1
 var obelisk_spawn_chance: int = 0
 var obelisks: Array = []
-#################
+
 var bonus_damage: Dictionary = {}
-##############
+
 var projectile_mod_data: ProjectileDataModifiers
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
 @onready var timer: Timer = $Timer
@@ -51,29 +43,18 @@ var lvl_tokens: int = 0
 var disabled: bool = false
 @onready var upgrade_arrow: Polygon2D = $UpgradeArrow
 
-static var manager
+static var manager: PlayerCellManager
 static var projectile_manager: ProjectileManager
 
 func _ready() -> void:
 	set_physics_process(false)
-	projectile_mod_data = ProjectileDataModifiers.new(
-		weakened_dmg_mod, 
-		weakening_chance, 
-		ricohcet_if_weakened,
-		reduce_cd_if_weakened,
-		bonus_bullet_spd,
-		ricochet_after_kill,
-		spread_damage_ratio,
-		spread_damage_to,
-		bonus_crit_chance_on_weakened,
-		)
+	projectile_mod_data = ProjectileDataModifiers.new(weakened_dmg_mod)
 		
 	if !data:
 		panel.hide()
 		panel_not_active.show()
 		progress_bar.hide()
 		progress_bar.set("theme_override_styles/fill", pb_style)
-		progress_bar.hide()
 		set_process_unhandled_input(false)
 	
 	timer.timeout.connect(_on_timeout)
@@ -110,11 +91,7 @@ func _on_pressed() -> void:
 	
 func add_xp() -> void:
 	manager.xp_added.emit(self)
-#	xp += data.xp_increase - float(lvl) / 10
-#	if xp >= 100:
-#		xp = xp - 100
-#		add_lvl()
-#
+
 func add_lvl() -> void:
 	lvl += 1
 	lvl_tokens += 1
@@ -187,10 +164,6 @@ func _on_multi_attack_timeout() -> void:
 
 func get_bullet_crit_chance() -> float:
 	return data.crit_chance + bonus_crit_chance
-#	if randf_range(0, 100) <= (data.crit_chance + bonus_crit_chance):
-#		return data.crit_mult
-#
-#	return 0
 
 func get_bullet_pos() -> Vector2:
 	return bullet_pos_marker.global_position
@@ -228,8 +201,6 @@ func reduce_cd_time(amount: float) -> void:
 func add_dir_projectile(function: Callable) -> void:
 	function.call(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, get_dir(get_bullet_pos()), projectile_mod_data, bonus_damage,self)
 	
-# shooter
-##################################
 func shooter_attack() -> void:
 	if special_attack_count == 1:
 		var init_chance: int = projectile_mod_data.weakening_chance
@@ -240,26 +211,16 @@ func shooter_attack() -> void:
 		
 	add_dir_projectile(projectile_manager.add_bullet)
 		
-# rogue
-##################################
 func rogue_attack() -> void:
 	add_dir_projectile(projectile_manager.add_knife)
 
-# wizard
-##################################
 func wizard_attack() -> void:
 	# projectile_manager.add_magic(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, 
 	# G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self)
 	WipStub.wip("wizard_attack")
-	return
 
-# druid
-##################################
 func druid_attack() -> void:
 	add_dir_projectile(projectile_manager.add_druid_magic)
 	
-# executioner
-##################################
 func executioner_attack() -> void:
 	projectile_manager.add_greataxe(get_bullet_crit_chance(), data.crit_mult, projectile_mod_data, bonus_damage, self)
-	#add_dir_projectile(projectile_manager.add_druid_magic)

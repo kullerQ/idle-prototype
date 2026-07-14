@@ -39,4 +39,3 @@ func unlock_next_node() -> void:
 
 func lock() -> void:
 	locked = true
-	print(get_parent().name)

@@ -40,32 +40,31 @@ signal level_upgrade_menu_open_requested(cell: PlayerCell)
 signal ui_layout_change_requested(new_layout: UIPP.Layouts)
 
 func initialize() -> void:
-	########################################
 	economy = Economy.new()
-#	CellResource.economy = economy
+
 	UpgradeNode.economy = economy
 	BuildingCell.economy = economy
-	########################################
+
 	damage_manager = DamageManager.new()
 	damage_manager.initialize()
-	########################################
+
 	cell_manager = load("uid://b14oi7hhj8hew").instantiate()
 	cell_manager.name = "CellManager"
 	cell_manager.economy = economy
-	#
+	
 	player_cell_manager = load("uid://ctck6suxq5bcj").instantiate()
 	player_cell_manager.name = "PlayerCellManager"
 	player_cell_manager.economy = economy
 	player_cell_manager.damage_manager = damage_manager
 	player_cell_manager.cell_manager = cell_manager
-	#
+
 	timer_manager = load("uid://bd2s6jemxrplh").instantiate()
 	timer_manager.name = "TimerManager"
 	timer_manager.cell_manager = cell_manager
-	#
+	
 	building_manager = load("uid://4wswmpgy5skt").instantiate()
 	building_manager.name = "BuildingManager"
-	########################################
+
 	upgrade_manager = UpgradeManager.new()
 	upgrade_manager.cell_manager = cell_manager
 	upgrade_manager.building_manager = building_manager
@@ -73,25 +72,25 @@ func initialize() -> void:
 	upgrade_manager.timer_manager = timer_manager
 	upgrade_manager.damage_manager = damage_manager
 	UpgradeNode.upgrade_manager = upgrade_manager
-	#
+	
 	PlayerCell.manager = player_cell_manager
 	TimerResource.cell_manager = cell_manager
-	########################################
+	
 	projectile_manager = ProjectileManager.new()
 	projectile_manager.damage_manager = damage_manager
 	projectile_manager.cell_manager = cell_manager
 	PlayerCell.projectile_manager = projectile_manager
 	upgrade_manager.projectile_manager = projectile_manager
-	########################################
+
 	level_upgrade_manager = LevelUpgradeManager.new()
-	########################################
+
 	expedition_manager = ExpeditionManager.new()
 	expedition_manager.name = "ExpeditionManager"
 	expedition_manager.cell_manager = cell_manager
 	expedition_manager.projectile_manager = projectile_manager
 	expedition_manager.timer_manager = timer_manager
 	ExpeditionButton.manager = expedition_manager
-	########################################
+
 
 	Axe.bounce = false
 

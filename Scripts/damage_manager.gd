@@ -21,20 +21,7 @@ enum TowerPresets {
 	DRUID_LIFE_TIME,
 }
 
-var projectile_damage_data: Dictionary = {
-	ProjectileManager.Types.BULLET: {
-#		DamageDataTypes.BASE: {
-#			Types.HEAL: {},
-#			Types.HIT: {},
-#		},
-#		DamageDataTypes.BONUS: {
-#			Types.HEAL: {},
-#			Types.HIT: {},
-#		},
-#		DamageDataTypes.MULT: 1
-	}
-}
-
+var projectile_damage_data: Dictionary = {}
 var tower_bonus_damage_presets: Dictionary = {}
 
 var flat_damage_bonus: Dictionary = {}

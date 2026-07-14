@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cjumk0owaxjey"]
 
-[ext_resource type="Script" path="res://Scenes/ExpeditionUI/expediton_ui.gd" id="1_urskx"]
+[ext_resource type="Script" path="res://Scenes/ExpeditionUI/expedition_ui.gd" id="1_urskx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_urh5q"]
 bg_color = Color(0, 0, 0, 1)

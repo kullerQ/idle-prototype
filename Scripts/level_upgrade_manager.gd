@@ -60,7 +60,7 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 			cell.projectile_mod_data.weakened_dmg_mod += 0.5
 		
 		Types.SHOOTER_WEAK_RIC:
-			cell.projectile_mod_data.ricohcet_if_weakened = true
+			cell.projectile_mod_data.ricochet_if_weakened = true
 			
 		Types.SHOOTER_WEAK:
 			cell.projectile_mod_data.weakening_chance += 20

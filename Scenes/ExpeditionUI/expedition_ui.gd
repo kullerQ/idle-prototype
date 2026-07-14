@@ -6,11 +6,11 @@ class_name ExpeditionUI
 var manager: ExpeditionManager
 
 func _ready() -> void:
-	manager.hp_chanced.connect(_on_hp_changed)
+	manager.hp_changed.connect(_on_hp_changed)
 	manager.expedition_started.connect(_on_expedition_started)
 	
 func _on_expedition_started() -> void:
-	pass
+	WipStub.wip("expedition_started")
 #	progress_bar_hp.
 	
 func _on_hp_changed(new_hp: float, max_hp: float) -> void:

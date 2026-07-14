@@ -27,7 +27,7 @@ func move(delta: float) -> void:
 		die()
 		return
 		
-	if global_position.distance_to(target_pos) <= 3:
+	if global_position.distance_squared_to(target_pos) <= 9:
 		spd = 0
 		set_disabled(false)
 

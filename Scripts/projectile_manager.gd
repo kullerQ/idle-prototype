@@ -28,11 +28,6 @@ var projectile_data: Dictionary = {
 	Types.GREATAXE: load("uid://cvmku6kcw7ksr").duplicate(),
 	}
 
-var all_damage_data: Dictionary = {
-	PlayerCellData.Types.NULL: DamageData.new(),
-	PlayerCellData.Types.SHOOTER: load("uid://b25j3a61ph37i").duplicate(),
-}
-
 var projectile_container: Node2D
 var damage_manager: DamageManager
 var cell_manager: CellManager
@@ -44,7 +39,7 @@ func free_all_projectiles() -> void:
 func get_data(type: Types) -> ProjectileData:
 	return projectile_data[type]
 	
-# todo refactor effects
+# TODO: refactor effects
 func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, _mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
 	var projectile: Projectile = projectile_scenes[type].instantiate()
 	projectile.data = projectile_data[type]
@@ -67,7 +62,7 @@ func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int,
 	projectile.mod_data = _mod_data
 	return projectile
 	
-func new_resource_projectule(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array, _delay: float = 0) -> Projectile:
+func new_resource_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array, _delay: float = 0) -> Projectile:
 	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.ignore = _ignore
 	if _delay:
@@ -76,36 +71,27 @@ func new_resource_projectule(pos: Vector2, type: Types, crit_chance: int, crit_m
 		
 	return projectile
 
-func new_player_projectle(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> Projectile:
+func new_player_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> Projectile:
 	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.p_owner = _owner
-#	if damage_mod_data:
-#		damage = damage_mod_data.apply(damage_data)
-#
-#	projectile.damage = damage 
 	return projectile
 
 func add_projectile(projectile: Projectile) -> void:
 	projectile_container.call_deferred("add_child", projectile)
 
 func add_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary,  _owner: PlayerCell) -> void:
-	var bullet: Bullet = new_player_projectle(pos, Types.BULLET, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	var bullet: Bullet = new_player_projectile(pos, Types.BULLET, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	bullet.spd = mod_data.bonus_bullet_spd
 	bullet.dir = _dir
 	add_projectile(bullet)
-#
+
 func add_knife(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
-	var knife: Knife = new_player_projectle(pos, Types.KNIFE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	var knife: Knife = new_player_projectile(pos, Types.KNIFE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	knife.dir = _dir
 	add_projectile(knife)
-#
-#func add_magic(pos: Vector2, crit_chance: int, crit_mult: int, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _owner: PlayerCell) -> void:
-#	var magic: Magic = new_player_projectle(pos, Types.MAGIC, crit_chance, crit_chance, mod_data, _owner)
-#	magic.target_pos = _target_pos
-#	add_projectile(magic)
-#
+
 func add_druid_magic(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
-	var druid_magic: DruidMagic = new_player_projectle(pos, Types.DRUID_MAGIC, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	var druid_magic: DruidMagic = new_player_projectile(pos, Types.DRUID_MAGIC, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	druid_magic.dir = _dir
 	add_projectile(druid_magic)
 
@@ -114,20 +100,20 @@ func add_greataxe(crit_chance: int, crit_mult: int, mod_data: ProjectileDataModi
 	var start_coords: Vector2i = Vector2i(0, randi_range(0, row_count))
 #	start_coords = Vector2i.ZERO
 	var pos: Vector2 = cell_manager.get_cell_global_center(start_coords)
-	var greataxe: Greataxe = new_player_projectle(pos, Types.GREATAXE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
+	var greataxe: Greataxe = new_player_projectile(pos, Types.GREATAXE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	var target_y: int = start_coords.y + 1 if start_coords.y < row_count else start_coords.y - 1
 	greataxe.target_pos =  cell_manager.get_cell_global_center(Vector2i(greataxe.data.max_range, target_y))
 	greataxe.cell_height =  cell_manager.CELL_SIZE.y
 	add_projectile(greataxe)
-#
+
 func add_resource_axe(pos: Vector2, crit_chance: int, crit_mult: int, _dmg_ratio: float, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array) -> void:
-	var axe: Axe = new_resource_projectule(pos, Types.AXE, crit_chance, crit_mult, mod_data, {}, _ignore)#projectile_scenes[Types.AXE].instantiate()
+	var axe: Axe = new_resource_projectile(pos, Types.AXE, crit_chance, crit_mult, mod_data, {}, _ignore)
 	axe.target_pos = _target_pos
 	axe.dmg_ratio = _dmg_ratio
 	add_projectile(axe)
 	
 func add_resource_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array, _delay: float = 0) -> void:
-	var bullet: Bullet = new_resource_projectule(pos, Types.BULLET, crit_chance, crit_mult, mod_data, {}, _ignore, _delay)#projectile_scenes[Types.AXE].instantiate()
+	var bullet: Bullet = new_resource_projectile(pos, Types.BULLET, crit_chance, crit_mult, mod_data, {}, _ignore, _delay)
 	bullet.dir = _dir
 	add_projectile(bullet)
 	

@@ -49,7 +49,7 @@ func move(delta: float) -> void:
 	global_position += dir * spd * delta
 	
 func check_max_range() -> void:
-	if global_position.distance_to(init_pos) >= data.max_range:
+	if global_position.distance_squared_to(init_pos) >= data.max_range * data.max_range:
 		queue_free()
 
 func _draw() -> void:
@@ -90,7 +90,7 @@ func get_spread_damage_data() -> Dictionary:
 func apply_effects(cell: CellResource) -> void:
 	if weakening:
 		if cell.is_weakened():
-			if mod_data.ricohcet_if_weakened:
+			if mod_data.ricochet_if_weakened:
 				if ricochet(cell):
 					pierced -= 1
 			
@@ -121,22 +121,22 @@ func set_disabled(_disabled: bool) -> void:
 	collision.disabled = _disabled
 
 func get_dmg() -> float:
-	dmg = 0
-	for dmg_type in range(DamageManager.DamageDataTypes.MULT): # MULT because it's the last entry of an enum i guess
+	var total: float = 0
+	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
-				dmg += damage_data[dmg_type][type][stat]
-	
-	return dmg
+				total += damage_data[dmg_type][type][stat]
+				
+	return total
 
 func add_dmg(amount: int) -> void:
-	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
+	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] += amount
 
 func div_dmg(amount: int) -> void:
-	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
+	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] = floor(damage_data[dmg_type][type][stat] / amount)

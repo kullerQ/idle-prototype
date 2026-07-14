@@ -35,7 +35,7 @@ enum Types {
 	DRUID_MAGIC_DMG,
 	DRUID_MAGIC_SPD,
 	DRUID_XP,
-	LUMBERJACK_WOOD_SPANW,
+	LUMBERJACK_WOOD_SPAWN,
 	ROGUE,
 	ROGUE_COOLDOWN,
 	ROGUE_CRIT,
@@ -105,7 +105,7 @@ var descriptions: Dictionary = {
 	Types.DRUID_MAGIC_DMG: "druid magic dmg +1",
 	Types.DRUID_MAGIC_SPD: "druid magic speed +15",
 	Types.DRUID_XP: "druid get +1 xp",
-	Types.LUMBERJACK_WOOD_SPANW: "chance to spawn wood cell after lumberjack +25%",
+	Types.LUMBERJACK_WOOD_SPAWN: "chance to spawn wood cell after lumberjack +25%",
 	Types.ROGUE: "+1 rogue",
 	Types.ROGUE_COOLDOWN: "rogue cooldown -0.2s",
 	Types.ROGUE_CRIT: "rogue crit chance +5%",
@@ -265,7 +265,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.DRUID_XP:
 			player_cell_manager.get_data(PlayerCellData.Types.DRUID).xp_increase += 1
 			
-		Types.LUMBERJACK_WOOD_SPANW:
+		Types.LUMBERJACK_WOOD_SPAWN:
 			cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).spawn_wood_chance += 25
 			
 		Types.ROGUE:
@@ -335,5 +335,5 @@ func _on_upgrade_purchased(type: Types) -> void:
 			
 			
 func add_projectile_damage(type: ProjectileManager.Types, amount: int) -> void:
-	damage_manager.add_flat_damage_bonus(type, 1)
+	damage_manager.add_flat_damage_bonus(type, amount)
 	

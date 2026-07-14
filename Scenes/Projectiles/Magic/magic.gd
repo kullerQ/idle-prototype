@@ -10,7 +10,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	global_position += global_position.direction_to(target_pos) * mage_spd * delta
-	if global_position.distance_to(target_pos) <= 5:
+	if global_position.distance_squared_to(target_pos) <= 25:
 		queue_free()
 
 func die() -> void:

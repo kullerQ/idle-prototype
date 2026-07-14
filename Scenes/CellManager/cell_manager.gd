@@ -117,10 +117,7 @@ func _on_cell_died(cell: CellResource) -> void:
 	free_cell(cell)
 			
 func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
-#	if !handle_hit_function(cell.data, cell):
-#		return
-	
-	var cells_to_damage: Dictionary = {cell: 1} # cell: damage_ratio
+	var cells_to_damage: Dictionary = {cell: 1}
 	if !spread_damage_data.is_empty():
 		if spread_damage_data.to > 0 && spread_damage_data.ratio > 0:
 			cells_to_damage.merge(get_cells_to_spread_damage(cell, spread_damage_data.to, spread_damage_data.ratio))
@@ -146,7 +143,6 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 				DamageManager.Types.HIT:
 					match i.stat:
 						DamageManager.Stats.HP:
-							var init_cell_hp: int = c.hp
 							c.sub_hp(value)
 							if cell_data.value:
 								if c.is_buffed():
@@ -226,7 +222,6 @@ func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 				cell_pos.direction_to(get_rand_occupied_cell_global_center([cell])), 
 				ProjectileDataModifiers.new(1.5, data.weakening_chance), [cell], 0.1 * i)
 			return
-	
 
 func kill_grid() -> void:
 	for i in range(occupied_cells.size() - 1, -1, -1):
@@ -235,13 +230,6 @@ func kill_grid() -> void:
 
 func kill_cell(target: CellResource) -> void:
 	target._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(target.data.durability))}, {})
-
-func handle_hit_function(data: CellResourceData, cell: CellResource) -> void:
-	pass
-#			if data.spawn_wood_chance > 0:
-#				if randi() % 100 < data.spawn_wood_chance:
-#					add_rand_resource_at(cells.find_key(cell), Types.WOOD)
-#
 
 func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float) -> Dictionary:
 	if occupied_cells.is_empty():

@@ -3,7 +3,7 @@ class_name ProjectileDataModifiers
 
 var weakened_dmg_mod: float
 var weakening_chance: int
-var ricohcet_if_weakened: bool
+var ricochet_if_weakened: bool
 var reduce_cd_if_weakened: float
 var bonus_bullet_spd: int 
 var ricochet_after_kill: bool
@@ -13,7 +13,7 @@ var bonus_crit_chance_on_weakened: int
 
 func _init(_weakened_dmg_mod: float = 0, 
 			_weakening_chance: int = 0, 
-			_ricohcet_if_weakened: bool = false, 
+			_ricochet_if_weakened: bool = false, 
 			_reduce_cd_if_weakened: float = 0,
 			_bonus_bullet_spd: int = 0,
 			_ricochet_after_kill: bool = false,
@@ -24,7 +24,7 @@ func _init(_weakened_dmg_mod: float = 0,
 
 	weakened_dmg_mod = _weakened_dmg_mod
 	weakening_chance = _weakening_chance
-	ricohcet_if_weakened = _ricohcet_if_weakened
+	ricochet_if_weakened = _ricochet_if_weakened
 	reduce_cd_if_weakened = _reduce_cd_if_weakened
 	bonus_bullet_spd = _bonus_bullet_spd
 	ricochet_after_kill = _ricochet_after_kill

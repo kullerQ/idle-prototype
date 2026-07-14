@@ -22,30 +22,37 @@ func set_data(_data: BuildingData) -> void:
 	data = _data
 	$PanelNotActive.hide()
 	$Panel.show()
-	if !data.automated:
-		G.resource_cell_hitted.connect(_on_resource_hitted)
-		return
+	if data.automated:
+		automate()
+
+#region resource_cell_hitted
+# NOTE: resource_cell_hitted is not exists
+
+	# if !data.automated:
+	# 	G.resource_cell_hitted.connect(_on_resource_hitted)
+	# 	return
 	
-	automate()
+	# automate()
+
+# func _on_resource_hitted(type: CellManager.Types, _name: CellManager.Names) -> void:
+# 	if charged:
+# 		return
+
+# 	if type != Economy.Currencies.WOOD:
+# 		return
+
+# 	current_charge += 1
+# 	if current_charge >= data.charge:
+# 		set_charged(true)
+# 		current_charge -= data.charge
+# 		apply_effects()
+	
+# 	progress_bar.value = float(current_charge) / data.charge
+# 	return
+#endregion resource_cell_hitted
 
 func _physics_process(delta: float) -> void:
-	progress_bar.value =  timer.time_left / graphics_cd #(graphics_cd - timer.time_left) / graphics_cd
-
-func _on_resource_hitted(type: CellManager.Types, _name: CellManager.Names) -> void:
-	return
-#	if charged:
-#		return
-#
-#	if type != Economy.Currencies.WOOD:
-#		return
-#
-#	current_charge += 1
-#	if current_charge >= data.charge:
-#		set_charged(true)
-##		current_charge -= data.charge
-##		apply_effects()
-	
-	progress_bar.value = float(current_charge) / data.charge
+	progress_bar.value =  timer.time_left / graphics_cd
 
 func set_charged(enabled: bool) -> void:
 	charged = enabled
@@ -54,7 +61,8 @@ func set_charged(enabled: bool) -> void:
 		set_physics_process(true)
 		
 func automate() -> void:
-#	G.resource_cell_hitted.disconnect(_on_resource_hitted)
+# NOTE: resource_cell_hitted is not exists
+# G.resource_cell_hitted.disconnect(_on_resource_hitted)
 	data.automated = true
 	timer.wait_time = data.cooldown
 	graphics_cd = timer.wait_time

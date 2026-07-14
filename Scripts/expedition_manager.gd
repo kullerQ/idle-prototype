@@ -28,7 +28,7 @@ var connected_signals: Dictionary = {}
 var target_cells: Array = []
 
 signal expedition_selected(type: Types)
-signal hp_chanced(new_hp: float)
+signal hp_changed(new_hp: float, max_hp: float)
 signal expedition_started()
 
 static func get_expedition_path(type: ExpeditionManager.Types, level: int) -> String:
@@ -147,12 +147,12 @@ func _on_cell_hit_handled_targets(cell: CellResource, data: CellResourceData) ->
 		
 	sub_hp(cell.hp)
 		
-func sub_hp(amount: int) -> void:
+func sub_hp(amount: float) -> void:
 	set_hp(current_hp - amount)
 
-func set_hp(value: int) -> void:
+func set_hp(value: float) -> void:
 	current_hp = value
-	hp_chanced.emit(current_hp, max_hp)
+	hp_changed.emit(current_hp, max_hp)
 	if current_hp <= 0:
 		handle_expedition_result()
 #		call_deferred("end_expedition")
