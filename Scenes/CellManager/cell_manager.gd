@@ -185,7 +185,7 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 										if spawn_tree_on_overheal_chance > 0:
 											if randi() % 100 < spawn_tree_on_overheal_chance:
 												var new_cell: CellResource = add_rand_resource(Types.WOOD)
-												if randi() % 100 < _owner.weakening_chance:
+												if new_cell && randi() % 100 < _owner.weakening_chance:
 													new_cell.set_effect(EffectManager.Effects.WEAKENED, true)
 													
 								var spawn_wood_to_the_right_chance: int = _owner.spawn_wood_to_the_right_chance

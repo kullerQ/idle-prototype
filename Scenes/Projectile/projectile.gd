@@ -129,7 +129,7 @@ func get_dmg() -> float:
 	
 	return dmg
 
-func add_dmg( amount: int) -> void:
+func add_dmg(amount: int) -> void:
 	for dmg_type in range(DamageManager.DamageDataTypes.MULT):
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
@@ -141,7 +141,7 @@ func div_dmg(amount: int) -> void:
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] = floor(damage_data[dmg_type][type][stat] / amount)
 
-func ricochet(cell: CellResource = null, div_dmg: bool = true) -> bool:
+func ricochet(cell: CellResource = null, _div_dmg: bool = true) -> bool:
 	damage_data[DamageManager.DamageDataTypes.MULT] = base_mult
 	if get_dmg() <= 0:
 		die()
@@ -152,7 +152,7 @@ func ricochet(cell: CellResource = null, div_dmg: bool = true) -> bool:
 		return false
 		
 	dir = global_position.direction_to(target_cell_pos) 
-	if div_dmg:
+	if _div_dmg:
 		div_dmg(2)
 	
 	return true
