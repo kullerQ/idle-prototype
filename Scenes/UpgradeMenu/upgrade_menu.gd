@@ -4,7 +4,7 @@ class_name UpgradeMenu
 var nodes: Dictionary = {}
 var unlocked_node_count: int = 0
 @onready var highlight_label: Label = G.upgrades_highlight_label
-#todo remove G dependency
+# TODO: remove G dependency
 @onready var economy: Economy = G.economy
 
 
@@ -17,6 +17,7 @@ func _ready() -> void:
 	economy.res_changed.connect(block_expensive)
 
 
+# TODO: remove bullshit 💩
 func block_expensive(currency: Economy.Currencies, value: int) -> void:
 	# bullshit 💩
 	var unlocked: int = 0

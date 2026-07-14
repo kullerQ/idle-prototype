@@ -16,7 +16,7 @@ var current_root: Control
 @onready var panel = $Graphics/Panel
 
 var manager: LevelUpgradeManager
-#todo remove G dependency
+# TODO: remove G dependency
 @onready var economy: Economy = G.economy
 
 

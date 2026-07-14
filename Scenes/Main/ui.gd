@@ -13,7 +13,7 @@ var si_suffex: Array = ["", "K", "M", "B"]
 @onready var label_wood: Label = $HBoxContainer/LabelWood
 
 
-# todo implement ui manager and refactor ui node to add ui manager
+# TODO: implement ui manager and refactor ui node to add ui manager
 func _enter_tree() -> void:
 	G.ui = self
 
