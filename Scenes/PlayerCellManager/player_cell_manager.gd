@@ -43,7 +43,8 @@ signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
 signal xp_added(cell: PlayerCell)
 signal cell_attacked(cell: PlayerCell)
-	
+
+
 func _ready() -> void:
 	var pos: Vector2i = Vector2i.ZERO
 	for c in get_children():
@@ -70,16 +71,19 @@ func _ready() -> void:
 	G.player_cell_pressed.connect(_on_cell_pressed)
 	G.level_upgrade_menu_close_requested.connect(_on_level_upgrade_menu_close_requested)
 
+
 func fill_grid(type: PlayerCellData.Types) -> void:
 	for i in cells.values():
 		i.call_deferred("set_data", all_data[type])
-	
+
+
 func _on_level_upgrade_menu_close_requested() -> void:
 	if !highlighted_cell:
 		return
 	
 	highlighted_cell.set_highlight(false)
 	highlighted_cell = null
+
 
 func _on_cell_pressed(cell: PlayerCell) -> void:
 	if G.opened_menu_type:
@@ -95,16 +99,20 @@ func _on_cell_pressed(cell: PlayerCell) -> void:
 	highlighted_cell = cell
 	highlighted_cell.set_highlight(true)
 	G.level_upgrade_menu_open_requested.emit(cell)
-		
+
+
 func add_starting_cell(type: PlayerCellData.Types, offset_x: int = 0, offset_y: int = 0) -> void:
 	add_free_cell()
 	add_tower_at(type, start_pos + Vector2i(offset_x, offset_y))
 
+
 func get_data(type: PlayerCellData.Types) -> PlayerCellData:
 	return all_data[type]
 
+
 func add_tower_at(type: PlayerCellData.Types, coords: Vector2i) -> void:
 	add_tower(type, cells[coords])
+
 
 func add_tower(type: PlayerCellData.Types, cell: PlayerCell = null) -> void:
 	if free_cells.is_empty():
@@ -119,13 +127,17 @@ func add_tower(type: PlayerCellData.Types, cell: PlayerCell = null) -> void:
 	
 	cell.set_data(all_data[type])
 	occupy_cell(cell)
+
 #	if damage_mod_data.has(type):
 #		cell.set_damage_data(damage_mod_data[type].duplicate())
 #	else:
 #		cell.set_damage_data(damage_mod_data[0])
 #		print("null dmg data")
+
+
 func _on_xp_added(cell: PlayerCell) -> void:
 	economy.add_resource(Economy.Currencies.XP, cell.data.xp_increase)
+
 
 func add_free_cell() -> void:
 	if h_idx >= columns:
@@ -155,6 +167,7 @@ func add_free_cell() -> void:
 	down_added = 0
 	h_idx += 1
 
+
 func _on_cell_lvled_up(cell: PlayerCell, lvl: int) -> void:
 	if cells_to_upgrade.has(cell):
 		return
@@ -162,7 +175,8 @@ func _on_cell_lvled_up(cell: PlayerCell, lvl: int) -> void:
 	cells_to_upgrade.append(cell)
 	lvl_upgrades_highlight_label.show()
 	lvl_upgrades_highlight_label.text = "%d" %cells_to_upgrade.size()
-	
+
+
 func _on_cell_upgraded(cell: PlayerCell) -> void:
 	if cell.lvl_tokens > 0:
 		return
@@ -174,12 +188,15 @@ func _on_cell_upgraded(cell: PlayerCell) -> void:
 	
 	lvl_upgrades_highlight_label.hide()
 
+
 func occupy_cell(cell: PlayerCell) -> void:
 	free_cells.erase(cell)
 	economy.sub_resource(Economy.Currencies.FREE_CELLS, 1)
 
+
 func set_cell_bonus_damage_preset(cell: PlayerCell, preset: DamageManager.TowerPresets) -> void:
 	cell.bonus_damage = damage_manager.tower_bonus_damage_presets[preset]
+
 
 func get_cell_to_upgrade() -> PlayerCell:
 	if cells_to_upgrade.is_empty():
@@ -192,6 +209,7 @@ func get_cell_to_upgrade() -> PlayerCell:
 	upgrade_cell_idx = (upgrade_cell_idx + 1) % cells_to_upgrade.size()
 	return cell
 
+
 func _on_cell_attacked(cell: PlayerCell, attack_effects: Array) -> void:
 	if attack_effects.is_empty():
 		return
@@ -203,4 +221,3 @@ func _on_cell_attacked(cell: PlayerCell, attack_effects: Array) -> void:
 				if res_cell:
 					var cell_data: CellResourceData = res_cell.data
 					cell_manager.add_res(cell_data.type, cell_data.break_value)
-				

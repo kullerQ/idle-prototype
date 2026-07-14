@@ -4,6 +4,7 @@ class_name LabelCrit
 @onready var label: Label = $Label
 var tw: Tween
 
+
 func _ready() -> void:
 	tw = create_tween()
 	tw.set_parallel()

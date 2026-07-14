@@ -63,6 +63,7 @@ signal hit_handled(cell: CellResource, data: CellResourceData)
 signal cell_died(cell: CellResource)
 signal cell_occupied(cell: CellResource) 
 
+
 func _ready():
 	for i in all_data:
 		all_data[i]._name = i
@@ -95,12 +96,14 @@ func _ready():
 	cell_died.connect(_on_cell_died)
 	cell_occupied.connect(_on_cell_occupied)
 	add_start_cells()
-	
+
+
 func add_start_cells() -> void:
 	add_rand_resource(Types.WOOD)
 #	add_resource(Names.WOOD_GROVE)
 #	add_resource(Names.SPECIAL_LUMBERJACK)
-	
+
+
 func add_res(type: Types, amount: int) -> void:
 	if G.in_expedition:
 		return
@@ -109,13 +112,15 @@ func add_res(type: Types, amount: int) -> void:
 		Types.WOOD:
 			economy.add_resource(Economy.Currencies.WOOD, amount)
 
+
 func _on_cell_died(cell: CellResource) -> void:
 	var data: CellResourceData = cell.data
 	if data.break_value:
 		add_res(data.type, data.break_value)
 		
 	free_cell(cell)
-			
+
+
 func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
 	var cells_to_damage: Dictionary = {cell: 1}
 	if !spread_damage_data.is_empty():
@@ -198,6 +203,7 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 			handle_cell_death_func(cell_data, c)
 			cell_died.emit(c)
 
+
 func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 	match data._name:
 		Names.WOOD_FOREST:
@@ -223,13 +229,16 @@ func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 				ProjectileDataModifiers.new(1.5, data.weakening_chance), [cell], 0.1 * i)
 			return
 
+
 func kill_grid() -> void:
 	for i in range(occupied_cells.size() - 1, -1, -1):
 		var c: CellResource = occupied_cells[i]
 		c._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(c.data.durability))}, {})
 
+
 func kill_cell(target: CellResource) -> void:
 	target._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(target.data.durability))}, {})
+
 
 func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float) -> Dictionary:
 	if occupied_cells.is_empty():
@@ -250,18 +259,23 @@ func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float
 
 	return cells
 
+
 func get_cell_from_global_pos(pos: Vector2) -> CellResource:
 	return cells[get_cell_coords_from_global_pos(pos)]
+
 
 func get_cell_coords_from_global_pos(pos: Vector2) -> Vector2i:
 	return floor((pos - global_position) / (CELL_SIZE + separation))
 
+
 func get_cell_global_pos(coords: Vector2i) -> Vector2:
 	return cells[coords].global_position
-	
+
+
 func get_cell_global_center(coords: Vector2i) -> Vector2:
 	return cells[coords].global_position + CELL_SIZE / 2
-	
+
+
 func get_rand_occupied_cell(exclude: Array = [], type: Types = 0) -> CellResource:
 	if occupied_cells.is_empty():
 		return null
@@ -278,19 +292,23 @@ func get_rand_occupied_cell(exclude: Array = [], type: Types = 0) -> CellResourc
 			return null
 	
 	return target_arr.pick_random()
-	
+
+
 func get_rand_occupied_cell_global_center(exclude: Array = [], type: Types = 0) -> Vector2:
 	var cell: CellResource = get_rand_occupied_cell(exclude, type)
 	if !cell:
 		return Vector2.ZERO
 		
 	return cell.global_position + CELL_SIZE / 2
-	
+
+
 func get_data(_name: Names) -> CellResourceData:
 	return all_data[_name]
 
+
 func get_type_from_name(_name: Names) -> Types:
 	return Types.get(Names.keys()[_name].split("_")[0])
+
 
 func add_cell_weight(_name: Names, amount: int, type: Types = 0) -> void:
 	if type == 0:
@@ -299,12 +317,14 @@ func add_cell_weight(_name: Names, amount: int, type: Types = 0) -> void:
 
 	set_cell_weight(_name, tiers[type][_name].weight + amount, type)
 
+
 func sub_cell_weight(_name: Names, amount: int, type: Types = 0) -> void:
 	if type == 0:
 		type = get_type_from_name(_name)
 		assert(type != 0)
 
 	set_cell_weight(_name, tiers[type][_name].weight - amount, type)
+
 
 func set_cell_weight(_name: Names, value: int, type: Types = 0) -> void:
 	if type == 0:
@@ -313,7 +333,8 @@ func set_cell_weight(_name: Names, value: int, type: Types = 0) -> void:
 
 	tiers[type][0] -= tiers[type][_name].weight - value # total weight
 	tiers[type][_name].weight = value
-	
+
+
 func get_rand_name(type: Types) -> Names:
 	var w: Array = tiers[type].values()
 	var roll: int = randi_range(0, w[0] - 1)
@@ -328,7 +349,8 @@ func get_rand_name(type: Types) -> Names:
 	
 	assert(_name != 0)
 	return _name
-	
+
+
 func add_rand_resource(type: Types) -> CellResource:
 	if free_cells.is_empty():
 		return
@@ -337,12 +359,14 @@ func add_rand_resource(type: Types) -> CellResource:
 	set_cell_data(cell, all_data[get_rand_name(type)])
 	return cell
 
+
 func add_rand_resource_at(coords: Vector2i, type: Types) -> void:
 	var cell: CellResource = cells.get(coords, null)
 	if !free_cells.has(cell):
 		return
 	
 	set_cell_data(cell, all_data[get_rand_name(type)])
+
 
 func add_resource(_name: Names) -> CellResource:
 	if free_cells.is_empty():
@@ -351,7 +375,8 @@ func add_resource(_name: Names) -> CellResource:
 	var cell: CellResource = free_cells.pick_random()
 	set_cell_data(cell, all_data[_name])
 	return cell
-	
+
+
 func add_resource_at(coords: Vector2i, _name: Names) -> CellResource:
 	var cell: CellResource = cells.get(coords, null)
 	if !is_instance_valid(cell) || !free_cells.has(cell):
@@ -360,8 +385,10 @@ func add_resource_at(coords: Vector2i, _name: Names) -> CellResource:
 	set_cell_data(cell, all_data[_name])
 	return cell
 
+
 func add_resource_at_global(pos: Vector2, _name: Names) -> void:
 	add_resource_at(get_cell_coords_from_global_pos(pos), _name)
+
 
 func before_set_cell_data(data: CellResourceData) -> bool:
 	if !is_cell_special(data._name):
@@ -378,6 +405,7 @@ func before_set_cell_data(data: CellResourceData) -> bool:
 				
 	return true
 
+
 func reset_cell_data(cell: CellResource, data: CellResourceData, old_data: CellResourceData) -> void:
 	var args: Dictionary = {
 		"sub_hp": old_data.durability - cell.hp, 
@@ -391,6 +419,7 @@ func reset_cell_data(cell: CellResource, data: CellResourceData, old_data: CellR
 
 	set_cell_data(cell, data, args)
 
+
 func set_cell_data(cell: CellResource, data: CellResourceData, args: Dictionary = {"sub_hp": 0, "sub_life_time": 0, "effects": [] })  -> void:
 #	if !before_set_cell_data(data):
 #		return
@@ -400,7 +429,8 @@ func set_cell_data(cell: CellResource, data: CellResourceData, args: Dictionary 
 			args.effects.append(EffectManager.Effects.BUFFED)
 	
 	cell.set_data(data, args)
-	
+
+
 func free_cell(cell: CellResource) -> void:
 	if free_cells.has(cell):
 		return
@@ -441,6 +471,7 @@ func free_cell(cell: CellResource) -> void:
 			
 			free_druid_obelisks[i] = remain
 
+
 func free_druid_obelisk(obelisk: CellResource) -> void:
 	if !druid_obelisks.has(obelisk):
 		return
@@ -457,23 +488,27 @@ func free_druid_obelisk(obelisk: CellResource) -> void:
 		buffed_cell.set_effect(EffectManager.Effects.BUFFED, false)
 			
 		druid_obelisks.erase(obelisk)
-		
+
 #	if !is_cell_special(_name):
 #		return
 		
 #	spawned_special_cells[_name].erase(cell)
-	
+
+
 func free_cell_at(coords: Vector2i) -> void:
 	free_cell(cells[coords])
 
+
 func free_cell_at_global(pos: Vector2) -> void:
 	free_cell(cells[get_cell_coords_from_global_pos(pos)])
+
 
 func is_cell_special(_name: Names) -> bool:
 	if Names.keys()[_name].split("_")[0] == "SPECIAL":
 		return true
 		
 	return false
+
 
 func occupy_cell(cell: CellResource) -> void:
 	if !free_cells.has(cell):
@@ -487,8 +522,9 @@ func occupy_cell(cell: CellResource) -> void:
 	cell_occupied.emit(cell)
 	if !is_cell_special(cell.data._name):
 		return
-		
+
 #	spawned_special_cells[cell.data._name].append(cell)
+
 
 func respawn_res_at_rand_cell(cell: CellResource) -> void:
 	if free_cells.is_empty():
@@ -498,6 +534,7 @@ func respawn_res_at_rand_cell(cell: CellResource) -> void:
 	var data: CellResourceData = all_data[cell.data._name]
 	free_cell(cell)
 	set_cell_data(new_cell, data)
+
 
 func lvlup_cell(cell: CellResource) -> void:
 	if !occupied_cells.has(cell):
@@ -511,6 +548,7 @@ func lvlup_cell(cell: CellResource) -> void:
 	
 	reset_cell_data(cell, get_data(tier_keys[tier + 1]), cell_data)
 
+
 func lvlup_cell_at(coords: Vector2i) -> void:
 	var cell: CellResource = cells[coords]
 	if !cell.data:
@@ -518,11 +556,13 @@ func lvlup_cell_at(coords: Vector2i) -> void:
 	
 	lvlup_cell(cell)
 
+
 #func add_max_lumberjack_count(amount: int) -> void:
 #	set_max_lumberjack_count(max_lumberjack_count + amount)
 #
 #func set_max_lumberjack_count(new_v: int) -> void:
 #	max_lumberjack_count = new_v
+
 
 func _on_cell_occupied(cell: CellResource) -> void:
 	var _name: Names = cell.data._name
@@ -567,7 +607,8 @@ func _on_cell_occupied(cell: CellResource) -> void:
 			continue
 		
 		free_druid_obelisks.erase(i)
-		
+
+
 func handle_obelisk_buff(obelisk: CellResource, buff_cell_amount: int) -> int:
 	if !is_instance_valid(obelisk):
 		free_druid_obelisk(obelisk)
@@ -598,11 +639,13 @@ func handle_obelisk_buff(obelisk: CellResource, buff_cell_amount: int) -> int:
 			return 0
 
 	return buff_cell_amount
-		
+
+
 func free_grid() -> void:
 	for i in range(occupied_cells.size() - 1, -1, -1):
 		free_cell(occupied_cells[i])
-	
+
+
 func get_exclude_for_druid_obelisk() -> Array:
 	var exclude: Array = druid_obelisks.keys()
 	for i in occupied_cells:
@@ -612,7 +655,8 @@ func get_exclude_for_druid_obelisk() -> Array:
 		exclude.append(i)
 	
 	return exclude
-	
+
+
 func get_grid_total_hp() -> int:
 	var total: int = 0
 	for i in occupied_cells:

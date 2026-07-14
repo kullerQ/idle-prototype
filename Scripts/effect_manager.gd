@@ -5,4 +5,3 @@ enum Effects {
 	WEAKENED,
 	BUFFED
 }
-

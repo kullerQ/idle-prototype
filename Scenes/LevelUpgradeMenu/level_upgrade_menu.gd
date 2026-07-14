@@ -22,6 +22,7 @@ var manager: LevelUpgradeManager
 
 signal upgrade_button_pressed(node: LevelUpgradeNode)
 
+
 func _ready() -> void:
 	hide()
 	for i in $Graphics/Panel/MarginContainer/UpgradesContainer.get_children():
@@ -33,11 +34,12 @@ func _ready() -> void:
 	close_button.pressed.connect(_on_close_button_pressed)
 	upgrade_button_pressed.connect(_on_upgrade_button_pressed)
 	set_physics_process(false)
-	
+
+
 func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
 	if node.locked_for.has(cell):
 		return
-		
+
 #	if economy.get_resource(Economy.Currencies.XP) < node.cost:
 #		return
 
@@ -53,11 +55,14 @@ func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
 	manager.apply_upgrade(type, cell)
 #	label_tokens.text = "%d" %cell.lvl_tokens
 
+
 func show_tooltip(type: LevelUpgradeManager.Types, cost: int) -> void:
 	G.tooltip_requested.emit("%d xp\n%s" %[cost, manager.get_description(type)])
 
+
 func hide_tooltip(type: LevelUpgradeManager.Types) -> void:
 	G.tooltip_close_required.emit()
+
 
 func change_path(path: int) -> void:
 	for i in current_root.get_children():
@@ -77,7 +82,7 @@ func change_path(path: int) -> void:
 			continue
 		
 		i.hide()
-		
+
 #	current_root = current_root.get_node("Path_%d" %path).get_node("Root")
 #	current_root.show()
 	cell.upgrade_path.append(path)# = path
@@ -86,27 +91,32 @@ func change_path(path: int) -> void:
 ##	upgrade_path = get_upgrade_path()
 #	upgrade_path.show()
 #	nodes_to_hide.append(upgrade_path)
-	
+
+
 func _on_cell_lvled_up(_cell: PlayerCell, lvl: int) -> void:
 	if cell != _cell:
 		return
 	
 	label_tokens.text = "%d" %cell.lvl_tokens
-	
+
+
 func _on_close_button_pressed() -> void:
 	G.level_upgrade_menu_close_requested.emit()
-	
+
+
 func _on_level_upgrade_menu_close_requested() -> void:
 	set_physics_process(false)
 	cell = null
 	hide_paths()
 	hide()
-	
+
+
 func hide_paths() -> void:
 	for i in nodes_to_hide:
 		i.hide()
 	
 	nodes_to_hide = []
+
 
 func show_upgrade_path() -> void:
 	# dumb but works i guess 
@@ -138,15 +148,16 @@ func show_upgrade_path() -> void:
 				continue
 			
 			i.hide()
-			
-	
+
+
 func _on_level_upgrade_menu_open_requested(_cell: PlayerCell) -> void:
 	if G.opened_menu_type:
 		return
 		
 	if !nodes_to_hide.is_empty():
 		hide_paths()
-	
+
+
 #	await get_tree().process_frame
 	panel.call_deferred("set", "size", Vector2.ZERO)
 #	panel.size = Vector2.ZERO

@@ -11,6 +11,7 @@ var charged: bool = false
 
 static var economy: Economy
 
+
 func _ready() -> void:
 	set_physics_process(false)
 	timer.timeout.connect(_on_timeout)
@@ -18,12 +19,14 @@ func _ready() -> void:
 	if !data:
 		return
 
+
 func set_data(_data: BuildingData) -> void:
 	data = _data
 	$PanelNotActive.hide()
 	$Panel.show()
 	if data.automated:
 		automate()
+
 
 #region resource_cell_hitted
 # NOTE: resource_cell_hitted is not exists
@@ -51,15 +54,18 @@ func set_data(_data: BuildingData) -> void:
 # 	return
 #endregion resource_cell_hitted
 
+
 func _physics_process(delta: float) -> void:
 	progress_bar.value =  timer.time_left / graphics_cd
+
 
 func set_charged(enabled: bool) -> void:
 	charged = enabled
 	if charged && data.automated:
 		timer.start()
 		set_physics_process(true)
-		
+
+
 func automate() -> void:
 # NOTE: resource_cell_hitted is not exists
 # G.resource_cell_hitted.disconnect(_on_resource_hitted)
@@ -68,6 +74,7 @@ func automate() -> void:
 	graphics_cd = timer.wait_time
 	button.pressed.disconnect(_on_pressed)
 
+
 func _on_timeout() -> void:
 	timer.wait_time = data.cooldown
 	graphics_cd = timer.wait_time
@@ -75,6 +82,7 @@ func _on_timeout() -> void:
 	set_charged(false)
 	apply_effects()
 	set_physics_process(false)
+
 
 func apply_effects() -> void:
 	for i in data.production:
@@ -86,7 +94,8 @@ func apply_effects() -> void:
 				G.crit_label_requested.emit(progress_bar.global_position + progress_bar.size / 2)
 				
 			economy.add_resource(i, v * mult)
-	
+
+
 func _on_pressed() -> void:
 	if charged:
 		current_charge = max(0, current_charge - 1)
@@ -94,4 +103,3 @@ func _on_pressed() -> void:
 		if current_charge == 0:
 			apply_effects()
 			set_charged(false)
-	

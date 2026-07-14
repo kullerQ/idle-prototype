@@ -18,14 +18,17 @@ var layouts_visibility: Dictionary = {
 var visible_ui: Array = []
 var layout: Layouts
 
+
 func _ready() -> void:
 	G.crit_label_requested.connect(_on_crit_label_requested)
 	G.ui_layout_change_requested.connect(set_layout)
-	
+
+
 func _on_crit_label_requested(pos: Vector2) -> void:
 	var label: LabelCrit = label_crit_scene.instantiate()
 	label.global_position = pos
 	add_child(label)
+
 
 func add_element(node: Node) -> void:
 	add_child(node)
@@ -36,7 +39,8 @@ func add_element(node: Node) -> void:
 		return
 	
 	visible_ui.append(node)
-	
+
+
 func set_layout(new_layout: Layouts) -> void:
 	if layout == new_layout:
 		return

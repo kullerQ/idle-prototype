@@ -3,9 +3,11 @@ class_name Main
 
 @onready var tree: SceneTree = get_tree()
 
+
 func _enter_tree():
 	G.initialize()
 	Engine.time_scale = 1
+
 
 func _input(event):
 	if event is InputEventKey && event.is_pressed():

@@ -15,16 +15,19 @@ enum Stats {
 var flat_bonus: Dictionary = {}
 var mult: Dictionary = {}
 
+
 func get_value(stat: Stats) -> float:
 	return (base[stat] + flat_bonus.get(stat, 0)) * mult.get(stat, 1)
+
 
 func add_flat_bonus(stat: Stats, amount: float) -> void:
 	flat_bonus[stat] = flat_bonus.get(stat, 0) + amount
 
+
 func add_mult(stat: Stats, amount: float) -> void:
 	flat_bonus[stat] = mult.get(stat, 0) + amount
-	
-	
+
+
 #enum Values {
 #	NULL,
 #	HP,

@@ -5,6 +5,7 @@ class_name ExpeditionEditor
 @export var goal: ExpeditionManager.Goals
 @export var level: int = 1
 
+
 func _input(event):
 	if event is InputEventKey && event.is_pressed():
 		match event.keycode:
@@ -12,6 +13,7 @@ func _input(event):
 				get_tree().quit()
 			KEY_S:
 				save_expedition()
+
 
 func save_expedition() -> void:
 	if !type:
@@ -38,6 +40,7 @@ func save_expedition() -> void:
 	var json_string: String = JSON.stringify(data)
 	file.store_string(json_string)
 	file.close()
+
 
 func add_start_cells() -> void:
 	pass

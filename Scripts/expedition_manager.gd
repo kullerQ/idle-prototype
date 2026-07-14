@@ -31,12 +31,14 @@ signal expedition_selected(type: Types)
 signal hp_changed(new_hp: float, max_hp: float)
 signal expedition_started()
 
+
 static func get_expedition_path(type: ExpeditionManager.Types, level: int) -> String:
 	if !type || level < 1:
 		return ""
 	
 	var expedition_name: String = "%s_%d" %[Types.keys()[type].to_lower(), level]
 	return FOLDER_PATH + expedition_name + ".json"
+
 
 func select_expedition(type: Types, level: int = 1) -> void:
 	expedition_selected.emit(type)
@@ -47,16 +49,19 @@ func select_expedition(type: Types, level: int = 1) -> void:
 	G.in_expedition = true
 	call_deferred("start_expedition", type, level)
 
+
 func start_expedition(type: Types, level: int = 1) -> void:
 	load_expedition(type, level)
 	G.ui_layout_change_requested.emit(UIPP.Layouts.EXPEDITION)
 	expedition_started.emit()
+
 
 func handle_expedition_result() -> void:
 	G.call_deferred("open_menu", UI.Menus.EXPEDITION_END)
 	var reward_data: ExpeditionRewardData = load(REWARD_PATHS[current_expedition_info.type])
 	print(reward_data.wood[current_expedition_info.level - 1])
 	WipStub.wip("expedition_reward")
+
 
 func end_expedition() -> void:
 	G.in_expedition = false 
@@ -65,7 +70,8 @@ func end_expedition() -> void:
 	G.ui_layout_change_requested.emit(UIPP.Layouts.BASE)
 	timer_manager.start_timers()
 	disconnect_signals()
-	
+
+
 func disconnect_signals() -> void:
 	for i in connected_signals:
 		var signal_and_callable: Array = connected_signals[i]
@@ -75,7 +81,8 @@ func disconnect_signals() -> void:
 			continue
 			
 		i.disconnect(signal_name, callable)
-	
+
+
 func load_expedition(type: Types, level: int = 1) -> void:
 	if !type:
 		return
@@ -104,13 +111,15 @@ func load_expedition(type: Types, level: int = 1) -> void:
 			connected_signals[cell_manager] = [cell_manager.hit_handled, _on_cell_hit_handled_targets] 
 
 	set_hp(max_hp)
-	
+
+
 func place_cells(data: Array) -> Array:
 	var cells: Array = []
 	for cell_data in data:
 		cells.append(cell_manager.add_resource_at(Vector2i(cell_data.x, cell_data.y), cell_data.name))
 	
 	return cells
+
 
 func get_data_from_json(path: String) -> Dictionary:
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
@@ -128,14 +137,16 @@ func get_data_from_json(path: String) -> Dictionary:
 	else:
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
 		return {}
-	
+
+
 func _on_cell_hit_handled_full_clear(cell: CellResource, data: CellResourceData) -> void:
 	if cell.hp <= 0:
 		sub_hp(data.durability)
 		return
 		
 	sub_hp(cell.hp)
-		
+
+
 func _on_cell_hit_handled_targets(cell: CellResource, data: CellResourceData) -> void:
 	if !target_cells.has(cell):
 		return
@@ -146,9 +157,11 @@ func _on_cell_hit_handled_targets(cell: CellResource, data: CellResourceData) ->
 		return
 		
 	sub_hp(cell.hp)
-		
+
+
 func sub_hp(amount: float) -> void:
 	set_hp(current_hp - amount)
+
 
 func set_hp(value: float) -> void:
 	current_hp = value
@@ -158,6 +171,8 @@ func set_hp(value: float) -> void:
 #		call_deferred("end_expedition")
 
 # debug
+
+
 func complete_expedition() -> void:
 	match current_expedition_info.goal:
 		Goals.FULL_CLEAR:

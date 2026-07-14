@@ -22,6 +22,7 @@ var delay: float = 0
 
 static var particle_container: Node2D
 
+
 func _ready() -> void:
 	if delay:
 		set_physics_process(false)
@@ -37,28 +38,34 @@ func _ready() -> void:
 	base_mult = damage_data[DamageManager.DamageDataTypes.MULT]
 	if p_owner:
 		damage_data["owner"] = p_owner
-	
+
+
 func _physics_process(delta: float) -> void:
 	move(delta)
 	check_max_range()
+
 
 func move(delta: float) -> void:
 	if !dir:
 		queue_free()
 		
 	global_position += dir * spd * delta
-	
+
+
 func check_max_range() -> void:
 	if global_position.distance_squared_to(init_pos) >= data.max_range * data.max_range:
 		queue_free()
+
 
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, data.r + 1, Color.BLACK)
 	draw_circle(Vector2.ZERO, data.r, Color.DARK_GRAY)
 
+
 func before_hitted(cell: CellResource = null) -> void:
 	apply_crit()
-	
+
+
 func after_hitted(cell: CellResource = null) -> void:
 	particle_container.add_child(HitCircle.new(global_position))
 	pierced += 1
@@ -71,8 +78,10 @@ func after_hitted(cell: CellResource = null) -> void:
 	if pierced >= data.max_piercings + 1:
 		die()
 
+
 func die() -> void:
 	queue_free()
+
 
 func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
 	if p_owner:
@@ -84,8 +93,10 @@ func when_hitted(_area: Area2D, cell: CellResource = null) -> void:
 	_area.hitted.emit(damage_data, get_spread_damage_data())
 	apply_effects(cell)
 
+
 func get_spread_damage_data() -> Dictionary:
 	return {"to":  mod_data.spread_damage_to, "ratio": mod_data.spread_damage_ratio}
+
 
 func apply_effects(cell: CellResource) -> void:
 	if weakening:
@@ -101,12 +112,14 @@ func apply_effects(cell: CellResource) -> void:
 	if cell.is_weakened():
 		if mod_data.reduce_cd_if_weakened:
 			p_owner.reduce_cd_time(mod_data.reduce_cd_if_weakened)
-		
+
+
 func apply_crit(chance: int = crit_chance) -> void:
 	if randi() % 100 < chance:
 		critted = true
 		damage_data[DamageManager.DamageDataTypes.MULT] += crit_mult
 		G.crit_label_requested.emit(global_position)
+
 
 func _on_area_entered(a: Area2D) -> void:
 	var cell: CellResource = a.owner
@@ -116,9 +129,11 @@ func _on_area_entered(a: Area2D) -> void:
 	before_hitted(cell)
 	when_hitted(a, cell)
 	after_hitted(cell)
-	
+
+
 func set_disabled(_disabled: bool) -> void:
 	collision.disabled = _disabled
+
 
 func get_dmg() -> float:
 	var total: float = 0
@@ -129,17 +144,20 @@ func get_dmg() -> float:
 				
 	return total
 
+
 func add_dmg(amount: int) -> void:
 	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] += amount
 
+
 func div_dmg(amount: int) -> void:
 	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] = floor(damage_data[dmg_type][type][stat] / amount)
+
 
 func ricochet(cell: CellResource = null, _div_dmg: bool = true) -> bool:
 	damage_data[DamageManager.DamageDataTypes.MULT] = base_mult

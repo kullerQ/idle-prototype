@@ -9,6 +9,8 @@ class_name Knife
 #	if pirced >= data.max_pircings + 1:
 #		die()
 #
+
+
 func before_hitted(cell: CellResource = null) -> void:
 	if cell.is_weakened():
 		apply_crit(crit_chance + mod_data.bonus_crit_chance_on_weakened)
@@ -16,9 +18,11 @@ func before_hitted(cell: CellResource = null) -> void:
 		
 	apply_crit()
 
+
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, data.r + 1, Color.BLACK)
 	draw_circle(Vector2.ZERO, data.r, Color.SADDLE_BROWN)
+
 
 func after_hitted(cell: CellResource = null) -> void:
 	super()

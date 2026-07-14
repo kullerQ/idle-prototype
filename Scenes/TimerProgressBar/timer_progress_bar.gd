@@ -7,6 +7,7 @@ var wt: float = 0
 @onready var panel = $Icon/Panel
 var tw: Tween
 
+
 func _ready() -> void:
 	wt = timer.wait_time
 	timer.timeout.connect(_on_timeout)
@@ -14,9 +15,11 @@ func _ready() -> void:
 	fill_style.set("bg_color", timer.color)
 	progress_bar.set("theme_override_styles/fill", fill_style)
 
+
 func _physics_process(delta: float) -> void:
 	progress_bar.value = (wt - timer.time_left) / wt
-	
+
+
 func _on_timeout() -> void:
 	wt = timer.wait_time
 	if tw:
@@ -25,4 +28,3 @@ func _on_timeout() -> void:
 	tw = create_tween()
 	panel.position.y = -2
 	tw.tween_property(panel, "position:y", 0, 0.2)
-

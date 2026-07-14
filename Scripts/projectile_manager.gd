@@ -8,8 +8,8 @@ enum Types {
 	AXE,
 	DRUID_MAGIC,
 	GREATAXE,
-	
 }
+
 var projectile_scenes: Dictionary = {
 	Types.BULLET: load("uid://cqfvg24btpsd"),
 	Types.KNIFE: load("uid://btawcaget3dop"),
@@ -26,19 +26,22 @@ var projectile_data: Dictionary = {
 	Types.AXE: load("uid://cwix8ktqxey3o").duplicate(),
 	Types.DRUID_MAGIC: load("uid://ckqurogg2vv7y").duplicate(),
 	Types.GREATAXE: load("uid://cvmku6kcw7ksr").duplicate(),
-	}
+}
 
 var projectile_container: Node2D
 var damage_manager: DamageManager
 var cell_manager: CellManager
 
+
 func free_all_projectiles() -> void:
 	for i in projectile_container.get_children():
 		i.call_deferred("queue_free")
 
+
 func get_data(type: Types) -> ProjectileData:
 	return projectile_data[type]
-	
+
+
 # TODO: refactor effects
 func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, _mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
 	var projectile: Projectile = projectile_scenes[type].instantiate()
@@ -61,7 +64,8 @@ func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int,
 
 	projectile.mod_data = _mod_data
 	return projectile
-	
+
+
 func new_resource_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array, _delay: float = 0) -> Projectile:
 	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.ignore = _ignore
@@ -71,13 +75,16 @@ func new_resource_projectile(pos: Vector2, type: Types, crit_chance: int, crit_m
 		
 	return projectile
 
+
 func new_player_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> Projectile:
 	var projectile: Projectile = new_projectile(pos, type, crit_chance, crit_mult, mod_data, bonus_damage)
 	projectile.p_owner = _owner
 	return projectile
 
+
 func add_projectile(projectile: Projectile) -> void:
 	projectile_container.call_deferred("add_child", projectile)
+
 
 func add_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary,  _owner: PlayerCell) -> void:
 	var bullet: Bullet = new_player_projectile(pos, Types.BULLET, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
@@ -85,15 +92,18 @@ func add_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, m
 	bullet.dir = _dir
 	add_projectile(bullet)
 
+
 func add_knife(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
 	var knife: Knife = new_player_projectile(pos, Types.KNIFE, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	knife.dir = _dir
 	add_projectile(knife)
 
+
 func add_druid_magic(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
 	var druid_magic: DruidMagic = new_player_projectile(pos, Types.DRUID_MAGIC, crit_chance, crit_mult, mod_data, bonus_damage, _owner)
 	druid_magic.dir = _dir
 	add_projectile(druid_magic)
+
 
 func add_greataxe(crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _owner: PlayerCell) -> void:
 	var row_count: int = cell_manager.row_count
@@ -106,16 +116,15 @@ func add_greataxe(crit_chance: int, crit_mult: int, mod_data: ProjectileDataModi
 	greataxe.cell_height =  cell_manager.CELL_SIZE.y
 	add_projectile(greataxe)
 
+
 func add_resource_axe(pos: Vector2, crit_chance: int, crit_mult: int, _dmg_ratio: float, _target_pos: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array) -> void:
 	var axe: Axe = new_resource_projectile(pos, Types.AXE, crit_chance, crit_mult, mod_data, {}, _ignore)
 	axe.target_pos = _target_pos
 	axe.dmg_ratio = _dmg_ratio
 	add_projectile(axe)
-	
+
+
 func add_resource_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: Vector2, mod_data: ProjectileDataModifiers, _ignore: Array, _delay: float = 0) -> void:
 	var bullet: Bullet = new_resource_projectile(pos, Types.BULLET, crit_chance, crit_mult, mod_data, {}, _ignore, _delay)
 	bullet.dir = _dir
 	add_projectile(bullet)
-	
-
-	

@@ -51,6 +51,7 @@ var descriptions: Dictionary = {
 	Types.DRUID_OBELISK_CHANCE: "+10% chance to add 1 druid obelisk if overheals",
 }
 
+
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 	match type:
 		Types.SHOOTER_SUPPORT:
@@ -113,12 +114,13 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 			
 		Types.DRUID_OBELISK_CHANCE:
 			cell.obelisk_spawn_chance += 10
-			
+
 #			"if overheals: 25% chance to spawn weakened wood resource",
 #			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}
 #			cell.projectile_mod_data.sub_overwrite = {DamageData.Values.LIFE_TIME: 1}
 
 	G.player_cell_manager.cell_upgraded.emit(cell)
-		
+
+
 func get_description(type: Types) -> String:
 	return descriptions[type]

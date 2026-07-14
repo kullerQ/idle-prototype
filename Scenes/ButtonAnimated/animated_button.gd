@@ -9,10 +9,12 @@ var pressed_func: Callable
 
 var tw: Tween
 
+
 func initialize(_text: String, _pressed_func: Callable, xsize: int = 25) -> void:
 	text = _text
 	custom_minimum_size.x = xsize
 	pressed_func = _pressed_func
+
 
 func _ready() -> void:
 	if !_owner.is_node_ready():
@@ -26,10 +28,12 @@ func _ready() -> void:
 	_owner.visibility_changed.connect(_on_visibility_changed)
 	label.visible = _owner.visible
 	button.pressed.connect(_on_pressed)
-	
+
+
 func _on_visibility_changed() -> void:
 	label.visible = _owner.visible
-	
+
+
 func _on_pressed() -> void:
 	if tw:
 		tw.kill()

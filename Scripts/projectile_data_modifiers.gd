@@ -11,6 +11,7 @@ var spread_damage_ratio: float
 var spread_damage_to: int
 var bonus_crit_chance_on_weakened: int
 
+
 func _init(_weakened_dmg_mod: float = 0, 
 			_weakening_chance: int = 0, 
 			_ricochet_if_weakened: bool = false, 

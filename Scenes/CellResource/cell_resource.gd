@@ -33,8 +33,11 @@ var effects: Array = []
 
 signal effect_timeout(effect: EffectManager.Effects)
 
+
 func _ready() -> void:
 	timer.timeout.connect(_on_timeout)
+
+
 #	panel.set("theme_override_styles/panel", panel_style)
 	progress_bar_hp.set("theme_override_styles/background", progress_bar_hp_bg)
 	progress_bar_hp.set("theme_override_styles/fill", progress_bar_hp_fill)
@@ -57,6 +60,7 @@ func _ready() -> void:
 	
 #	timer_weaken.timeout.connect(_on_weaken_timeout)
 
+
 func _physics_process(delta) -> void:
 	progress_bar.value = timer.time_left / data.life_time 
 	for i in effects:
@@ -66,7 +70,9 @@ func _physics_process(delta) -> void:
 		var pb: ProgressBar = effect_progress_bars[i]
 		var timer: Timer = effect_timers[i]
 		pb.value = timer.time_left / timer.wait_time
+
 #	panel_weaken.value = timer_weaken
+
 
 func _on_hitted(damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
 	if !data:
@@ -75,30 +81,36 @@ func _on_hitted(damage_data: Dictionary, spread_damage_data: Dictionary) -> void
 	audio_stream_player.pitch_scale = randf_range(0.9, 1.1)
 	audio_stream_player.playing = true	
 	manager.cell_hitted.emit(self, damage_data, spread_damage_data)
-	
+
+
 func sub_hp(v: int) -> void:
 	if !data:
 		return
 	
 	set_hp(hp - v)
-	
+
+
 func add_hp(v: int) -> void:
 	if !data:
 		return
 		
 	set_hp(min(data.durability, hp + v))
-	
+
+
 func set_hp(new_v: int) -> void:
 	hp = new_v
 	progress_bar_hp.value = float(hp) / data.durability
+
 #	if hp <= 0:
 #		manager.cell_died.emit(self)
-	
+
+
 func set_data(_data: CellResourceData, args: Dictionary) -> void:
 	if data == _data:
 		return
 	
 	data = _data
+
 #	panel_style.bg_color = Color(data.color, default_color.a)
 	progress_bar_hp_bg.bg_color = Color(data.color, default_color_bg.a)
 	progress_bar_hp_fill.bg_color = Color(data.color, default_color_fill.a)
@@ -116,6 +128,7 @@ func set_data(_data: CellResourceData, args: Dictionary) -> void:
 	set_hp(data.durability - args.sub_hp)
 	manager.occupy_cell(self)
 
+
 func set_disabled(_disabled: bool) -> void:
 	collision.call_deferred("set_disabled", _disabled)
 	if _disabled:
@@ -131,10 +144,12 @@ func set_disabled(_disabled: bool) -> void:
 		
 	set_physics_process(!_disabled)
 
+
 func _on_timeout() -> void:
 	manager.free_cell(self)
 	data = null
 	set_disabled(true)
+
 
 func clear_effects() -> void:
 	for e in range(1, EffectManager.Effects.size()):
@@ -145,7 +160,8 @@ func clear_effects() -> void:
 			continue
 			
 		timer.stop()
-		
+
+
 func set_effect(effect: EffectManager.Effects, enabled: bool) -> void:
 	var timer: Timer
 	if effect_timers.has(effect):
@@ -170,11 +186,13 @@ func set_effect(effect: EffectManager.Effects, enabled: bool) -> void:
 		i.visible = enabled
 		if i is ProgressBar:
 			i.value = 0 if !enabled else 1
-		
+
+
 func _on_effect_timeout(effect: EffectManager.Effects) -> void:
 	set_effect(effect, false)
-		
-# retunrs overheal
+
+
+# returns overheal
 func add_life_time(amount: float) -> float:
 	if !data.life_time:
 		return 0
@@ -191,6 +209,7 @@ func add_life_time(amount: float) -> float:
 	timer.start()
 	return overheal
 
+
 # returns overkill
 func sub_life_time(amount: float) -> float:
 	var time_left: float = timer.time_left
@@ -204,9 +223,10 @@ func sub_life_time(amount: float) -> float:
 	timer.start()
 	return 0
 
+
 func is_weakened() -> bool:
 	return effects.has(EffectManager.Effects.WEAKENED)
 
+
 func is_buffed() -> bool:
 	return effects.has(EffectManager.Effects.BUFFED)
-	

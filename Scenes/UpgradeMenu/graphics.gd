@@ -8,6 +8,7 @@ var min_scale: float = 0.7
 var scroll_speed: float = 0.03
 @onready var parent: UpgradeMenu = owner
 
+
 func _input(event: InputEvent) -> void:
 	if !rect.has_point(get_global_mouse_position()) && !is_dragging:
 		return
@@ -32,6 +33,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_dragging:
 		var delta = -event.relative / scale
 		position -= delta
+
 
 func resize_container(amount: float) -> void:
 	var new_scale = scale + Vector2(amount, amount)

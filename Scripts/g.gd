@@ -39,6 +39,7 @@ signal level_upgrade_menu_close_requested
 signal level_upgrade_menu_open_requested(cell: PlayerCell)
 signal ui_layout_change_requested(new_layout: UIPP.Layouts)
 
+
 func initialize() -> void:
 	economy = Economy.new()
 
@@ -94,6 +95,7 @@ func initialize() -> void:
 
 	Axe.bounce = false
 
+
 func toggle_menu(menu_type: UI.Menus) -> void:
 	if opened_menu_type:
 		if opened_menu_type == menu_type:
@@ -106,12 +108,14 @@ func toggle_menu(menu_type: UI.Menus) -> void:
 	menu_signals[menu_type][0].emit() # open signal
 	opened_menu_type = menu_type
 
+
 func open_menu(menu_type: UI.Menus) -> void:
 	if opened_menu_type == menu_type:
 		return
 	
 	menu_signals[menu_type][0].emit() # open signal
 	opened_menu_type = menu_type	
+
 
 func close_menu(menu_type: UI.Menus) -> void:
 	if opened_menu_type != menu_type:

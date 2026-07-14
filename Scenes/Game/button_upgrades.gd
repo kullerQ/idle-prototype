@@ -1,3 +1,2 @@
 extends Button
 class_name ButtonUpgrades
-

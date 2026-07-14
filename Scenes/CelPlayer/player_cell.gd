@@ -46,6 +46,7 @@ var disabled: bool = false
 static var manager: PlayerCellManager
 static var projectile_manager: ProjectileManager
 
+
 func _ready() -> void:
 	set_physics_process(false)
 	projectile_mod_data = ProjectileDataModifiers.new(weakened_dmg_mod)
@@ -65,16 +66,19 @@ func _ready() -> void:
 		DamageManager.new_data(0, 0), # cell's bonus heal data 
 		DamageManager.new_data(0, 0)  # cell's bonus hit data
 		)
-	
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton && event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
 		if !timer.is_stopped():
 			return
 			
 		attack()
-	
+
+
 func _physics_process(delta: float) -> void:
 	progress_bar.value = (cooldown - timer.time_left) / cooldown
+
 
 func set_highlight(enabled: bool) -> void:
 	if enabled:
@@ -82,35 +86,42 @@ func set_highlight(enabled: bool) -> void:
 		return
 	
 	panel_highlight.hide()
-	
+
+
 func _on_pressed() -> void:
 	if !data:
 		return
 		
 	G.player_cell_pressed.emit(self)
-	
+
+
 func add_xp() -> void:
 	manager.xp_added.emit(self)
+
 
 func add_lvl() -> void:
 	lvl += 1
 	lvl_tokens += 1
 	upgrade_arrow.show()
 	manager.cell_lvled_up.emit(self, lvl)
-	
+
+
 func sub_tokens() -> void:
 	lvl_tokens -= 1
 	if lvl_tokens == 0:
 		upgrade_arrow.hide()
-	
+
+
 func start_cd_timer() -> void:
 	cooldown = max(0.1, data.cooldown - cooldown_reduction)
 	timer.wait_time = cooldown
 	timer.start()
 
+
 func start_multi_attack_timer() -> void:
 	timer_multi_attack.wait_time = data.multi_attack_delay
 	timer_multi_attack.start()
+
 
 func attack() -> void:
 	if disabled:
@@ -134,7 +145,8 @@ func attack() -> void:
 
 	attack_count = 0
 	start_cd_timer()
-	
+
+
 func set_data(_data: PlayerCellData) -> void:
 	data = _data
 		
@@ -153,23 +165,29 @@ func set_data(_data: PlayerCellData) -> void:
 	set_process_unhandled_input(true)
 	set_physics_process(true)
 
+
 func _on_timeout() -> void:
 	if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && !data.autoattack:
 		return
 	
 	attack()
 
+
 func _on_multi_attack_timeout() -> void:
 	attack()
+
 
 func get_bullet_crit_chance() -> float:
 	return data.crit_chance + bonus_crit_chance
 
+
 func get_bullet_pos() -> Vector2:
 	return bullet_pos_marker.global_position
 
+
 func accuracy_rotated_dir(dir: Vector2) -> Vector2:
 	return dir.rotated(deg_to_rad(randf_range(-MAX_ACCURACY + data.accuracy, MAX_ACCURACY - data.accuracy)))
+
 
 func get_attack_dir_to_mouse() -> Vector2:
 	var bullet_dir = get_bullet_pos().direction_to(get_global_mouse_position())
@@ -177,15 +195,18 @@ func get_attack_dir_to_mouse() -> Vector2:
 		bullet_dir = accuracy_rotated_dir(bullet_dir)
 	
 	return bullet_dir
-	
+
+
 func get_dir(pos: Vector2) -> Vector2:
 	if auto_aim || data.autoattack:
 		return get_dir_to_rand_cell()
 	
 	return get_attack_dir_to_mouse()
-	
+
+
 func get_dir_to_rand_cell() -> Vector2:
 	return get_bullet_pos().direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
+
 
 func reduce_cd_time(amount: float) -> void:
 	var time_left: float = timer.time_left
@@ -197,10 +218,12 @@ func reduce_cd_time(amount: float) -> void:
 	
 	timer.wait_time = new_time
 	timer.start()
-	
+
+
 func add_dir_projectile(function: Callable) -> void:
 	function.call(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, get_dir(get_bullet_pos()), projectile_mod_data, bonus_damage,self)
-	
+
+
 func shooter_attack() -> void:
 	if special_attack_count == 1:
 		var init_chance: int = projectile_mod_data.weakening_chance
@@ -210,17 +233,21 @@ func shooter_attack() -> void:
 		return
 		
 	add_dir_projectile(projectile_manager.add_bullet)
-		
+
+
 func rogue_attack() -> void:
 	add_dir_projectile(projectile_manager.add_knife)
+
 
 func wizard_attack() -> void:
 	# projectile_manager.add_magic(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, 
 	# G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self)
 	WipStub.wip("wizard_attack")
 
+
 func druid_attack() -> void:
 	add_dir_projectile(projectile_manager.add_druid_magic)
-	
+
+
 func executioner_attack() -> void:
 	projectile_manager.add_greataxe(get_bullet_crit_chance(), data.crit_mult, projectile_mod_data, bonus_damage, self)

@@ -26,11 +26,13 @@ var tower_bonus_damage_presets: Dictionary = {}
 
 var flat_damage_bonus: Dictionary = {}
 
+
 static func new_data(hp: float = 0, life_time: float = 0) -> Dictionary:
 	var data: Dictionary = {}
 	data[Stats.HP] = hp
 	data[Stats.LIFE_TIME] = life_time
 	return data
+
 
 static func new_damage_data(heal_data: Dictionary, hit_data: Dictionary) -> Dictionary:
 	var damage_data: Dictionary = {}
@@ -38,8 +40,10 @@ static func new_damage_data(heal_data: Dictionary, hit_data: Dictionary) -> Dict
 	damage_data[Types.HIT] = hit_data
 	return damage_data
 
+
 static func add_hit_hp(data: Dictionary, amount: float) -> void:
 	data[Types.HIT][Stats.HP] += amount
+
 
 static func print_data(data: Dictionary) -> void:
 	var dtk: Array = DamageDataTypes.keys()
@@ -56,11 +60,14 @@ static func print_data(data: Dictionary) -> void:
 			for stat in data[damage_type][type]:
 				print("# stat: %s value: %d" %[sk[stat], data[damage_type][type][stat]])
 
+
 func add_mult(projectile_type: ProjectileManager.Types, amount: float) -> void:
 	projectile_damage_data[projectile_type][DamageDataTypes.MULT] += amount
 
+
 func set_mult(projectile_type: ProjectileManager.Types, mult: float = 1) -> void:
 	projectile_damage_data[projectile_type][DamageDataTypes.MULT] = mult
+
 
 func initialize() -> void:
 	for i in range(1, ProjectileManager.Types.size()):
@@ -79,29 +86,37 @@ func initialize() -> void:
 	new_base_data(ProjectileManager.Types.GREATAXE, new_data(), new_data(10))
 	new_base_data(ProjectileManager.Types.AXE)
 
+
 func new_tower_preset(tower_preset: TowerPresets, damage_data: Dictionary) -> void:
 	tower_bonus_damage_presets[tower_preset] =  damage_data
 
+
 func new_projectile_damage_data(data_type: DamageDataTypes, projectile_type: ProjectileManager.Types, damage_data: Dictionary) -> void:
 	projectile_damage_data[projectile_type][data_type] = damage_data
+
 
 func new_base_data(type: ProjectileManager.Types, base_heal_data: Dictionary = new_data(), base_hit_data: Dictionary = new_data(), bonus_heal_data: Dictionary = new_data(), bonus_hit_data: Dictionary = new_data()) -> void:
 	new_projectile_damage_data(DamageDataTypes.BASE, type, new_damage_data(base_heal_data, base_hit_data))
 	new_projectile_damage_data(DamageDataTypes.BONUS, type, new_damage_data(bonus_heal_data, bonus_hit_data))
 	set_mult(type)
 
+
 func get_damage_data(projectile_type: ProjectileManager.Types) -> Dictionary:
 	return projectile_damage_data[projectile_type]
+
 
 func get_bonus_data(projectile_type: ProjectileManager.Types) -> Dictionary:
 	return projectile_damage_data[projectile_type][DamageDataTypes.BONUS]
 
+
 func add_hit_bonus(projectile_type: ProjectileManager.Types, stat: Stats, amount: float) -> void:
 	get_bonus_data(projectile_type)[Types.HIT][stat] += amount
-	
+
+
 func get_damage(projectile_type: ProjectileManager.Types, type: Types, stat: Stats) -> float:
 	var data: Dictionary = projectile_damage_data[projectile_type]
 	return data[DamageDataTypes.BASE][type][stat] + data[DamageDataTypes.BONUS][type][stat]
-	
+
+
 func add_flat_damage_bonus(projectile_type: ProjectileManager.Types, amount: float) -> void:
 	flat_damage_bonus[projectile_type] += amount

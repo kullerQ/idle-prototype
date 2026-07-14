@@ -135,12 +135,15 @@ var descriptions: Dictionary = {
 
 signal upgrade_purchased(type: Types)
 
+
 func _init():
 	upgrade_purchased.connect(_on_upgrade_purchased)
-		
+
+
 func get_description(type: Types) -> String:
 	return descriptions[type]
-		
+
+
 func _on_upgrade_purchased(type: Types) -> void:
 	match type:
 		Types.ADD_TOWER_CELL:
@@ -332,8 +335,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 		Types.FOREST_ADD:
 			cell_manager.add_cell_weight(CellManager.Names.WOOD_FOREST, 3, CellManager.Types.WOOD)
 			cell_manager.add_resource(CellManager.Names.WOOD_FOREST)
-			
-			
+
+
 func add_projectile_damage(type: ProjectileManager.Types, amount: int) -> void:
 	damage_manager.add_flat_damage_bonus(type, amount)
-	

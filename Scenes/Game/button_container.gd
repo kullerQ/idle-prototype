@@ -3,20 +3,26 @@ class_name ButtonContainer
 
 var button_scene: PackedScene = load("uid://c1b7sfau2swnf")
 
+
 func _enter_tree() -> void:
 	PanelButton.container = self
+
 
 func upgrade_menu_button_func() -> void:
 	G.toggle_menu(UI.Menus.UPGRADE)
 
+
 func expedition_func() -> void:
 	G.toggle_menu(UI.Menus.EXPEDITION)
+
 
 func wood_func() -> void:
 	G.economy.add_resource(Economy.Currencies.WOOD, 1000)
 
+
 func xp_func() -> void:
 	G.economy.add_resource(Economy.Currencies.XP, 100)
+
 
 func zero_func() -> void:
 	G.economy.set_resource(Economy.Currencies.WOOD, 0)
@@ -38,6 +44,7 @@ func lvl_up_func() -> void:
 	cell.set_highlight(true)
 	player_cell_manager.highlighted_cell = cell
 	G.level_upgrade_menu_open_requested.emit(cell)
+
 
 func _ready() -> void:
 	var b: PanelButton = button_scene.instantiate()

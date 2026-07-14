@@ -7,6 +7,7 @@ var unlocked_node_count: int = 0
 #todo remove G dependency
 @onready var economy: Economy = G.economy
 
+
 func _ready() -> void:
 	super()
 	graphics.clip_contents = true
@@ -14,7 +15,8 @@ func _ready() -> void:
 		block_expensive(i, economy.resources[i])
 	
 	economy.res_changed.connect(block_expensive)
-	
+
+
 func block_expensive(currency: Economy.Currencies, value: int) -> void:
 	# bullshit 💩
 	var unlocked: int = 0
@@ -50,10 +52,10 @@ func block_expensive(currency: Economy.Currencies, value: int) -> void:
 		highlight_label.text = str(unlocked)
 	else:
 		highlight_label.text = ""
-			
+
+
 func reg_node(key: Array, node: UpgradeNode) -> void:
 	if !nodes.has(key):
 		nodes[key] = []
 	
 	nodes[key].append(node)
-

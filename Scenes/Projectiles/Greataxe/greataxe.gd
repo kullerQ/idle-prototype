@@ -6,6 +6,7 @@ var cell_height: int = 0
 var damage_bonus_with_backstab: Dictionary = {}
 var default_damage_bonus: Dictionary = {}
 
+
 func _ready() -> void:
 	super()
 	if !data.backstab:
@@ -14,6 +15,7 @@ func _ready() -> void:
 	default_damage_bonus = damage_data[DamageManager.DamageDataTypes.BONUS]
 	damage_bonus_with_backstab = default_damage_bonus.duplicate(true)
 	damage_bonus_with_backstab[DamageManager.Types.HIT][DamageManager.Stats.HP] += data.backstab_bonus_dmg
+
 
 func _physics_process(delta: float) -> void:
 	global_position.x += spd * delta
@@ -25,6 +27,7 @@ func _physics_process(delta: float) -> void:
 	
 	if global_position.y == target_pos.y && abs(init_pos.x - global_position.x) < 5:
 		queue_free()
+
 
 func after_hitted(cell: CellResource = null) -> void:
 	particle_container.add_child(HitCircle.new(global_position))

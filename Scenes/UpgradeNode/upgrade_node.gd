@@ -25,6 +25,7 @@ var nodes: Array = []
 static var economy: Economy
 static var upgrade_manager: UpgradeManager
 
+
 func _ready() -> void:
 	if locked:
 		hide()
@@ -50,16 +51,20 @@ func _ready() -> void:
 	button.pressed.connect(_on_pressed)
 	button.mouse_entered.connect(_on_mouse_entered)
 	button.mouse_exited.connect(_on_mouse_exited)
-	
+
+
 func block() -> void:
 	panel.show()
-	
+
+
 func unblock() -> void:
 	panel.hide()
-	
+
+
 func get_cost(currency: Economy.Currencies) -> int:
 	return cost[currency][lvl]
-	
+
+
 func get_cost_text() -> String:
 	var cost_t: String = ""
 	for i in cost:
@@ -68,19 +73,24 @@ func get_cost_text() -> String:
 			cost_t += "%d  |  " %v
 	
 	return cost_t
-	
+
+
 func _on_mouse_entered() -> void:
 	G.tooltip_requested.emit(upgrade_manager.get_description(type))
-	
+
+
 func _on_mouse_exited() -> void:
 	G.tooltip_close_required.emit()
-	
+
+
 func unlock() -> void:
 	locked = false
 	show()
-	
+
+
 func add_lvl() -> void:
 	set_lvl(lvl + 1)
+
 
 func set_lvl(new_lvl: int) -> void:
 	lvl = new_lvl
@@ -95,6 +105,7 @@ func set_lvl(new_lvl: int) -> void:
 		if node.unlock_lvl <= lvl:
 			node.unlock()
 			nodes.remove_at(n)
+
 
 func _on_pressed() -> void:
 	if type == 0:
