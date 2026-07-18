@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ctck6suxq5bcj"]
 
 [ext_resource type="Script" path="res://Scenes/PlayerCellManager/player_cell_manager.gd" id="1_ejp3e"]
-[ext_resource type="PackedScene" uid="uid://lbdmfqss0gje" path="res://Scenes/CelPlayer/player_cell.tscn" id="2_syj7i"]
+[ext_resource type="PackedScene" uid="uid://lbdmfqss0gje" path="res://Scenes/PlayerCell/player_cell.tscn" id="2_syj7i"]
 
 [node name="PlayerCellManager" type="GridContainer"]
 offset_left = 32.0

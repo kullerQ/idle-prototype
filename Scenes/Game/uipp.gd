@@ -7,7 +7,7 @@ enum Layouts {
 	EXPEDITION
 }
 
-var label_crit_scene: PackedScene = load("uid://2ecp1ltsrumb")
+var label_crit_scene: PackedScene = preload("res://Scenes/LabelCrit/label_crit.tscn")
 var timer_ui: TimerUI
 var expedition_ui: ExpeditionUI
 

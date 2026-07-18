@@ -60,7 +60,7 @@ func handle_expedition_result() -> void:
 	G.call_deferred("open_menu", UI.Menus.EXPEDITION_END)
 	var reward_data: ExpeditionRewardData = load(REWARD_PATHS[current_expedition_info.type])
 	print(reward_data.wood[current_expedition_info.level - 1])
-	WipStub.wip("expedition_reward")
+	push_warning("WIP: Not implemented yet: expedition_reward")
 
 
 func end_expedition() -> void:

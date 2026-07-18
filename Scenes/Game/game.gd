@@ -1,6 +1,12 @@
 extends Node2D
 class_name Game
 
+const LEVEL_UPGRADE_MENU_SCENE: PackedScene = preload("res://Scenes/LevelUpgradeMenu/level_upgrade_menu.tscn")
+const EXPEDITION_MENU_SCENE: PackedScene = preload("res://Scenes/ExpeditionMenu/expedition_menu.tscn")
+const EXPEDITION_END_SCREEN_SCENE: PackedScene = preload("res://Scenes/ExpeditionEndScreen/expedition_end_screen.tscn")
+const EXPEDITION_UI_SCENE: PackedScene = preload("res://Scenes/ExpeditionUI/expedition_ui.tscn")
+const TIMER_UI_SCENE: PackedScene = preload("res://Scenes/TimerUI/timer_ui.tscn")
+
 
 func _enter_tree() -> void:
 	add_child(G.cell_manager)
@@ -20,17 +26,17 @@ func _enter_tree() -> void:
 	var level_upgrade_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "LevelUpgradeMenuLayer", uipp)
 	var expedition_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "ExpeditionMenuLayer", uipp)
 	
-	var level_upgrade_menu: LevelUpgradeMenu = add_scene(load("uid://beki2ixvgfrwy"), "LevelUpgradeMenu", level_upgrade_menu_layer)
+	var level_upgrade_menu: LevelUpgradeMenu = add_scene(LEVEL_UPGRADE_MENU_SCENE, "LevelUpgradeMenu", level_upgrade_menu_layer)
 	level_upgrade_menu.manager = G.level_upgrade_manager
 	
 	var expedition_manager: ExpeditionManager = G.expedition_manager
-	var expedition_menu: ExpeditionMenu = add_scene(load("uid://dihjhmgs3n5d1"), "ExpeditionMenu", expedition_menu_layer)
-	var expedition_end_screen: ExpeditionEndScreen = add_scene(load("uid://cf0ulssjiksm4"), "ExpeditionEndScreen", expedition_menu_layer)
-	var expedition_ui: ExpeditionUI = new_scene(load("uid://cjumk0owaxjey"), "ExpeditionUI") 
+	var expedition_menu: ExpeditionMenu = add_scene(EXPEDITION_MENU_SCENE, "ExpeditionMenu", expedition_menu_layer)
+	var expedition_end_screen: ExpeditionEndScreen = add_scene(EXPEDITION_END_SCREEN_SCENE, "ExpeditionEndScreen", expedition_menu_layer)
+	var expedition_ui: ExpeditionUI = new_scene(EXPEDITION_UI_SCENE, "ExpeditionUI") 
 	expedition_ui.manager = expedition_manager
 	expedition_end_screen.manager = expedition_manager
 	
-	var timer_ui = new_scene(load("uid://cd2muxujuqyi3"), "TimerUI")
+	var timer_ui = new_scene(TIMER_UI_SCENE, "TimerUI")
 	timer_ui.initialize(G.timer_manager)
 	
 	uipp.add_element(timer_ui)
@@ -39,7 +45,7 @@ func _enter_tree() -> void:
 	add_child(G.timer_manager)
 	
 	uipp.set_layout(UIPP.Layouts.BASE)
-#	var expedition_ui = new_scene(load("uid://cjumk0owaxjey"), "ExpeditionUI")
+#	var expedition_ui = new_scene(EXPEDITION_UI_SCENE, "ExpeditionUI")
 #	uipp.add_element(timer_ui)
 
 

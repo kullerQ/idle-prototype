@@ -6,8 +6,10 @@ enum Buildings {
 	LUMBERJACK,
 }
 
+const _DATA_LUMBERJACK: BuildingData = preload("res://Resources/building_cell_lumberjack.tres")
+
 var all_data: Dictionary = {
-	Buildings.LUMBERJACK: load("uid://cns5x6t2lsryk").duplicate()
+	Buildings.LUMBERJACK: _DATA_LUMBERJACK.duplicate()
 }
 var cells: Dictionary = {}
 

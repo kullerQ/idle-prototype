@@ -1,7 +1,7 @@
 extends HBoxContainer
 class_name ButtonContainer
 
-var button_scene: PackedScene = load("uid://c1b7sfau2swnf")
+var button_scene: PackedScene = preload("res://Scenes/ButtonPanel/panel_button.tscn")
 
 
 func _enter_tree() -> void:

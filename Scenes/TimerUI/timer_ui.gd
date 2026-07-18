@@ -1,7 +1,7 @@
 extends Control
 class_name TimerUI
 
-var timer_pb_scene: PackedScene = load("uid://c27fham6w4psy")
+var timer_pb_scene: PackedScene = preload("res://Scenes/TimerProgressBar/timer_progress_bar.tscn")
 
 
 func initialize(manager: TimerManager) -> void:

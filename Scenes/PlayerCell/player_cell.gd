@@ -242,7 +242,7 @@ func rogue_attack() -> void:
 func wizard_attack() -> void:
 	# projectile_manager.add_magic(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, 
 	# G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self)
-	WipStub.wip("wizard_attack")
+	push_warning("WIP: Not implemented yet: wizard_attack")
 
 
 func druid_attack() -> void:

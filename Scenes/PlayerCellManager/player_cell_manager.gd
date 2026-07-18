@@ -6,13 +6,20 @@ enum AttackEffects {
 	RES_BREAK_VALUE,
 }
 var cells: Dictionary = {}
+const _DATA_NULL: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_empty.tres")
+const _DATA_SHOOTER: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_shooter.tres")
+const _DATA_ROGUE: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_rogue.tres")
+const _DATA_WIZARD: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_wizard.tres")
+const _DATA_DRUID: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_druid.tres")
+const _DATA_EXECUTIONER: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_executioner.tres")
+
 var all_data: Dictionary = {
-	PlayerCellData.Types.NULL: load("uid://cgk1kaetu6bsg").duplicate(),
-	PlayerCellData.Types.SHOOTER: load("uid://d1lppkhdp8brh").duplicate(),
-	PlayerCellData.Types.ROGUE: load("uid://cson3piyylqw0").duplicate(),
-	PlayerCellData.Types.WIZARD: load("uid://ynurimwp8bik").duplicate(),
-	PlayerCellData.Types.DRUID: load("uid://0xyfkmq4ag42").duplicate(),
-	PlayerCellData.Types.EXECUTIONER: load("uid://d3gj115kupqd7").duplicate(),
+	PlayerCellData.Types.NULL: _DATA_NULL.duplicate(),
+	PlayerCellData.Types.SHOOTER: _DATA_SHOOTER.duplicate(),
+	PlayerCellData.Types.ROGUE: _DATA_ROGUE.duplicate(),
+	PlayerCellData.Types.WIZARD: _DATA_WIZARD.duplicate(),
+	PlayerCellData.Types.DRUID: _DATA_DRUID.duplicate(),
+	PlayerCellData.Types.EXECUTIONER: _DATA_EXECUTIONER.duplicate(),
 }
 #var damage_data: Dictionary = {
 #	PlayerCellData.Types.NULL: DamageData.new(),

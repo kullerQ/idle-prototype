@@ -1,5 +1,10 @@
 extends Node
 
+const CELL_MANAGER_SCENE: PackedScene = preload("res://Scenes/CellManager/cell_manager.tscn")
+const PLAYER_CELL_MANAGER_SCENE: PackedScene = preload("res://Scenes/PlayerCellManager/player_cell_manager.tscn")
+const TIMER_MANAGER_SCENE: PackedScene = preload("res://Scenes/TimerManager/timer_manager.tscn")
+const BUILDING_MANAGER_SCENE: PackedScene = preload("res://Scenes/BuildingManager/building_manager.tscn")
+
 var menu_signals: Dictionary = {
 	UI.Menus.UPGRADE: [upgrade_menu_open_requested, upgrade_menu_close_requested],
 	UI.Menus.EXPEDITION: [expedition_menu_open_requested, expedition_menu_close_requested],
@@ -49,21 +54,21 @@ func initialize() -> void:
 	damage_manager = DamageManager.new()
 	damage_manager.initialize()
 
-	cell_manager = load("uid://b14oi7hhj8hew").instantiate()
+	cell_manager = CELL_MANAGER_SCENE.instantiate()
 	cell_manager.name = "CellManager"
 	cell_manager.economy = economy
 	
-	player_cell_manager = load("uid://ctck6suxq5bcj").instantiate()
+	player_cell_manager = PLAYER_CELL_MANAGER_SCENE.instantiate()
 	player_cell_manager.name = "PlayerCellManager"
 	player_cell_manager.economy = economy
 	player_cell_manager.damage_manager = damage_manager
 	player_cell_manager.cell_manager = cell_manager
 
-	timer_manager = load("uid://bd2s6jemxrplh").instantiate()
+	timer_manager = TIMER_MANAGER_SCENE.instantiate()
 	timer_manager.name = "TimerManager"
 	timer_manager.cell_manager = cell_manager
 	
-	building_manager = load("uid://4wswmpgy5skt").instantiate()
+	building_manager = BUILDING_MANAGER_SCENE.instantiate()
 	building_manager.name = "BuildingManager"
 
 	upgrade_manager = UpgradeManager.new()

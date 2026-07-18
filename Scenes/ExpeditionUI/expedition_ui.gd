@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func _on_expedition_started() -> void:
-	WipStub.wip("expedition_started")
+	push_warning("WIP: Not implemented yet: expedition_started")
 #	progress_bar_hp.
 
 

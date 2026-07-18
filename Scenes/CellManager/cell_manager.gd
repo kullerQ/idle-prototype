@@ -19,13 +19,20 @@ enum Types {
 	SPECIAL
 }
 
+const _DATA_WOOD_TREE: CellResourceData = preload("res://Resources/ResourceCells/cell_resource_tree.tres")
+const _DATA_WOOD_GROVE: CellResourceData = preload("res://Resources/ResourceCells/cell_resource_grove.tres")
+const _DATA_WOOD_FOREST: ForestData = preload("res://Resources/ResourceCells/cell_resource_forest.tres")
+const _DATA_SPECIAL_LUMBERJACK: LumberjackData = preload("res://Resources/ResourceCells/cell_lumberjack.tres")
+const _DATA_SPECIAL_OUTPOST: OutpostData = preload("res://Resources/ResourceCells/cell_outpost.tres")
+const _DATA_SPECIAL_DRUID_OBELISK: DruidObeliskData = preload("res://Resources/ResourceCells/cell_druid_obelisk.tres")
+
 var all_data: Dictionary = {
-	Names.WOOD_TREE: load("uid://flg8f2dfjch1").duplicate(),
-	Names.WOOD_GROVE: load("uid://cfyepdnjigkxa").duplicate(),
-	Names.WOOD_FOREST: load("uid://co3h5t00833iw").duplicate(),
-	Names.SPECIAL_LUMBERJACK: load("uid://tcqsywu5xh4d").duplicate(),
-	Names.SPECIAL_OUTPOST: load("uid://bkofoigt7mcgd").duplicate(),
-	Names.SPECIAL_DRUID_OBELISK: load("uid://dim8xt8cu1j1i").duplicate(),
+	Names.WOOD_TREE: _DATA_WOOD_TREE.duplicate(),
+	Names.WOOD_GROVE: _DATA_WOOD_GROVE.duplicate(),
+	Names.WOOD_FOREST: _DATA_WOOD_FOREST.duplicate(),
+	Names.SPECIAL_LUMBERJACK: _DATA_SPECIAL_LUMBERJACK.duplicate(),
+	Names.SPECIAL_OUTPOST: _DATA_SPECIAL_OUTPOST.duplicate(),
+	Names.SPECIAL_DRUID_OBELISK: _DATA_SPECIAL_DRUID_OBELISK.duplicate(),
 }
 
 var row_count: int = 0
@@ -121,6 +128,7 @@ func _on_cell_died(cell: CellResource) -> void:
 	free_cell(cell)
 
 
+# TODO: Fix data-type inconsistency
 func _award_resources_for_hit(cell: CellResource, cell_data: CellResourceData, value: float) -> void:
 	if !cell_data.value:
 		return
@@ -129,43 +137,43 @@ func _award_resources_for_hit(cell: CellResource, cell_data: CellResourceData, v
 	add_res(cell_data.type, cell_data.value * value)
 
 
-func _handle_druid_overheal_procs(owner: PlayerCell, healed_cell: CellResource, overheal: float) -> void:
-	if owner.data.type != PlayerCellData.Types.DRUID:
+func _handle_druid_overheal_procs(damage_data_owner: PlayerCell, healed_cell: CellResource, overheal: float) -> void:
+	if damage_data_owner.data.type != PlayerCellData.Types.DRUID:
 		return
 
 	if overheal > 0.1:
-		var obelisk_spawn_chance: int = owner.obelisk_spawn_chance
+		var obelisk_spawn_chance: int = damage_data_owner.obelisk_spawn_chance
 		if obelisk_spawn_chance > 0:
-			if owner.obelisks.size() < owner.max_obelisks:
+			if damage_data_owner.obelisks.size() < damage_data_owner.max_obelisks:
 				if randi() % 100 < obelisk_spawn_chance:
 					var obelisk: CellResource = add_resource(Names.SPECIAL_DRUID_OBELISK)
 					if obelisk:
-						owner.obelisks.append(obelisk)
-						obelisk_links[obelisk] = owner
+						damage_data_owner.obelisks.append(obelisk)
+						obelisk_links[obelisk] = damage_data_owner
 
-		var cell_lvlup_chance: int = owner.cell_lvlup_chance
+		var cell_lvlup_chance: int = damage_data_owner.cell_lvlup_chance
 		if cell_lvlup_chance > 0:
 			if randi() % 100 < cell_lvlup_chance:
 				lvlup_cell(healed_cell)
 
-		var spawn_tree_on_overheal_chance: int = owner.spawn_tree_on_overheal_chance
+		var spawn_tree_on_overheal_chance: int = damage_data_owner.spawn_tree_on_overheal_chance
 		if spawn_tree_on_overheal_chance > 0:
 			if randi() % 100 < spawn_tree_on_overheal_chance:
 				var new_cell: CellResource = add_rand_resource(Types.WOOD)
-				if new_cell && randi() % 100 < owner.weakening_chance:
+				if new_cell && randi() % 100 < damage_data_owner.weakening_chance:
 					new_cell.set_effect(EffectManager.Effects.WEAKENED, true)
 
-	var spawn_wood_to_the_right_chance: int = owner.spawn_wood_to_the_right_chance
+	var spawn_wood_to_the_right_chance: int = damage_data_owner.spawn_wood_to_the_right_chance
 	if spawn_wood_to_the_right_chance > 0:
 		if randi() % 100 < spawn_wood_to_the_right_chance:
 			add_rand_resource_at(cells.find_key(healed_cell) + Vector2i.RIGHT, Types.WOOD)
 
-	var reduce_cd_if_heal: float = owner.reduce_cd_if_heal
+	var reduce_cd_if_heal: float = damage_data_owner.reduce_cd_if_heal
 	if reduce_cd_if_heal:
-		owner.reduce_cd_time(reduce_cd_if_heal)
+		damage_data_owner.reduce_cd_time(reduce_cd_if_heal)
 
 
-func _apply_compiled_damage(cell: CellResource, ratio: float, compiled: Array, owner: PlayerCell) -> void:
+func _apply_compiled_damage(cell: CellResource, ratio: float, compiled: Array, damage_data_owner: PlayerCell) -> void:
 	var cell_data: CellResourceData = cell.data
 	for i in compiled:
 		var value: float = i.damage_value * ratio
@@ -183,8 +191,8 @@ func _apply_compiled_damage(cell: CellResource, ratio: float, compiled: Array, o
 						cell.add_hp(value)
 					DamageManager.Stats.LIFE_TIME:
 						var overheal: float = cell.add_life_time(value)
-						if owner:
-							_handle_druid_overheal_procs(owner, cell, overheal)
+						if damage_data_owner:
+							_handle_druid_overheal_procs(damage_data_owner, cell, overheal)
 
 
 func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
@@ -205,9 +213,9 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 			if damage_value != 0:
 				compiled_damage.append({"type": type, "stat": stat, "damage_value": damage_value})
 
-	var owner: PlayerCell = damage_data.get("owner")
+	var damage_data_owner: PlayerCell = damage_data.get("owner")
 	for c in cells_to_damage:
-		_apply_compiled_damage(c, cells_to_damage[c], compiled_damage, owner)
+		_apply_compiled_damage(c, cells_to_damage[c], compiled_damage, damage_data_owner)
 		var cell_data: CellResourceData = c.data
 		hit_handled.emit(c, cell_data)
 		if c.hp <= 0:
@@ -255,20 +263,20 @@ func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float
 	if occupied_cells.is_empty():
 		return {}
 		
-	var cells: Dictionary = {}
+	var cells_to_damage: Dictionary = {}
 	var temp_occupied_cells: Array = occupied_cells.duplicate()
 	for i in amount:
 		if temp_occupied_cells.has(exclude):
 			temp_occupied_cells.erase(exclude)
 			
 		if temp_occupied_cells.is_empty():
-			return cells
+			return cells_to_damage
 			
 		var cell: CellResource = temp_occupied_cells.pick_random()
-		cells[cell] = ratio
+		cells_to_damage[cell] = ratio
 		exclude = cell
 
-	return cells
+	return cells_to_damage
 
 
 func get_cell_from_global_pos(pos: Vector2) -> CellResource:
