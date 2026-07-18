@@ -121,12 +121,78 @@ func _on_cell_died(cell: CellResource) -> void:
 	free_cell(cell)
 
 
+func _award_resources_for_hit(cell: CellResource, cell_data: CellResourceData, value: float) -> void:
+	if !cell_data.value:
+		return
+	if cell.is_buffed():
+		value *= 2
+	add_res(cell_data.type, cell_data.value * value)
+
+
+func _handle_druid_overheal_procs(owner: PlayerCell, healed_cell: CellResource, overheal: float) -> void:
+	if owner.data.type != PlayerCellData.Types.DRUID:
+		return
+
+	if overheal > 0.1:
+		var obelisk_spawn_chance: int = owner.obelisk_spawn_chance
+		if obelisk_spawn_chance > 0:
+			if owner.obelisks.size() < owner.max_obelisks:
+				if randi() % 100 < obelisk_spawn_chance:
+					var obelisk: CellResource = add_resource(Names.SPECIAL_DRUID_OBELISK)
+					if obelisk:
+						owner.obelisks.append(obelisk)
+						obelisk_links[obelisk] = owner
+
+		var cell_lvlup_chance: int = owner.cell_lvlup_chance
+		if cell_lvlup_chance > 0:
+			if randi() % 100 < cell_lvlup_chance:
+				lvlup_cell(healed_cell)
+
+		var spawn_tree_on_overheal_chance: int = owner.spawn_tree_on_overheal_chance
+		if spawn_tree_on_overheal_chance > 0:
+			if randi() % 100 < spawn_tree_on_overheal_chance:
+				var new_cell: CellResource = add_rand_resource(Types.WOOD)
+				if new_cell && randi() % 100 < owner.weakening_chance:
+					new_cell.set_effect(EffectManager.Effects.WEAKENED, true)
+
+	var spawn_wood_to_the_right_chance: int = owner.spawn_wood_to_the_right_chance
+	if spawn_wood_to_the_right_chance > 0:
+		if randi() % 100 < spawn_wood_to_the_right_chance:
+			add_rand_resource_at(cells.find_key(healed_cell) + Vector2i.RIGHT, Types.WOOD)
+
+	var reduce_cd_if_heal: float = owner.reduce_cd_if_heal
+	if reduce_cd_if_heal:
+		owner.reduce_cd_time(reduce_cd_if_heal)
+
+
+func _apply_compiled_damage(cell: CellResource, ratio: float, compiled: Array, owner: PlayerCell) -> void:
+	var cell_data: CellResourceData = cell.data
+	for i in compiled:
+		var value: float = i.damage_value * ratio
+		match i.type:
+			DamageManager.Types.HIT:
+				match i.stat:
+					DamageManager.Stats.HP:
+						cell.sub_hp(value)
+						_award_resources_for_hit(cell, cell_data, value)
+					DamageManager.Stats.LIFE_TIME:
+						cell.sub_life_time(value)
+			DamageManager.Types.HEAL:
+				match i.stat:
+					DamageManager.Stats.HP:
+						cell.add_hp(value)
+					DamageManager.Stats.LIFE_TIME:
+						var overheal: float = cell.add_life_time(value)
+						if owner:
+							_handle_druid_overheal_procs(owner, cell, overheal)
+
+
 func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_data: Dictionary) -> void:
 	var cells_to_damage: Dictionary = {cell: 1}
 	if !spread_damage_data.is_empty():
 		if spread_damage_data.to > 0 && spread_damage_data.ratio > 0:
 			cells_to_damage.merge(get_cells_to_spread_damage(cell, spread_damage_data.to, spread_damage_data.ratio))
-		
+
 	var base_damage_data: Dictionary = damage_data[DamageManager.DamageDataTypes.BASE]
 	var bonus_damage_data: Dictionary = damage_data.get(DamageManager.DamageDataTypes.BONUS, {})
 	var damage_mult: float = damage_data.get(DamageManager.DamageDataTypes.MULT, 1)
@@ -135,69 +201,14 @@ func _on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_
 		var base_type_data: Dictionary = base_damage_data[type]
 		var bonus_type_data: Dictionary = bonus_damage_data.get(type, {})
 		for stat in base_type_data:
-			var damage_value: int = round((base_type_data[stat] + bonus_type_data.get(stat, 0)) * damage_mult)#.get(type, {}).get(stat, 0)) * damage_mult
+			var damage_value: int = round((base_type_data[stat] + bonus_type_data.get(stat, 0)) * damage_mult)
 			if damage_value != 0:
 				compiled_damage.append({"type": type, "stat": stat, "damage_value": damage_value})
-	
+
+	var owner: PlayerCell = damage_data.get("owner")
 	for c in cells_to_damage:
+		_apply_compiled_damage(c, cells_to_damage[c], compiled_damage, owner)
 		var cell_data: CellResourceData = c.data
-		var ratio: float = cells_to_damage[c]
-		for i in compiled_damage:
-			var value: float = i.damage_value * ratio
-			match i.type:
-				DamageManager.Types.HIT:
-					match i.stat:
-						DamageManager.Stats.HP:
-							c.sub_hp(value)
-							if cell_data.value:
-								if c.is_buffed():
-									value *= 2
-
-								add_res(cell_data.type, cell_data.value * value)
-						
-						DamageManager.Stats.LIFE_TIME:
-							c.sub_life_time(value)
-
-				DamageManager.Types.HEAL:
-					match i.stat:
-						DamageManager.Stats.HP:
-							c.add_hp(value)
-							
-						DamageManager.Stats.LIFE_TIME:
-							var overheal: float = c.add_life_time(value)
-							var _owner: PlayerCell = damage_data.owner
-							if _owner.data.type == PlayerCellData.Types.DRUID:
-								if overheal > 0.1:
-										var obelisk_spawn_chance: int = _owner.obelisk_spawn_chance
-										if obelisk_spawn_chance > 0:
-											if _owner.obelisks.size() < _owner.max_obelisks:
-												if randi() % 100 < obelisk_spawn_chance:
-													var obelisk: CellResource = add_resource(Names.SPECIAL_DRUID_OBELISK) 
-													if obelisk:
-														_owner.obelisks.append(obelisk)
-														obelisk_links[obelisk] = _owner
-										
-										var cell_lvlup_chance: int = _owner.cell_lvlup_chance
-										if cell_lvlup_chance > 0:
-											if randi() % 100 < cell_lvlup_chance:
-												lvlup_cell(c)
-										
-										var spawn_tree_on_overheal_chance: int = _owner.spawn_tree_on_overheal_chance
-										if spawn_tree_on_overheal_chance > 0:
-											if randi() % 100 < spawn_tree_on_overheal_chance:
-												var new_cell: CellResource = add_rand_resource(Types.WOOD)
-												if new_cell && randi() % 100 < _owner.weakening_chance:
-													new_cell.set_effect(EffectManager.Effects.WEAKENED, true)
-													
-								var spawn_wood_to_the_right_chance: int = _owner.spawn_wood_to_the_right_chance
-								if spawn_wood_to_the_right_chance > 0:
-									if randi() % 100 < spawn_wood_to_the_right_chance:
-										add_rand_resource_at(cells.find_key(c) + Vector2i.RIGHT, Types.WOOD) 
-								
-								var reduce_cd_if_heal: float = _owner.reduce_cd_if_heal
-								if reduce_cd_if_heal:
-									_owner.reduce_cd_time(reduce_cd_if_heal)
-	
 		hit_handled.emit(c, cell_data)
 		if c.hp <= 0:
 			handle_cell_death_func(cell_data, c)
