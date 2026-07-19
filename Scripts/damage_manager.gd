@@ -120,3 +120,36 @@ func get_damage(projectile_type: ProjectileManager.Types, type: Types, stat: Sta
 
 func add_flat_damage_bonus(projectile_type: ProjectileManager.Types, amount: float) -> void:
 	flat_damage_bonus[projectile_type] += amount
+
+
+## Merge tower bonus_damage + flat_damage_bonus into a duplicated projectile damage dict.
+func build_projectile_damage(projectile_type: ProjectileManager.Types, bonus_damage: Dictionary) -> Dictionary:
+	var damage_data: Dictionary = get_damage_data(projectile_type).duplicate(true)
+	var base_damage_bonus: Dictionary = damage_data[DamageDataTypes.BONUS]
+	for damage_type in bonus_damage:
+		for stat in bonus_damage[damage_type]:
+			var value: float = bonus_damage[damage_type][stat]
+			base_damage_bonus[damage_type][stat] += value
+			if damage_data[DamageDataTypes.BASE][damage_type][stat] > 0:
+				base_damage_bonus[damage_type][stat] += flat_damage_bonus[projectile_type]
+	return damage_data
+
+
+## Compile BASE+BONUS * MULT into [{type, stat, damage_value}, ...].
+static func compile_damage(damage_data: Dictionary) -> Array:
+	var base_damage_data: Dictionary = damage_data[DamageDataTypes.BASE]
+	var bonus_damage_data: Dictionary = damage_data.get(DamageDataTypes.BONUS, {})
+	var damage_mult: float = damage_data.get(DamageDataTypes.MULT, 1)
+	var compiled: Array = []
+	for type in base_damage_data:
+		var base_type_data: Dictionary = base_damage_data[type]
+		var bonus_type_data: Dictionary = bonus_damage_data.get(type, {})
+		for stat in base_type_data:
+			var damage_value: int = round((base_type_data[stat] + bonus_type_data.get(stat, 0)) * damage_mult)
+			if damage_value != 0:
+				compiled.append({"type": type, "stat": stat, "damage_value": damage_value})
+	return compiled
+
+
+static func new_kill_damage(durability: float) -> Dictionary:
+	return {DamageDataTypes.BASE: new_damage_data({}, new_data(durability))}

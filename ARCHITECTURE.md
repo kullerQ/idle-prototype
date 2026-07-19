@@ -22,8 +22,8 @@ Editor scene tree ≠ runtime tree: managers are created in code, then `add_chil
 | **CellSpecialBehaviors** | Death hooks (lumberjack/outpost/forest) + forest occupy spawn + lumberjack cap. |
 | **DruidObeliskSystem** | Obelisk links, buff graph, overheal procs. |
 | **PlayerCellManager** | Player tower grid: add towers, highlight, level-up targeting. Injects `manager` / `projectile_manager` onto each `PlayerCell`. |
-| **ProjectileManager** | Spawn projectiles; owns projectile scenes/data (e.g. axe `bounce` on `ProjectileData`). |
-| **DamageManager** | Damage compile / stats dictionaries. |
+| **ProjectileManager** | Spawn projectiles; owns projectile scenes/data (e.g. axe `bounce` on `ProjectileData`). Injects `cell_manager` onto each `Projectile` at spawn. Weakening rolls once in `new_projectile` from `ProjectileDataModifiers`. |
+| **DamageManager** | Damage compile / stats dictionaries. Helpers: `compile_damage`, `build_projectile_damage`, `new_kill_damage`. |
 | **Economy** | Currencies and awards. |
 | **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers (`_apply_tower_upgrade`, `_apply_wood_upgrade`, `_apply_building_upgrade`, `_apply_projectile_upgrade`). Prefer manager mutators over nested `get_data(...).field` writes. |
 | **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. |

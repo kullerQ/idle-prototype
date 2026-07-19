@@ -80,27 +80,17 @@ func add_backstab_bonus_dmg(type: Types, amount: int) -> void:
 	projectile_data[type].backstab_bonus_dmg += amount
 
 
-# TODO: refactor effects
-func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, _mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
+func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
 	var projectile: Projectile = projectile_scenes[type].instantiate()
 	projectile.data = projectile_data[type]
 	projectile.crit_chance = crit_chance
 	projectile.crit_mult = crit_mult
 	projectile.global_position = pos
-	var damage_data: Dictionary = damage_manager.get_damage_data(type).duplicate(true)
-	var base_damage_bonus: Dictionary = damage_data[DamageManager.DamageDataTypes.BONUS]
-	for damage_type in bonus_damage:
-		for stat in bonus_damage[damage_type]:
-			var value: float = bonus_damage[damage_type][stat]
-			base_damage_bonus[damage_type][stat] += value
-			if damage_data[DamageManager.DamageDataTypes.BASE][damage_type][stat] > 0:
-				base_damage_bonus[damage_type][stat] += damage_manager.flat_damage_bonus[type]
-		
-	projectile.damage_data = damage_data
-	if _mod_data.weakening_chance > 0:
-		projectile.weakening = true if randi() % 100 < _mod_data.weakening_chance else false
-
-	projectile.mod_data = _mod_data
+	projectile.cell_manager = cell_manager
+	projectile.damage_data = damage_manager.build_projectile_damage(type, bonus_damage)
+	projectile.mod_data = mod_data
+	# Effects roll once at spawn from ProjectileDataModifiers (single path).
+	projectile.weakening = mod_data.weakening_chance > 0 and randi() % 100 < mod_data.weakening_chance
 	return projectile
 
 

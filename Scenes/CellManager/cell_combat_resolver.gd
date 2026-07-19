@@ -16,18 +16,7 @@ func on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_d
 		if spread_damage_data.to > 0 && spread_damage_data.ratio > 0:
 			cells_to_damage.merge(get_cells_to_spread_damage(cell, spread_damage_data.to, spread_damage_data.ratio))
 
-	var base_damage_data: Dictionary = damage_data[DamageManager.DamageDataTypes.BASE]
-	var bonus_damage_data: Dictionary = damage_data.get(DamageManager.DamageDataTypes.BONUS, {})
-	var damage_mult: float = damage_data.get(DamageManager.DamageDataTypes.MULT, 1)
-	var compiled_damage: Array = []
-	for type in base_damage_data:
-		var base_type_data: Dictionary = base_damage_data[type]
-		var bonus_type_data: Dictionary = bonus_damage_data.get(type, {})
-		for stat in base_type_data:
-			var damage_value: int = round((base_type_data[stat] + bonus_type_data.get(stat, 0)) * damage_mult)
-			if damage_value != 0:
-				compiled_damage.append({"type": type, "stat": stat, "damage_value": damage_value})
-
+	var compiled_damage: Array = DamageManager.compile_damage(damage_data)
 	var damage_data_owner: PlayerCell = damage_data.get("owner")
 	for c in cells_to_damage:
 		_apply_compiled_damage(c, cells_to_damage[c], compiled_damage, damage_data_owner)
@@ -41,11 +30,11 @@ func on_cell_hitted(cell: CellResource, damage_data: Dictionary, spread_damage_d
 func kill_grid() -> void:
 	for i in range(_manager.occupied_cells.size() - 1, -1, -1):
 		var c: CellResource = _manager.occupied_cells[i]
-		c._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(c.data.durability))}, {})
+		c._on_hitted(DamageManager.new_kill_damage(c.data.durability), {})
 
 
 func kill_cell(target: CellResource) -> void:
-	target._on_hitted({DamageManager.DamageDataTypes.BASE: DamageManager.new_damage_data({}, DamageManager.new_data(target.data.durability))}, {})
+	target._on_hitted(DamageManager.new_kill_damage(target.data.durability), {})
 
 
 func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float) -> Dictionary:

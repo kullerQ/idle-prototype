@@ -7,6 +7,7 @@ var data: ProjectileData
 @onready var area: Area2D = $Area2D
 var mod_data: ProjectileDataModifiers
 var damage_data: Dictionary
+var cell_manager: CellManager
 var dmg: float = 0
 var spd: int = 0
 var crit_mult: int = 0
@@ -165,7 +166,7 @@ func ricochet(cell: CellResource = null, _div_dmg: bool = true) -> bool:
 		die()
 		return false
 		
-	var target_cell_pos: Vector2 = G.cell_manager.get_rand_occupied_cell_global_center([cell])
+	var target_cell_pos: Vector2 = cell_manager.get_rand_occupied_cell_global_center([cell])
 	if !target_cell_pos:
 		return false
 		

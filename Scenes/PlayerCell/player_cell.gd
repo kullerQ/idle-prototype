@@ -3,24 +3,28 @@ class_name PlayerCell
 
 const MAX_ACCURACY: int = 12
 var data: PlayerCellData
-# individual data
+
+# --- Per-tower combat modifiers (set by level-up / upgrades; not a Modifiers Resource yet) ---
+# Shared
 var cooldown_reduction: float = 0
-var weakened_dmg_mod: float = 0.4
-var auto_weakening_chance: int = 0
-var special_attack_count: int = 0
 var bonus_crit_chance: int = 0
 var auto_aim: bool = false
 var bonus_attacks: int = 0
+var attack_effects: Array = []
+var bonus_damage: Dictionary = {}
+# Shooter
+var weakened_dmg_mod: float = 0.4
+var auto_weakening_chance: int = 0
+var special_attack_count: int = 0 # runtime counter for auto-weaken burst
+# Druid
 var spawn_tree_on_overheal_chance: int = 0
 var spawn_wood_to_the_right_chance: int = 0
 var cell_lvlup_chance: int = 0
-var attack_effects: Array = []
 var reduce_cd_if_heal: float = 0
+var weakening_chance: int = 0 # chance spawned-on-overheal wood starts weakened
 var max_obelisks: int = 1
 var obelisk_spawn_chance: int = 0
 var obelisks: Array = []
-
-var bonus_damage: Dictionary = {}
 
 var projectile_mod_data: ProjectileDataModifiers
 @onready var bullet_pos_marker: Marker2D = $MarkerShoot 
@@ -205,7 +209,7 @@ func get_dir(pos: Vector2) -> Vector2:
 
 
 func get_dir_to_rand_cell() -> Vector2:
-	return get_bullet_pos().direction_to(G.cell_manager.get_rand_occupied_cell_global_center())
+	return get_bullet_pos().direction_to(manager.cell_manager.get_rand_occupied_cell_global_center())
 
 
 func reduce_cd_time(amount: float) -> void:
@@ -241,7 +245,7 @@ func rogue_attack() -> void:
 
 func wizard_attack() -> void:
 	# projectile_manager.add_magic(get_bullet_pos(), get_bullet_crit_chance(), data.crit_mult, 
-	# G.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self)
+	# manager.cell_manager.get_cell_global_center(Vector2(10, randi_range(0, 7))), projectile_mod_data, self)
 	push_warning("WIP: Not implemented yet: wizard_attack")
 
 

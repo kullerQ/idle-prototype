@@ -19,7 +19,7 @@ todos:
     status: completed
   - id: phase-4-combat
     content: "Phase 4: projectile/damage/PlayerCell consistency; remove redundant G lookups"
-    status: pending
+    status: completed
   - id: phase-5-secondary
     content: "Phase 5: expedition/timer/building/editor pass; verify ExpeditionEditor still works"
     status: pending
