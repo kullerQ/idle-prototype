@@ -45,6 +45,7 @@ var upgrade_cell_idx: int = 0
 var economy: Economy
 var cell_manager: CellManager
 var damage_manager: DamageManager
+var projectile_manager: ProjectileManager
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
@@ -55,6 +56,7 @@ signal cell_attacked(cell: PlayerCell)
 func _ready() -> void:
 	var pos: Vector2i = Vector2i.ZERO
 	for c in get_children():
+		_configure_cell(c)
 		cells[pos] = c
 		if pos.x + 1 == columns:
 			pos.x = 0
@@ -77,6 +79,11 @@ func _ready() -> void:
 
 	G.player_cell_pressed.connect(_on_cell_pressed)
 	G.level_upgrade_menu_close_requested.connect(_on_level_upgrade_menu_close_requested)
+
+
+func _configure_cell(cell: PlayerCell) -> void:
+	cell.manager = self
+	cell.projectile_manager = projectile_manager
 
 
 func fill_grid(type: PlayerCellData.Types) -> void:

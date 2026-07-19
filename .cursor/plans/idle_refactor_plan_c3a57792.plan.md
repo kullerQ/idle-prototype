@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: phase-1-boot
     content: "Phase 1: group G.initialize wiring; stop new static injection; clarify Game parenting"
-    status: pending
+    status: completed
   - id: phase-2-cell-combat
     content: "Phase 2.1–2.2: keep CellManager grid façade; extract CellCombatResolver"
     status: pending

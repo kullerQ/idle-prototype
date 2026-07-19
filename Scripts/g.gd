@@ -45,60 +45,68 @@ signal level_upgrade_menu_open_requested(cell: PlayerCell)
 signal ui_layout_change_requested(new_layout: UIPP.Layouts)
 
 
+## Creates managers and wires deps. Game parents the scene nodes afterward.
 func initialize() -> void:
+	_create_economy()
+	_create_combat()
+	_create_cell_systems()
+	_wire_upgrades()
+	_wire_expedition()
+
+
+func _create_economy() -> void:
 	economy = Economy.new()
 
-	UpgradeNode.economy = economy
-	BuildingCell.economy = economy
 
+func _create_combat() -> void:
 	damage_manager = DamageManager.new()
 	damage_manager.initialize()
 
+	projectile_manager = ProjectileManager.new()
+	projectile_manager.damage_manager = damage_manager
+
+
+func _create_cell_systems() -> void:
 	cell_manager = CELL_MANAGER_SCENE.instantiate()
 	cell_manager.name = "CellManager"
 	cell_manager.economy = economy
-	
+
+	projectile_manager.cell_manager = cell_manager
+
 	player_cell_manager = PLAYER_CELL_MANAGER_SCENE.instantiate()
 	player_cell_manager.name = "PlayerCellManager"
 	player_cell_manager.economy = economy
 	player_cell_manager.damage_manager = damage_manager
 	player_cell_manager.cell_manager = cell_manager
+	player_cell_manager.projectile_manager = projectile_manager
 
 	timer_manager = TIMER_MANAGER_SCENE.instantiate()
 	timer_manager.name = "TimerManager"
 	timer_manager.cell_manager = cell_manager
-	
+
 	building_manager = BUILDING_MANAGER_SCENE.instantiate()
 	building_manager.name = "BuildingManager"
+	building_manager.economy = economy
 
+
+func _wire_upgrades() -> void:
 	upgrade_manager = UpgradeManager.new()
 	upgrade_manager.cell_manager = cell_manager
 	upgrade_manager.building_manager = building_manager
 	upgrade_manager.player_cell_manager = player_cell_manager
 	upgrade_manager.timer_manager = timer_manager
 	upgrade_manager.damage_manager = damage_manager
-	UpgradeNode.upgrade_manager = upgrade_manager
-	
-	PlayerCell.manager = player_cell_manager
-	TimerResource.cell_manager = cell_manager
-	
-	projectile_manager = ProjectileManager.new()
-	projectile_manager.damage_manager = damage_manager
-	projectile_manager.cell_manager = cell_manager
-	PlayerCell.projectile_manager = projectile_manager
 	upgrade_manager.projectile_manager = projectile_manager
 
 	level_upgrade_manager = LevelUpgradeManager.new()
 
+
+func _wire_expedition() -> void:
 	expedition_manager = ExpeditionManager.new()
 	expedition_manager.name = "ExpeditionManager"
 	expedition_manager.cell_manager = cell_manager
 	expedition_manager.projectile_manager = projectile_manager
 	expedition_manager.timer_manager = timer_manager
-	ExpeditionButton.manager = expedition_manager
-
-
-	Axe.bounce = false
 
 
 func toggle_menu(menu_type: UI.Menus) -> void:

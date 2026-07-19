@@ -1,6 +1,9 @@
 extends Control
 class_name UI
 
+## Top-level HUD (currencies). Menu open/close API stays on G; listeners live here,
+## on UIPP, Tooltip, and NodePopupMenu subclasses — not in gameplay managers.
+
 enum Menus {
 	NULL,
 	UPGRADE,

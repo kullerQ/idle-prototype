@@ -2,7 +2,7 @@ extends Control
 class_name ExpeditionButton
 
 @export var type: ExpeditionManager.Types
-static var manager: ExpeditionManager
+var manager: ExpeditionManager
 
 
 func _ready() -> void:

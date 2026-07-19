@@ -242,7 +242,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 			player_cell_manager.get_data(PlayerCellData.Types.SHOOTER).xp_increase += 1
 			
 		Types.AXE_BOUNCE:
-			Axe.bounce = true
+			projectile_manager.get_data(ProjectileManager.Types.AXE).bounce = true
 			
 		Types.AXE_SPD:
 			projectile_manager.get_data(ProjectileManager.Types.AXE).spd += 5

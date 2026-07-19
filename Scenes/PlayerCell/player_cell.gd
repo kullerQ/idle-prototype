@@ -43,8 +43,8 @@ var lvl_tokens: int = 0
 var disabled: bool = false
 @onready var upgrade_arrow: Polygon2D = $UpgradeArrow
 
-static var manager: PlayerCellManager
-static var projectile_manager: ProjectileManager
+var manager: PlayerCellManager
+var projectile_manager: ProjectileManager
 
 
 func _ready() -> void:

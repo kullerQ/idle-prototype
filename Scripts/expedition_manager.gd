@@ -30,6 +30,7 @@ var target_cells: Array = []
 signal expedition_selected(type: Types)
 signal hp_changed(new_hp: float, max_hp: float)
 signal expedition_started()
+signal expedition_ended()
 
 
 static func get_expedition_path(type: ExpeditionManager.Types, level: int) -> String:
@@ -52,7 +53,6 @@ func select_expedition(type: Types, level: int = 1) -> void:
 
 func start_expedition(type: Types, level: int = 1) -> void:
 	load_expedition(type, level)
-	G.ui_layout_change_requested.emit(UIPP.Layouts.EXPEDITION)
 	expedition_started.emit()
 
 
@@ -67,7 +67,7 @@ func end_expedition() -> void:
 	G.in_expedition = false 
 	max_hp = 0
 	cell_manager.free_grid()
-	G.ui_layout_change_requested.emit(UIPP.Layouts.BASE)
+	expedition_ended.emit()
 	timer_manager.start_timers()
 	disconnect_signals()
 

@@ -12,11 +12,14 @@ var all_data: Dictionary = {
 	Buildings.LUMBERJACK: _DATA_LUMBERJACK.duplicate()
 }
 var cells: Dictionary = {}
+var economy: Economy
 
 
 func _ready() -> void:
 	for i in range(1, Buildings.size()):
-		cells[i] = get_child(i - 1)
+		var cell: BuildingCell = get_child(i - 1)
+		cell.economy = economy
+		cells[i] = cell
 
 
 func set_automated(type: Buildings, enabled: bool) -> void:

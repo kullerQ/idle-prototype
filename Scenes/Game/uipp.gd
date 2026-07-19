@@ -1,6 +1,9 @@
 extends Control
 class_name UIPP
 
+## UI layout + floating feedback. Listens to G UI bus and domain signals from managers.
+## Menu open/close lives on NodePopupMenu subclasses; tooltips on Tooltip.
+
 enum Layouts {
 	NULL,
 	BASE,
@@ -22,6 +25,19 @@ var layout: Layouts
 func _ready() -> void:
 	G.crit_label_requested.connect(_on_crit_label_requested)
 	G.ui_layout_change_requested.connect(set_layout)
+	G.uipp = self
+
+	var expedition_manager: ExpeditionManager = G.expedition_manager
+	expedition_manager.expedition_started.connect(_on_expedition_started)
+	expedition_manager.expedition_ended.connect(_on_expedition_ended)
+
+
+func _on_expedition_started() -> void:
+	set_layout(Layouts.EXPEDITION)
+
+
+func _on_expedition_ended() -> void:
+	set_layout(Layouts.BASE)
 
 
 func _on_crit_label_requested(pos: Vector2) -> void:

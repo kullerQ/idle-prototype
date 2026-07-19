@@ -1,6 +1,20 @@
 extends Node2D
 class_name Game
 
+## Runtime tree (created in G.initialize, parented here — not visible in the editor scene):
+##   Game
+##   ├── CellManager
+##   ├── PlayerCellManager
+##   ├── ExpeditionManager
+##   ├── ProjectileContainer   ← G.projectile_manager.projectile_container
+##   ├── BuildingManager
+##   ├── ParticleContainer     ← Projectile.particle_container
+##   ├── TimerManager
+##   └── UIPPLayer
+##       └── UIPP
+##           ├── LevelUpgradeMenuLayer / ExpeditionMenuLayer
+##           └── layout elements (TimerUI, ExpeditionUI)
+
 const LEVEL_UPGRADE_MENU_SCENE: PackedScene = preload("res://Scenes/LevelUpgradeMenu/level_upgrade_menu.tscn")
 const EXPEDITION_MENU_SCENE: PackedScene = preload("res://Scenes/ExpeditionMenu/expedition_menu.tscn")
 const EXPEDITION_END_SCREEN_SCENE: PackedScene = preload("res://Scenes/ExpeditionEndScreen/expedition_end_screen.tscn")

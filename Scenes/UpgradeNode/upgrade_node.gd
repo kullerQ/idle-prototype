@@ -22,8 +22,8 @@ var nodes: Array = []
 @onready var debugbtn = $Button2
 @onready var panel = $Panel
 
-static var economy: Economy
-static var upgrade_manager: UpgradeManager
+var economy: Economy
+var upgrade_manager: UpgradeManager
 
 
 func _ready() -> void:

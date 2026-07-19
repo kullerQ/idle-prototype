@@ -3,7 +3,6 @@ class_name Axe
 
 var target_pos: Vector2
 var dmg_ratio: float = 0
-static var bounce: bool = false
 
 
 func _ready() -> void:
@@ -18,7 +17,7 @@ func move(delta: float) -> void:
 		if area.has_overlapping_areas():
 			return
 		
-		if bounce:
+		if data.bounce:
 			target_pos = G.cell_manager.get_rand_occupied_cell_global_center([], CellManager.Types.WOOD)
 			if target_pos:
 				spd = data.spd

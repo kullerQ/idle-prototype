@@ -9,7 +9,7 @@ var current_charge: int = 0
 var charged: bool = false
 @onready var button: Button = $Button
 
-static var economy: Economy
+var economy: Economy
 
 
 func _ready() -> void:
