@@ -99,6 +99,21 @@ const _TOWER_DEFINITION_PATHS: PackedStringArray = [
 	"res://data/upgrades/meta/upgrade_executioner_xp.tres",
 ]
 
+const _BUILDING_DEFINITION_PATHS: PackedStringArray = [
+	"res://data/upgrades/meta/upgrade_unlock_lumberjack.tres",
+	"res://data/upgrades/meta/upgrade_add_lumberjack.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_automation.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_cd.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_wood.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_crit.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_dmg.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_charge.tres",
+	"res://data/upgrades/meta/upgrade_lumberjack_wood_spawn.tres",
+	"res://data/upgrades/meta/upgrade_unlock_outpost.tres",
+	"res://data/upgrades/meta/upgrade_outpost_weakening_chance.tres",
+	"res://data/upgrades/meta/upgrade_outpost_multiattacks.tres",
+]
+
 var cell_manager : CellManager
 var damage_manager: DamageManager
 var player_cell_manager : PlayerCellManager
@@ -115,19 +130,10 @@ var descriptions: Dictionary = {
 	Types.BULLET_DMG: "bullet dmg +1",
 	Types.BULLET_DIST: "bullet max distance +10",
 	Types.BULLET_SPD: "bullet speed +5",
-	Types.UNLOCK_LUMBERJACK: "every 15 seconds lumberjack builds his hut",
-	Types.ADD_LUMBERJACK: "lumberjack stays in place for 10 more seconds",
-	Types.LUMBERJACK_AUTOMATION: "lumberjack produces wood automatically",
-	Types.LUMBERJACK_CD: "lumberjack's cooldown -2",
-	Types.LUMBERJACK_WOOD: "lumberjack produces +10 more wood",
-	Types.LUMBERJACK_CRIT: "lumberjack crit chance +10",
-	Types.LUMBERJACK_DMG: "lumberjack deals 5% more damage from tree's hp",
-	Types.LUMBERJACK_CHARGE: "lumberjack charge increase +1",
 	Types.AXE_BOUNCE: "axe bounces off empty cells",
 	Types.AXE_SPD: "axe speed +5",
 	Types.DRUID_MAGIC_DMG: "druid magic dmg +1",
 	Types.DRUID_MAGIC_SPD: "druid magic speed +15",
-	Types.LUMBERJACK_WOOD_SPAWN: "chance to spawn wood cell after lumberjack +25%",
 	Types.KNIFE_DMG: "knife damage +1",
 	Types.KNIFE_SPD: "knife speed +5",
 	Types.KNIFE_RANGE: "knife max range +10",
@@ -138,9 +144,6 @@ var descriptions: Dictionary = {
 	Types.GREATAXE_SPD: "greataxe speed +5",
 	Types.GREATAXE_PIERCING: "greataxe piercing +1",
 	Types.GREATAXE_RANGE: "greataxe max range +1 cell and piercing +1",
-	Types.UNLOCK_OUTPOST: "every 20 seconds a shooter outpost appears",
-	Types.OUTPOST_WEAKENING_CHANCE: "outpost chance to shoot weakening bullet +20%",
-	Types.OUTPOST_MULTIATTACKS: "outpost shoots +1 bullet%",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -161,6 +164,7 @@ func setup() -> void:
 	applier.damage_manager = damage_manager
 	_register_definitions(_WOOD_DEFINITION_PATHS)
 	_register_definitions(_TOWER_DEFINITION_PATHS)
+	_register_definitions(_BUILDING_DEFINITION_PATHS)
 
 
 func _register_definitions(paths: PackedStringArray) -> void:
@@ -182,48 +186,7 @@ func _on_upgrade_purchased(type: Types) -> void:
 	if _definitions.has(type):
 		applier.apply(_definitions[type])
 		return
-	if _apply_building_upgrade(type):
-		return
 	_apply_projectile_upgrade(type)
-
-
-func _apply_building_upgrade(type: Types) -> bool:
-	match type:
-		Types.UNLOCK_LUMBERJACK:
-			timer_manager.add_special_cell_spawn_timer(
-				CellManager.Names.SPECIAL_LUMBERJACK,
-				cell_manager.get_data(CellManager.Names.SPECIAL_LUMBERJACK).life_time,
-				Color(0.714, 0.576, 0.373)
-				)
-		Types.ADD_LUMBERJACK:
-			cell_manager.multiply_life_time(CellManager.Names.SPECIAL_LUMBERJACK, 2)
-		Types.LUMBERJACK_AUTOMATION:
-			building_manager.set_automated(BuildingManager.Buildings.LUMBERJACK, true)
-		Types.LUMBERJACK_CD:
-			building_manager.add_cooldown(BuildingManager.Buildings.LUMBERJACK, -0.2)
-		Types.LUMBERJACK_WOOD:
-			building_manager.add_production(BuildingManager.Buildings.LUMBERJACK, Economy.Currencies.WOOD, 10)
-		Types.LUMBERJACK_CRIT:
-			cell_manager.add_lumberjack_crit(10)
-		Types.LUMBERJACK_DMG:
-			cell_manager.add_lumberjack_dmg_ratio(0.05)
-		Types.LUMBERJACK_CHARGE:
-			building_manager.add_charge_per_hit(BuildingManager.Buildings.LUMBERJACK, 1)
-		Types.LUMBERJACK_WOOD_SPAWN:
-			cell_manager.add_lumberjack_spawn_wood_chance(25)
-		Types.UNLOCK_OUTPOST:
-			timer_manager.add_special_cell_spawn_timer(
-				CellManager.Names.SPECIAL_OUTPOST,
-				cell_manager.get_data(CellManager.Names.SPECIAL_OUTPOST).life_time,
-				Color(0.302, 0.365, 0.388)
-				)
-		Types.OUTPOST_WEAKENING_CHANCE:
-			cell_manager.add_outpost_weakening_chance(20)
-		Types.OUTPOST_MULTIATTACKS:
-			cell_manager.add_outpost_attacks(1)
-		_:
-			return false
-	return true
 
 
 func _apply_projectile_upgrade(type: Types) -> bool:

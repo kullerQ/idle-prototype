@@ -12,7 +12,7 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 |-----------|-------------|
 | Grid / tower / expedition / building behavior | Matching feature folder (migrated: `features/<domain>/`; else `Scenes/<Domain>/`) — scene + script together |
 | Pure logic with no Node | Same feature folder, or `Scripts/` / `core/` only if truly cross-cutting |
-| Tunable numbers / unlocks / descriptions | `data/<domain>/` when migrated (else `Resources/`) as `.tres` + `_scr_*.gd`. Meta upgrade effects/text: `data/upgrades/` (`UpgradeDefinition` + effect scripts; wood + towers batches done) |
+| Tunable numbers / unlocks / descriptions | `data/<domain>/` when migrated (else `Resources/`) as `.tres` + `_scr_*.gd`. Meta upgrade effects/text: `data/upgrades/` (`UpgradeDefinition` + effect scripts; wood + towers + buildings batches done) |
 | Menu / HUD / tooltip | `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (UIPP, crit labels, button bar), `ui/shared/` (buttons, `NodePopupMenu`) |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit-label flash | `G` UI bus only |
@@ -24,7 +24,7 @@ Quick checks:
 - **New building type?** → scene/script under `features/buildings/`, data as `.tres` under `data/buildings/`, register/unlock via `BuildingManager` API — not a new field on `G`.
 - **New tower / resource cell?** → tower: scene under `features/towers/player_cell/`, data under `data/player_cells/`; resource cell: scene under `features/resource_grid/cell_resource/`, data under `data/resource_cells/`.
 - **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
-- **New meta upgrade?** → Prefer `UpgradeDefinition` `.tres` under `data/upgrades/meta/` + effect Resources under `data/upgrades/effects/` (wood + towers batches done this way). Register path in `UpgradeManager._WOOD_DEFINITION_PATHS` / `_TOWER_DEFINITION_PATHS` (or next batch list). Effect/id fields use `int` (not manager enums) to avoid `class_name` cycles — same pattern as `CellSpawnWeight`. Do not add match arms in unrelated managers. Legacy building/projectile upgrades still use enum + apply helpers until their batch.
+- **New meta upgrade?** → Prefer `UpgradeDefinition` `.tres` under `data/upgrades/meta/` + effect Resources under `data/upgrades/effects/` (wood + towers + buildings batches done this way). Register path in `UpgradeManager._WOOD_DEFINITION_PATHS` / `_TOWER_DEFINITION_PATHS` / `_BUILDING_DEFINITION_PATHS` (or next batch list). Effect/id fields use `int` (not manager enums) to avoid `class_name` cycles — same pattern as `CellSpawnWeight`. Do not add match arms in unrelated managers. Legacy projectile upgrades still use enum + apply helpers until their batch.
 - **New expedition?** → layout JSON + reward `.tres` under `data/expeditions/`; runtime/UI under `features/expeditions/`; register via `ExpeditionManager` (not a new field on `G`).
 - **New menu?** → `NodePopupMenu` subclass (base under `ui/shared/popup_menu/`); register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable. Feature-specific menus stay under `features/<domain>/`.
 - **New shared button / HUD widget?** → reusable control under `ui/shared/`; outer-chrome under `ui/main_hud/`; in-world HUD under `ui/game_hud/`.
@@ -44,7 +44,7 @@ Phase 3 feature + UI folder moves are done. Remaining physical moves (e.g. `G` �
 | Economy | `features/economy/` | `features/economy/` |
 | Buildings | `features/buildings/` (+ `data/buildings/`) | `features/buildings/` |
 | Expeditions | `features/expeditions/` (+ `data/expeditions/`) | `features/expeditions/` |
-| Meta upgrades | `features/meta_upgrades/` (+ `data/upgrades/` — `UpgradeDefinition` `.tres` under `meta/`, effect scripts under `effects/`) | `features/meta_upgrades/` |
+| Meta upgrades | `features/meta_upgrades/` (+ `data/upgrades/` — `UpgradeDefinition` `.tres` under `meta/`, effect scripts under `effects/`; wood + towers + buildings migrated) | `features/meta_upgrades/` |
 | Timers | `features/timers/` | `features/timers/` |
 | Shared UI controls | `ui/shared/` (`animated_button/`, `panel_button/`, `popup_menu/`) | `ui/shared/` |
 | Outer HUD | `ui/main_hud/` (`ui.gd`, `tooltip.gd`; hosted by `Scenes/Main/main.tscn`) | `ui/main_hud/` |
@@ -109,7 +109,7 @@ Level-upgrade talent trees use a **frozen scene contract**: path nodes named `Pa
 |-----------------------------------|------------------|
 | Cell / tower / projectile / building stats | One-off glue and orchestration |
 | Spawn weights / tables | Tiny constants local to one function |
-| Upgrade definitions + descriptions (`data/upgrades/`; wood + towers done) | Temporary enums / description dict for unmigrated batches |
+| Upgrade definitions + descriptions (`data/upgrades/`; wood + towers + buildings done) | Temporary enums / description dict for unmigrated batches |
 
 Do not add a second parallel damage Resource path while live combat uses `DamageManager` dictionaries. The abandoned `DamageData` / `DamageModData` Resource path was deleted in Phase 1.
 

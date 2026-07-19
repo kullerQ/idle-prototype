@@ -57,5 +57,47 @@ func _apply_effect(effect: UpgradeEffect) -> void:
 	elif effect is UpgradeEffectAddTowerXpIncrease:
 		var e: UpgradeEffectAddTowerXpIncrease = effect as UpgradeEffectAddTowerXpIncrease
 		player_cell_manager.add_xp_increase(e.tower_type as PlayerCellData.Types, e.amount)
+	elif effect is UpgradeEffectAddSpecialCellSpawnTimer:
+		var e: UpgradeEffectAddSpecialCellSpawnTimer = effect as UpgradeEffectAddSpecialCellSpawnTimer
+		var cell_name: CellManager.Names = e.cell_name as CellManager.Names
+		timer_manager.add_special_cell_spawn_timer(
+			cell_name,
+			cell_manager.get_data(cell_name).life_time,
+			e.color
+		)
+	elif effect is UpgradeEffectMultiplyCellLifeTime:
+		var e: UpgradeEffectMultiplyCellLifeTime = effect as UpgradeEffectMultiplyCellLifeTime
+		cell_manager.multiply_life_time(e.cell_name as CellManager.Names, e.factor)
+	elif effect is UpgradeEffectSetBuildingAutomated:
+		var e: UpgradeEffectSetBuildingAutomated = effect as UpgradeEffectSetBuildingAutomated
+		building_manager.set_automated(e.building_type as BuildingManager.Buildings, e.enabled)
+	elif effect is UpgradeEffectAddBuildingCooldown:
+		var e: UpgradeEffectAddBuildingCooldown = effect as UpgradeEffectAddBuildingCooldown
+		building_manager.add_cooldown(e.building_type as BuildingManager.Buildings, e.amount)
+	elif effect is UpgradeEffectAddBuildingProduction:
+		var e: UpgradeEffectAddBuildingProduction = effect as UpgradeEffectAddBuildingProduction
+		building_manager.add_production(
+			e.building_type as BuildingManager.Buildings,
+			e.currency as Economy.Currencies,
+			e.value
+		)
+	elif effect is UpgradeEffectAddBuildingChargePerHit:
+		var e: UpgradeEffectAddBuildingChargePerHit = effect as UpgradeEffectAddBuildingChargePerHit
+		building_manager.add_charge_per_hit(e.building_type as BuildingManager.Buildings, e.amount)
+	elif effect is UpgradeEffectAddLumberjackCrit:
+		var e: UpgradeEffectAddLumberjackCrit = effect as UpgradeEffectAddLumberjackCrit
+		cell_manager.add_lumberjack_crit(e.amount)
+	elif effect is UpgradeEffectAddLumberjackDmgRatio:
+		var e: UpgradeEffectAddLumberjackDmgRatio = effect as UpgradeEffectAddLumberjackDmgRatio
+		cell_manager.add_lumberjack_dmg_ratio(e.amount)
+	elif effect is UpgradeEffectAddLumberjackSpawnWoodChance:
+		var e: UpgradeEffectAddLumberjackSpawnWoodChance = effect as UpgradeEffectAddLumberjackSpawnWoodChance
+		cell_manager.add_lumberjack_spawn_wood_chance(e.amount)
+	elif effect is UpgradeEffectAddOutpostWeakeningChance:
+		var e: UpgradeEffectAddOutpostWeakeningChance = effect as UpgradeEffectAddOutpostWeakeningChance
+		cell_manager.add_outpost_weakening_chance(e.amount)
+	elif effect is UpgradeEffectAddOutpostAttacks:
+		var e: UpgradeEffectAddOutpostAttacks = effect as UpgradeEffectAddOutpostAttacks
+		cell_manager.add_outpost_attacks(e.amount)
 	else:
 		push_error("UpgradeApplier: unhandled effect type %s" % effect.get_class())

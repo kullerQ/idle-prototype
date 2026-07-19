@@ -138,7 +138,7 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Economy: `features/economy/economy.gd`. Combat: `features/combat/` (managers + projectile scenes); projectile `.tres` under `data/projectiles/`.
 - Buildings: `features/buildings/` (`BuildingManager`, `BuildingCell`); building `.tres` under `data/buildings/`.
 - Timers: `features/timers/` (`TimerManager`, `TimerUI`, `TimerProgressBar`).
-- Meta upgrades: `features/meta_upgrades/` (`UpgradeManager`, `UpgradeApplier`, `UpgradeMenu`, `UpgradeNode`); `UpgradeDefinition` + effect Resources under `data/upgrades/` (wood + towers batches migrated; buildings/projectiles still enum+match).
+- Meta upgrades: `features/meta_upgrades/` (`UpgradeManager`, `UpgradeApplier`, `UpgradeMenu`, `UpgradeNode`); `UpgradeDefinition` + effect Resources under `data/upgrades/` (wood + towers + buildings batches migrated; projectiles still enum+match).
 - Expeditions: `features/expeditions/` (`ExpeditionManager`, menu / UI / end screen / editor); JSON layouts + `ExpeditionRewardData` under `data/expeditions/`.
 - UI: `ui/shared/` (buttons + `NodePopupMenu`), `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (`UIPP`, `ButtonContainer`, `LabelCrit`).
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).
