@@ -9,17 +9,17 @@ enum Types {
 	GREATAXE,
 }
 
-const _SCENE_BULLET: PackedScene = preload("res://Scenes/Projectiles/Bullet/bullet.tscn")
-const _SCENE_KNIFE: PackedScene = preload("res://Scenes/Projectiles/Knife/knife.tscn")
-const _SCENE_AXE: PackedScene = preload("res://Scenes/Projectiles/Axe/axe.tscn")
-const _SCENE_DRUID_MAGIC: PackedScene = preload("res://Scenes/Projectiles/DruidMagic/druid_magic.tscn")
-const _SCENE_GREATAXE: PackedScene = preload("res://Scenes/Projectiles/Greataxe/greataxe.tscn")
+const _SCENE_BULLET: PackedScene = preload("res://features/combat/projectiles/Bullet/bullet.tscn")
+const _SCENE_KNIFE: PackedScene = preload("res://features/combat/projectiles/Knife/knife.tscn")
+const _SCENE_AXE: PackedScene = preload("res://features/combat/projectiles/Axe/axe.tscn")
+const _SCENE_DRUID_MAGIC: PackedScene = preload("res://features/combat/projectiles/DruidMagic/druid_magic.tscn")
+const _SCENE_GREATAXE: PackedScene = preload("res://features/combat/projectiles/Greataxe/greataxe.tscn")
 
-const _DATA_BULLET: ProjectileData = preload("res://Resources/Projectiles/projectile_data_bullet.tres")
-const _DATA_KNIFE: ProjectileData = preload("res://Resources/Projectiles/projectile_data_knife.tres")
-const _DATA_AXE: ProjectileData = preload("res://Resources/Projectiles/projectile_data_axe.tres")
-const _DATA_DRUID_MAGIC: ProjectileData = preload("res://Resources/Projectiles/projectile_data_druid_magic.tres")
-const _DATA_GREATAXE: ProjectileData = preload("res://Resources/Projectiles/projectile_data_greataxe.tres")
+const _DATA_BULLET: ProjectileData = preload("res://data/projectiles/projectile_data_bullet.tres")
+const _DATA_KNIFE: ProjectileData = preload("res://data/projectiles/projectile_data_knife.tres")
+const _DATA_AXE: ProjectileData = preload("res://data/projectiles/projectile_data_axe.tres")
+const _DATA_DRUID_MAGIC: ProjectileData = preload("res://data/projectiles/projectile_data_druid_magic.tres")
+const _DATA_GREATAXE: ProjectileData = preload("res://data/projectiles/projectile_data_greataxe.tres")
 
 var projectile_scenes: Dictionary = {
 	Types.BULLET: _SCENE_BULLET,

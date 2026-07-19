@@ -10,9 +10,9 @@ Short map of boot, ownership, and signals. Prefer this over rediscovering `G.ini
 
 | New thing | Put it here |
 |-----------|-------------|
-| Grid / tower / expedition / building behavior | Matching feature folder (`Scenes/<Domain>/` today; `features/<domain>/` after Phase 3) — scene + script together |
+| Grid / tower / expedition / building behavior | Matching feature folder (`Scenes/<Domain>/` today; `features/<domain>/` as domains migrate) — scene + script together |
 | Pure logic with no Node | Feature folder, or `Scripts/` / `core/` if cross-cutting |
-| Tunable numbers / unlocks / descriptions | `Resources/` (later `data/<domain>/`) as `.tres` + `_scr_*.gd` |
+| Tunable numbers / unlocks / descriptions | `Resources/` or `data/<domain>/` (as domains migrate) as `.tres` + `_scr_*.gd` |
 | Menu / HUD / tooltip | `UI` / `UIPP` / shared button scenes |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit label | `G` UI bus only (combat/buildings emit domain `crit_occurred`; `Game` bridges to the bus) |
@@ -56,9 +56,9 @@ Main
 | **CellSpecialBehaviors** | Death hooks (lumberjack/outpost/forest) + forest occupy spawn + lumberjack cap. Uses injected `projectile_manager` (not `G`). |
 | **DruidObeliskSystem** | Obelisk links, buff graph, overheal procs. |
 | **PlayerCellManager** | Player tower grid: add towers, highlight, level-up targeting. Injects `manager` / `projectile_manager` onto each `PlayerCell`. Level-up badge label injected from `ButtonContainer`. |
-| **ProjectileManager** | Spawn projectiles; domain signal `crit_occurred`. Injects `cell_manager` / `particle_container` onto each `Projectile` at spawn. |
-| **DamageManager** | Damage compile / stats dictionaries. Helpers: `compile_damage`, `build_projectile_damage`, `new_kill_damage`. |
-| **Economy** | Currencies and awards. |
+| **ProjectileManager** | Spawn projectiles; domain signal `crit_occurred`. Lives under `features/combat/`. Injects `cell_manager` / `particle_container` onto each `Projectile` at spawn. |
+| **DamageManager** | Damage compile / stats dictionaries under `features/combat/`. Helpers: `compile_damage`, `build_projectile_damage`, `new_kill_damage`. |
+| **Economy** | Currencies and awards under `features/economy/`. |
 | **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `LevelUpgradeManager` holds injected `player_cell_manager`. |
 | **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. Highlight label from `ButtonContainer`. |
 | **ButtonContainer** | Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
@@ -131,5 +131,6 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Player tower scene lives under `Scenes/PlayerCell/` (`class_name PlayerCell`).
 - Resource cell data under `Resources/ResourceCells/` (`cell_resource_*.tres`).
 - Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` in `Resources/`.
+- Economy: `features/economy/economy.gd`. Combat: `features/combat/` (managers + projectile scenes); projectile `.tres` under `data/projectiles/`.
 - Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).

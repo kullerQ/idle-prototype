@@ -23,7 +23,7 @@ Quick checks:
 
 - **New building type?** → building scene/script next to `BuildingManager` / `BuildingCell`, data as `.tres` under `Resources/`, register/unlock via `BuildingManager` API — not a new field on `G`.
 - **New tower / resource cell?** → `PlayerCell` / `CellResource` scene + `Resources/PlayerCells/` or `Resources/ResourceCells/` data.
-- **New projectile?** → scene under `Scenes/Projectiles/`, data under `Resources/Projectiles/`, spawn via `ProjectileManager`.
+- **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
 - **New meta upgrade?** → today: enum + apply helper on `UpgradeManager` (Phase 4: `.tres` under upgrades data). Do not add match arms in unrelated managers.
 - **New menu?** → `NodePopupMenu` subclass; register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable.
 
@@ -38,14 +38,14 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Boot / thin autoload | `Scripts/g.gd`, `Scenes/Main/`, `Scenes/Game/` | `core/` + shell scenes |
 | Resource grid | `Scenes/CellManager/`, `Scenes/CellResource/` | `features/resource_grid/` |
 | Towers / level upgrades | `Scenes/PlayerCell*`, `Scenes/LevelUpgradeMenu/`, `Scripts/level_upgrade_manager.gd` | `features/towers/` |
-| Combat | `Scripts/damage_manager.gd`, `projectile_*.gd`, `Scenes/Projectile(s)/` | `features/combat/` |
-| Economy | `Scripts/economy.gd` | `features/economy/` |
+| Combat | `features/combat/` (managers + projectile scenes) | `features/combat/` |
+| Economy | `features/economy/` | `features/economy/` |
 | Buildings | `Scenes/BuildingManager/`, `Scenes/BuildingCell/` | `features/buildings/` |
 | Expeditions | `Scripts/expedition_manager.gd`, `Scenes/Expedition*` | `features/expeditions/` |
 | Meta upgrades | `Scripts/upgrade_manager.gd`, `Scenes/UpgradeMenu/`, `Scenes/UpgradeNode/` | `features/meta_upgrades/` |
 | Timers | `Scenes/TimerManager/`, `Scenes/TimerUI/` | `features/timers/` |
 | Shared UI controls | `Scenes/ButtonAnimated/`, `Scenes/ButtonPanel/`, popup helpers | `ui/shared/` |
-| Data (`.tres`) | `Resources/` | `data/<domain>/` |
+| Data (`.tres`) | `Resources/` (projectiles already in `data/projectiles/`) | `data/<domain>/` |
 
 **Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor. Do not big-bang rename the tree.
 

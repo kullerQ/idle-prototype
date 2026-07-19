@@ -1,7 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://dw7hqy0bhgwaw"]
-
-[ext_resource type="PackedScene" uid="uid://3url7yuxxjew" path="res://Scenes/Projectile/projectile.tscn" id="1_75wo5"]
-[ext_resource type="Script" path="res://Scenes/Projectiles/DruidMagic/druid_magic.gd" id="2_fb4np"]
-
-[node name="DruidMagic" instance=ExtResource("1_75wo5")]
-script = ExtResource("2_fb4np")

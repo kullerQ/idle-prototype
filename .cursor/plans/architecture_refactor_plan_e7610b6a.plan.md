@@ -12,7 +12,7 @@ todos:
     content: Move in_expedition to ExpeditionManager; Game parents Node managers; G only wires + UI bus; inject deps into gameplay
     status: completed
   - id: m3-feature-folders
-    content: Migrate domains one PR at a time into features/ + data/ layout
+    content: "Migrate domains one PR at a time into features/ + data/ layout (done: economy + combat)"
     status: pending
   - id: m4-upgrade-data
     content: Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts
@@ -233,7 +233,7 @@ RefCounted managers (`Economy`, `DamageManager`, `ProjectileManager`, `UpgradeMa
 
 Migrate in this order (dependency-friendly):
 
-1. `economy` + `combat` (mostly `Scripts/` today → `features/` + `data/`)
+1. ~~`economy` + `combat`~~ (done → `features/economy/`, `features/combat/`, `data/projectiles/`)
 2. `resource_grid` (already cohesive under `Scenes/CellManager/`)
 3. `towers` + level upgrades
 4. `buildings` + `timers`
