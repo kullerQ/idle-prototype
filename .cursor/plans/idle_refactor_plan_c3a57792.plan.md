@@ -23,6 +23,9 @@ todos:
   - id: phase-5-secondary
     content: "Phase 5: expedition/timer/building/editor pass; verify ExpeditionEditor still works"
     status: completed
+  - id: phase-6-polish
+    content: "Phase 6: spawn weight Resources; CellManager/PlayerCellManager in game.tscn; debug hotkeys gated"
+    status: completed
 isProject: false
 ---
 
@@ -193,11 +196,11 @@ Touches: [`Scenes/PlayerCell/player_cell.gd`](Scenes/PlayerCell/player_cell.gd),
 
 ---
 
-## Phase 6 — Polish (optional, low priority)
+## Phase 6 — Polish (optional, low priority) ✅
 
-- Consistent `@export` / Resource data for spawn weights if you edit them often in inspector.
-- Scene composition: eventually place CellManager / PlayerCellManager as children in `game.tscn` for editor visibility (behavior-preserving move).
-- Remove debug hotkeys from [`Scenes/Main/main.gd`](Scenes/Main/main.gd) behind `OS.is_debug_build()` if they clutter.
+- Consistent `@export` / Resource data for spawn weights if you edit them often in inspector. → `CellSpawnConfig` + `Resources/cell_spawn_config.tres` on CellManager.
+- Scene composition: eventually place CellManager / PlayerCellManager as children in `game.tscn` for editor visibility (behavior-preserving move). → Done; `G.bind_scene_managers` wires them.
+- Remove debug hotkeys from [`Scenes/Main/main.gd`](Scenes/Main/main.gd) behind `OS.is_debug_build()` if they clutter. → Done (Escape still always quits).
 
 ---
 

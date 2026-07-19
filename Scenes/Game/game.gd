@@ -1,14 +1,14 @@
 extends Node2D
 class_name Game
 
-## Runtime tree (created in G.initialize, parented here — not visible in the editor scene):
-##   Game
-##   ├── CellManager
-##   ├── PlayerCellManager
-##   ├── ExpeditionManager
-##   ├── ProjectileContainer   ← G.projectile_manager.projectile_container
+## Runtime tree:
+##   Game  (editor-visible children: CellManager, PlayerCellManager)
+##   ├── CellManager          ← from game.tscn
+##   ├── PlayerCellManager    ← from game.tscn
+##   ├── ExpeditionManager    ← created in G, parented here
+##   ├── ProjectileContainer
 ##   ├── BuildingManager
-##   ├── ParticleContainer     ← Projectile.particle_container
+##   ├── ParticleContainer
 ##   ├── TimerManager
 ##   └── UIPPLayer
 ##       └── UIPP
@@ -23,8 +23,8 @@ const TIMER_UI_SCENE: PackedScene = preload("res://Scenes/TimerUI/timer_ui.tscn"
 
 
 func _enter_tree() -> void:
-	add_child(G.cell_manager)
-	add_child(G.player_cell_manager)
+	G.bind_scene_managers($CellManager, $PlayerCellManager)
+
 	add_child(G.expedition_manager)
 
 	var projectile_container: Node2D = add_new_node(Node2D, "ProjectileContainer")
@@ -65,8 +65,6 @@ func _enter_tree() -> void:
 	add_child(G.timer_manager)
 	
 	uipp.set_layout(UIPP.Layouts.BASE)
-#	var expedition_ui = new_scene(EXPEDITION_UI_SCENE, "ExpeditionUI")
-#	uipp.add_element(timer_ui)
 
 
 func add_new_node(type: Variant, _name: String, parent: Node = self) -> Node:

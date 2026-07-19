@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="CellSpawnConfig" load_steps=8 format=3 uid="uid://cr5fby48nrklw"]
+
+[ext_resource type="Script" path="res://Resources/_scr_cell_spawn_config.gd" id="1_config"]
+[ext_resource type="Script" path="res://Resources/_scr_cell_spawn_table.gd" id="2_table"]
+[ext_resource type="Script" path="res://Resources/_scr_cell_spawn_weight.gd" id="3_weight"]
+
+[sub_resource type="Resource" id="weight_tree"]
+script = ExtResource("3_weight")
+cell_name = 1
+weight = 20
+tier = 1
+
+[sub_resource type="Resource" id="weight_grove"]
+script = ExtResource("3_weight")
+cell_name = 2
+weight = 0
+tier = 2
+
+[sub_resource type="Resource" id="weight_forest"]
+script = ExtResource("3_weight")
+cell_name = 3
+weight = 0
+tier = 3
+
+[sub_resource type="Resource" id="table_wood"]
+script = ExtResource("2_table")
+type = 1
+entries = Array[ExtResource("3_weight")]([SubResource("weight_tree"), SubResource("weight_grove"), SubResource("weight_forest")])
+
+[resource]
+script = ExtResource("1_config")
+tables = Array[ExtResource("2_table")]([SubResource("table_wood")])

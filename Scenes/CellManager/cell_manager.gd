@@ -25,6 +25,7 @@ const _DATA_WOOD_FOREST: ForestData = preload("res://Resources/ResourceCells/cel
 const _DATA_SPECIAL_LUMBERJACK: LumberjackData = preload("res://Resources/ResourceCells/cell_lumberjack.tres")
 const _DATA_SPECIAL_OUTPOST: OutpostData = preload("res://Resources/ResourceCells/cell_outpost.tres")
 const _DATA_SPECIAL_DRUID_OBELISK: DruidObeliskData = preload("res://Resources/ResourceCells/cell_druid_obelisk.tres")
+const _DEFAULT_SPAWN_CONFIG = preload("res://Resources/cell_spawn_config.tres")
 
 var all_data: Dictionary = {
 	Names.WOOD_TREE: _DATA_WOOD_TREE.duplicate(),
@@ -45,14 +46,10 @@ var spawned_special_cells: Dictionary = {
 }
 
 var far_cells: Array
-var tiers: Dictionary = {
-	Types.WOOD: {
-		0: 0, # total weight
-		Names.WOOD_TREE: {"weight": 20, "tier": 1},
-		Names.WOOD_GROVE: {"weight": 0, "tier": 2},
-		Names.WOOD_FOREST: {"weight": 0, "tier": 3},
-	},
-}
+## Runtime weight tables built from spawn_config in _ready. Key 0 = total weight.
+var tiers: Dictionary = {}
+
+@export var spawn_config: CellSpawnConfig
 
 var separation: Vector2
 var max_lumberjack_count: int = 1
@@ -93,10 +90,7 @@ func _ready() -> void:
 		coords.x += 1
 
 	row_count = cells.keys().back().y
-	for curr in tiers.values():
-		var values: Array = curr.values()
-		for i in range(1, curr.size()):
-			curr[0] += values[i].weight
+	_build_tiers_from_spawn_config()
 
 	for i in range(1, Types.size()):
 		occupied_cells_types[i] = []
@@ -105,6 +99,17 @@ func _ready() -> void:
 	cell_died.connect(_on_cell_died)
 	cell_occupied.connect(specials.on_cell_occupied)
 	add_start_cells()
+
+
+func _build_tiers_from_spawn_config() -> void:
+	var config: CellSpawnConfig = spawn_config if spawn_config else _DEFAULT_SPAWN_CONFIG
+	tiers.clear()
+	for table in config.tables:
+		var dict: Dictionary = {0: 0} # total weight
+		for entry in table.entries:
+			dict[entry.cell_name] = {"weight": entry.weight, "tier": entry.tier}
+			dict[0] += entry.weight
+		tiers[table.type] = dict
 
 
 func add_start_cells() -> void:
@@ -263,19 +268,20 @@ func set_cell_weight(_name: Names, value: int, type: Types = 0) -> void:
 
 
 func get_rand_name(type: Types) -> Names:
-	var w: Array = tiers[type].values()
-	var roll: int = randi_range(0, w[0] - 1)
-	var _name: Names = 0
-	for i in range(1, w.size()):
-		var value: int = w[i].weight
+	var table: Dictionary = tiers[type]
+	var roll: int = randi_range(0, table[0] - 1)
+	for key in table:
+		if key == 0:
+			continue
+
+		var value: int = table[key].weight
 		if roll < value:
-			_name = i
-			break
+			return key
 
 		roll -= value
 
-	assert(_name != 0)
-	return _name
+	assert(false, "get_rand_name: no entry for type %s" % type)
+	return Names.NULL
 
 
 func add_rand_resource(type: Types) -> CellResource:

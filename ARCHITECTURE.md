@@ -4,20 +4,21 @@ Short map of boot, ownership, and signals. Prefer this over rediscovering `G.ini
 
 ## Boot order
 
-1. **Main** (`Scenes/Main/main.tscn`) enters the tree and calls `G.initialize()`.
-2. **G** (autoload `Scripts/g.gd`) constructs managers and wires deps via named helpers:
-   - `_create_economy()` → `_create_combat()` → `_create_cell_systems()` → `_wire_upgrades()` → `_wire_expedition()`
-3. **Game** (`Scenes/Game/game.gd`) parents the scene-based managers under itself and builds UI layers (UIPP, menus, timer UI). See the runtime-tree comment at the top of `game.gd`.
+1. **Main** (`Scenes/Main/main.tscn`) enters the tree and calls `G.initialize()` (economy + combat only).
+2. **Game** (`Scenes/Game/game.tscn`) enters and calls `G.bind_scene_managers($CellManager, $PlayerCellManager)`:
+   - Wires scene-placed CellManager / PlayerCellManager
+   - Creates TimerManager, BuildingManager, UpgradeManager, LevelUpgradeManager, ExpeditionManager
+3. **Game** then parents the remaining runtime nodes (expedition, containers, UIPP/menus).
 
-Editor scene tree ≠ runtime tree: managers are created in code, then `add_child`’d by `Game`.
+Editor scene tree ≈ runtime for CellManager / PlayerCellManager (children of `game.tscn`). Other managers are still created in code and `add_child`’d by `Game`.
 
 ## Who owns what
 
 | Owner | Responsibility |
 |-------|----------------|
 | **G** | Service locator + menu/UI event bus. Holds refs; does not parent gameplay nodes. |
-| **Game** | Runtime scene parenting: CellManager, PlayerCellManager, BuildingManager, TimerManager, ExpeditionManager, projectile/particle containers, UIPP/menus. |
-| **CellManager** | Resource grid façade: spawn, occupy/free, coords, weights. Composes RefCounted siblings under `Scenes/CellManager/`. |
+| **Game** | Scene hosts CellManager / PlayerCellManager; parents ExpeditionManager, BuildingManager, TimerManager, projectile/particle containers, UIPP/menus. |
+| **CellManager** | Resource grid façade: spawn, occupy/free, coords, weights. Composes RefCounted siblings under `Scenes/CellManager/`. Spawn weights from `@export spawn_config` (`Resources/cell_spawn_config.tres`). |
 | **CellCombatResolver** | Hit compile, spread damage, kill_grid/kill_cell; emits via CellManager signals. |
 | **CellSpecialBehaviors** | Death hooks (lumberjack/outpost/forest) + forest occupy spawn + lumberjack cap. |
 | **DruidObeliskSystem** | Obelisk links, buff graph, overheal procs. |
@@ -55,7 +56,12 @@ Gameplay systems should prefer domain signals on their manager (e.g. `expedition
 
 Still set at runtime for convenience: `Projectile.particle_container`, `PanelButton.container`, `LevelUpgradeNode.manager`. Prefer explicit `setup` / manager APIs when touching those types.
 
+## Debug input
+
+Cheat / spawn / reload hotkeys in `Scenes/Main/main.gd` run only when `OS.is_debug_build()`. Escape always quits.
+
 ## Naming notes
 
 - Player tower scene lives under `Scenes/PlayerCell/` (`class_name PlayerCell`).
 - Resource cell data under `Resources/ResourceCells/` (`cell_resource_*.tres`).
+- Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` in `Resources/`.

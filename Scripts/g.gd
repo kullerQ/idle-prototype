@@ -1,7 +1,5 @@
 extends Node
 
-const CELL_MANAGER_SCENE: PackedScene = preload("res://Scenes/CellManager/cell_manager.tscn")
-const PLAYER_CELL_MANAGER_SCENE: PackedScene = preload("res://Scenes/PlayerCellManager/player_cell_manager.tscn")
 const TIMER_MANAGER_SCENE: PackedScene = preload("res://Scenes/TimerManager/timer_manager.tscn")
 const BUILDING_MANAGER_SCENE: PackedScene = preload("res://Scenes/BuildingManager/building_manager.tscn")
 
@@ -45,11 +43,26 @@ signal level_upgrade_menu_open_requested(cell: PlayerCell)
 signal ui_layout_change_requested(new_layout: UIPP.Layouts)
 
 
-## Creates managers and wires deps. Game parents the scene nodes afterward.
+## Creates core systems. CellManager / PlayerCellManager come from Game's scene tree
+## via bind_scene_managers (called from Game._enter_tree).
 func initialize() -> void:
 	_create_economy()
 	_create_combat()
-	_create_cell_systems()
+
+
+## Wires scene-placed CellManager / PlayerCellManager, then creates dependent managers.
+func bind_scene_managers(p_cell_manager: CellManager, p_player_cell_manager: PlayerCellManager) -> void:
+	cell_manager = p_cell_manager
+	cell_manager.economy = economy
+	projectile_manager.cell_manager = cell_manager
+
+	player_cell_manager = p_player_cell_manager
+	player_cell_manager.economy = economy
+	player_cell_manager.damage_manager = damage_manager
+	player_cell_manager.cell_manager = cell_manager
+	player_cell_manager.projectile_manager = projectile_manager
+
+	_create_secondary_managers()
 	_wire_upgrades()
 	_wire_expedition()
 
@@ -66,20 +79,7 @@ func _create_combat() -> void:
 	projectile_manager.damage_manager = damage_manager
 
 
-func _create_cell_systems() -> void:
-	cell_manager = CELL_MANAGER_SCENE.instantiate()
-	cell_manager.name = "CellManager"
-	cell_manager.economy = economy
-
-	projectile_manager.cell_manager = cell_manager
-
-	player_cell_manager = PLAYER_CELL_MANAGER_SCENE.instantiate()
-	player_cell_manager.name = "PlayerCellManager"
-	player_cell_manager.economy = economy
-	player_cell_manager.damage_manager = damage_manager
-	player_cell_manager.cell_manager = cell_manager
-	player_cell_manager.projectile_manager = projectile_manager
-
+func _create_secondary_managers() -> void:
 	timer_manager = TIMER_MANAGER_SCENE.instantiate()
 	timer_manager.name = "TimerManager"
 	timer_manager.cell_manager = cell_manager
