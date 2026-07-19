@@ -22,7 +22,7 @@ todos:
     status: completed
   - id: phase-5-secondary
     content: "Phase 5: expedition/timer/building/editor pass; verify ExpeditionEditor still works"
-    status: pending
+    status: completed
 isProject: false
 ---
 

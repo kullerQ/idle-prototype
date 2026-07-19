@@ -1,6 +1,10 @@
 extends CellManager
 class_name ExpeditionEditor
 
+## Standalone editor scene that extends CellManager.
+## Relies on the public grid façade only: `cells`, `occupied_cells`, `get_data`, `set_cell_data`.
+## Do not move those off CellManager without updating this editor.
+
 @export var type: ExpeditionManager.Types
 @export var goal: ExpeditionManager.Goals
 @export var level: int = 1
@@ -22,7 +26,7 @@ func save_expedition() -> void:
 	var path: String = ExpeditionManager.get_expedition_path(type, level)
 	if path == "":
 		return
-		
+
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	var data: Dictionary = {}
 	data["goal"] = goal
@@ -34,9 +38,9 @@ func save_expedition() -> void:
 		if i.target && goal == ExpeditionManager.Goals.BREAK_TARGETS:
 			data["target_cells"].append(cell_data)
 			continue
-			
+
 		data["cells"].append(cell_data)
-	
+
 	var json_string: String = JSON.stringify(data)
 	file.store_string(json_string)
 	file.close()

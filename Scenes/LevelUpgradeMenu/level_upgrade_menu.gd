@@ -16,8 +16,8 @@ var current_root: Control
 @onready var panel = $Graphics/Panel
 
 var manager: LevelUpgradeManager
-# TODO: remove G dependency
-@onready var economy: Economy = G.economy
+var economy: Economy
+var player_cell_manager: PlayerCellManager
 
 
 signal upgrade_button_pressed(node: LevelUpgradeNode)
@@ -27,10 +27,10 @@ func _ready() -> void:
 	hide()
 	for i in $Graphics/Panel/MarginContainer/UpgradesContainer.get_children():
 		i.hide()
-		
+
 	G.level_upgrade_menu_close_requested.connect(_on_level_upgrade_menu_close_requested)
 	G.level_upgrade_menu_open_requested.connect(_on_level_upgrade_menu_open_requested)
-	G.player_cell_manager.cell_lvled_up.connect(_on_cell_lvled_up)
+	player_cell_manager.cell_lvled_up.connect(_on_cell_lvled_up)
 	close_button.pressed.connect(_on_close_button_pressed)
 	upgrade_button_pressed.connect(_on_upgrade_button_pressed)
 	set_physics_process(false)

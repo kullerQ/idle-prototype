@@ -40,19 +40,25 @@ func _enter_tree() -> void:
 	var level_upgrade_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "LevelUpgradeMenuLayer", uipp)
 	var expedition_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "ExpeditionMenuLayer", uipp)
 	
-	var level_upgrade_menu: LevelUpgradeMenu = add_scene(LEVEL_UPGRADE_MENU_SCENE, "LevelUpgradeMenu", level_upgrade_menu_layer)
+	var level_upgrade_menu: LevelUpgradeMenu = new_scene(LEVEL_UPGRADE_MENU_SCENE, "LevelUpgradeMenu")
 	level_upgrade_menu.manager = G.level_upgrade_manager
-	
+	level_upgrade_menu.economy = G.economy
+	level_upgrade_menu.player_cell_manager = G.player_cell_manager
+	level_upgrade_menu_layer.add_child(level_upgrade_menu)
+
 	var expedition_manager: ExpeditionManager = G.expedition_manager
 	var expedition_menu: ExpeditionMenu = add_scene(EXPEDITION_MENU_SCENE, "ExpeditionMenu", expedition_menu_layer)
-	var expedition_end_screen: ExpeditionEndScreen = add_scene(EXPEDITION_END_SCREEN_SCENE, "ExpeditionEndScreen", expedition_menu_layer)
-	var expedition_ui: ExpeditionUI = new_scene(EXPEDITION_UI_SCENE, "ExpeditionUI") 
-	expedition_ui.manager = expedition_manager
+
+	var expedition_end_screen: ExpeditionEndScreen = new_scene(EXPEDITION_END_SCREEN_SCENE, "ExpeditionEndScreen")
 	expedition_end_screen.manager = expedition_manager
-	
+	expedition_menu_layer.add_child(expedition_end_screen)
+
+	var expedition_ui: ExpeditionUI = new_scene(EXPEDITION_UI_SCENE, "ExpeditionUI")
+	expedition_ui.manager = expedition_manager
+
 	var timer_ui = new_scene(TIMER_UI_SCENE, "TimerUI")
 	timer_ui.initialize(G.timer_manager)
-	
+
 	uipp.add_element(timer_ui)
 	uipp.add_element(expedition_ui)
 

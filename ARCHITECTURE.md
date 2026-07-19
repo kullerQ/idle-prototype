@@ -27,10 +27,12 @@ Editor scene tree ≠ runtime tree: managers are created in code, then `add_chil
 | **Economy** | Currencies and awards. |
 | **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers (`_apply_tower_upgrade`, `_apply_wood_upgrade`, `_apply_building_upgrade`, `_apply_projectile_upgrade`). Prefer manager mutators over nested `get_data(...).field` writes. |
 | **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. |
-| **TimerManager** | World timers (spawn ticks, etc.). Pass `CellManager` into `TimerResource` when creating one. |
-| **BuildingManager** | Side buildings; injects `economy` onto `BuildingCell`s. |
-| **ExpeditionManager** | Expedition state; domain signals `expedition_started` / `expedition_ended`. |
-| **ExpeditionMenu** | Injects `ExpeditionManager` onto `ExpeditionButton`s. |
+| **TimerManager** | World timers (spawn ticks, etc.). Owns `cell_manager` ref; spawn timeouts call CellManager façade. |
+| **BuildingManager** | Side buildings; injects `economy` onto `BuildingCell`s. UpgradeManager mutates via BuildingManager API only. |
+| **ExpeditionManager** | Expedition state; domain signals `expedition_selected` / `started` / `completed` / `ended`. Grid/timer via CellManager + TimerManager façades. |
+| **ExpeditionEditor** | Extends CellManager; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
+| **ExpeditionMenu** | Injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
+| **ExpeditionEndScreen** | Opens on `expedition_completed`; calls `manager.end_expedition()` (not raw `G.expedition_manager`). |
 | **UI / UIPP** | Listen to G UI signals + expedition domain signals; layout swap (base vs expedition). |
 
 ## Signal map (via G)
@@ -47,7 +49,7 @@ Menus: `toggle_menu` / `open_menu` / `close_menu` → pair of open/close signals
 | `player_cell_pressed` | Level-up / selection UI |
 | `ui_layout_change_requested` | UIPP (debug / manual); expeditions use domain signals instead |
 
-Gameplay systems should prefer domain signals on their manager (e.g. `expedition_started` / `expedition_ended`) and let UI react—avoid new raw UI emits from combat code.
+Gameplay systems should prefer domain signals on their manager (e.g. `expedition_selected` / `started` / `completed` / `ended`) and let UI react—avoid new raw UI emits from combat/expedition code. Menu open/close still goes through `G.open_menu` / `G.close_menu` from UI listeners.
 
 ## Remaining static injection (legacy)
 
