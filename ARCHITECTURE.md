@@ -17,7 +17,10 @@ Editor scene tree ≠ runtime tree: managers are created in code, then `add_chil
 |-------|----------------|
 | **G** | Service locator + menu/UI event bus. Holds refs; does not parent gameplay nodes. |
 | **Game** | Runtime scene parenting: CellManager, PlayerCellManager, BuildingManager, TimerManager, ExpeditionManager, projectile/particle containers, UIPP/menus. |
-| **CellManager** | Resource grid: spawn, occupy/free, hit resolve, specials, druid obelisks. |
+| **CellManager** | Resource grid façade: spawn, occupy/free, coords, weights. Composes RefCounted siblings under `Scenes/CellManager/`. |
+| **CellCombatResolver** | Hit compile, spread damage, kill_grid/kill_cell; emits via CellManager signals. |
+| **CellSpecialBehaviors** | Death hooks (lumberjack/outpost/forest) + forest occupy spawn + lumberjack cap. |
+| **DruidObeliskSystem** | Obelisk links, buff graph, overheal procs. |
 | **PlayerCellManager** | Player tower grid: add towers, highlight, level-up targeting. Injects `manager` / `projectile_manager` onto each `PlayerCell`. |
 | **ProjectileManager** | Spawn projectiles; owns projectile scenes/data (e.g. axe `bounce` on `ProjectileData`). |
 | **DamageManager** | Damage compile / stats dictionaries. |

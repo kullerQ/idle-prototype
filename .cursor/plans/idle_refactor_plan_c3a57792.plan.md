@@ -10,10 +10,10 @@ todos:
     status: completed
   - id: phase-2-cell-combat
     content: "Phase 2.1–2.2: keep CellManager grid façade; extract CellCombatResolver"
-    status: pending
+    status: completed
   - id: phase-2-specials-obelisk
     content: "Phase 2.3–2.4: extract special behaviors + druid obelisk system"
-    status: pending
+    status: completed
   - id: phase-3-upgrades
     content: "Phase 3: group UpgradeManager match into domain helpers against new APIs"
     status: pending
