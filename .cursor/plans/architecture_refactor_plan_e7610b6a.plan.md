@@ -15,7 +15,7 @@ todos:
     content: "Migrate domains one PR at a time into features/ + data/ + ui/ layout (done: economy + combat + resource_grid + towers + buildings + timers + meta_upgrades + expeditions + ui/shared + HUD)"
     status: completed
   - id: m4-upgrade-data
-    content: "Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts (batch 1 wood done; next: towers → buildings → projectiles)"
+    content: "Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts (batch 1 wood + batch 2 towers done; next: buildings → projectiles)"
     status: in_progress
   - id: m5-run-state
     content: Add RunState + SaveService façade; apply on boot; serialize IDs/levels not full tres blobs
@@ -263,9 +263,11 @@ features/meta_upgrades/upgrade_applier.gd        # Applies typed effects to mana
 - Level upgrades: same `UpgradeDefinition` shape later, scoped to `PlayerCell` instance; UI can keep scene trees short-term.
 - Shared description/effect types between meta and level where stats overlap.
 
-**Migration:** convert upgrades in batches (~~wood~~ → towers → buildings → projectiles). Keep enum IDs as `UpgradeDefinition.id` during transition if menus still key off enums.
+**Migration:** convert upgrades in batches (~~wood~~ → ~~towers~~ → buildings → projectiles). Keep enum IDs as `UpgradeDefinition.id` during transition if menus still key off enums.
 
 **Batch 1 (wood) done:** `WOOD_SPAWNRATE`, `TREE_LIFETIME`, `TREE_DURABILITY`, `GROVE_*`, `FOREST_ADD` — definitions under `data/upgrades/meta/`; `_apply_wood_upgrade` match removed.
+
+**Batch 2 (towers) done:** `ADD_TOWER_CELL`, `SHOOTER`/`DRUID`/`ROGUE`/`EXECUTIONER` (+ cooldown/accuracy/crit/crit_mult/xp where present) — definitions under `data/upgrades/meta/`; `_apply_tower_upgrade` match removed. Tower effect scripts under `data/upgrades/effects/` (`UpgradeEffectAddTower*`, `UpgradeEffectAddFreeTowerCell`).
 
 **Done when:** adding a new +10% crit upgrade is “new `.tres` + maybe one effect type if missing” — not a new `match` arm and string in two managers.
 
