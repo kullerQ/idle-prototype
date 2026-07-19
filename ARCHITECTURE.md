@@ -55,11 +55,11 @@ Main
 | **CellCombatResolver** | Hit compile, spread damage, kill_grid/kill_cell; emits via CellManager signals. |
 | **CellSpecialBehaviors** | Death hooks (lumberjack/outpost/forest) + forest occupy spawn + lumberjack cap. Uses injected `projectile_manager` (not `G`). |
 | **DruidObeliskSystem** | Obelisk links, buff graph, overheal procs. |
-| **PlayerCellManager** | Player tower grid: add towers, highlight, level-up targeting. Injects `manager` / `projectile_manager` onto each `PlayerCell`. Level-up badge label injected from `ButtonContainer`. |
+| **PlayerCellManager** | Player tower grid under `features/towers/`: add towers, highlight, level-up targeting. Injects `manager` / `projectile_manager` onto each `PlayerCell`. Level-up badge label injected from `ButtonContainer`. |
 | **ProjectileManager** | Spawn projectiles; domain signal `crit_occurred`. Lives under `features/combat/`. Injects `cell_manager` / `particle_container` onto each `Projectile` at spawn. |
 | **DamageManager** | Damage compile / stats dictionaries under `features/combat/`. Helpers: `compile_damage`, `build_projectile_damage`, `new_kill_damage`. |
 | **Economy** | Currencies and awards under `features/economy/`. |
-| **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `LevelUpgradeManager` holds injected `player_cell_manager`. |
+| **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `LevelUpgradeManager` lives under `features/towers/` and holds injected `player_cell_manager`. |
 | **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. Highlight label from `ButtonContainer`. |
 | **ButtonContainer** | Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
 | **TimerManager** | World timers. Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
@@ -128,7 +128,8 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 
 ## Naming notes
 
-- Player tower scene lives under `Scenes/PlayerCell/` (`class_name PlayerCell`).
+- Towers: `features/towers/` (`PlayerCellManager`, `PlayerCell`, level-upgrade menu + `LevelUpgradeManager`).
+- Player cell data under `data/player_cells/` (`player_cell_*.tres` + `_scr_player_cell_data.gd`).
 - Resource grid: `features/resource_grid/` (`CellManager`, `CellResource`, combat/specials/druid helpers).
 - Resource cell data under `data/resource_cells/` (`cell_resource_*.tres` + `_scr_*.gd`).
 - Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` under `data/spawn/`.

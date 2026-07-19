@@ -11,7 +11,7 @@ class_name Game
 ##   ├── ProjectileContainer / ParticleContainer   ← created here
 ##   └── UIPPLayer / UIPP / menus
 
-const LEVEL_UPGRADE_MENU_SCENE: PackedScene = preload("res://Scenes/LevelUpgradeMenu/level_upgrade_menu.tscn")
+const LEVEL_UPGRADE_MENU_SCENE: PackedScene = preload("res://features/towers/level_upgrade_menu/level_upgrade_menu.tscn")
 const EXPEDITION_MENU_SCENE: PackedScene = preload("res://Scenes/ExpeditionMenu/expedition_menu.tscn")
 const EXPEDITION_END_SCREEN_SCENE: PackedScene = preload("res://Scenes/ExpeditionEndScreen/expedition_end_screen.tscn")
 const EXPEDITION_UI_SCENE: PackedScene = preload("res://Scenes/ExpeditionUI/expedition_ui.tscn")

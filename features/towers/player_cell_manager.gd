@@ -6,12 +6,12 @@ enum AttackEffects {
 	RES_BREAK_VALUE,
 }
 var cells: Dictionary = {}
-const _DATA_NULL: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_empty.tres")
-const _DATA_SHOOTER: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_shooter.tres")
-const _DATA_ROGUE: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_rogue.tres")
-const _DATA_WIZARD: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_wizard.tres")
-const _DATA_DRUID: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_druid.tres")
-const _DATA_EXECUTIONER: PlayerCellData = preload("res://Resources/PlayerCells/player_cell_executioner.tres")
+const _DATA_NULL: PlayerCellData = preload("res://data/player_cells/player_cell_empty.tres")
+const _DATA_SHOOTER: PlayerCellData = preload("res://data/player_cells/player_cell_shooter.tres")
+const _DATA_ROGUE: PlayerCellData = preload("res://data/player_cells/player_cell_rogue.tres")
+const _DATA_WIZARD: PlayerCellData = preload("res://data/player_cells/player_cell_wizard.tres")
+const _DATA_DRUID: PlayerCellData = preload("res://data/player_cells/player_cell_druid.tres")
+const _DATA_EXECUTIONER: PlayerCellData = preload("res://data/player_cells/player_cell_executioner.tres")
 
 var all_data: Dictionary = {
 	PlayerCellData.Types.NULL: _DATA_NULL.duplicate(),

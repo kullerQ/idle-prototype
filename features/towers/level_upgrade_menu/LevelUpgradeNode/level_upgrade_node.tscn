@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bt1oojo2xwns6"]
 
-[ext_resource type="Script" path="res://Scenes/LevelUpgradeMenu/level_upgrade_node.gd" id="1_611tm"]
+[ext_resource type="Script" path="res://features/towers/level_upgrade_menu/level_upgrade_node.gd" id="1_611tm"]
 
 [node name="LevelUpgradeNode" type="Control"]
 custom_minimum_size = Vector2(16, 16)

@@ -22,7 +22,7 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 Quick checks:
 
 - **New building type?** → building scene/script next to `BuildingManager` / `BuildingCell`, data as `.tres` under `Resources/`, register/unlock via `BuildingManager` API — not a new field on `G`.
-- **New tower / resource cell?** → tower: `PlayerCell` scene + `Resources/PlayerCells/` data; resource cell: scene under `features/resource_grid/cell_resource/`, data under `data/resource_cells/`.
+- **New tower / resource cell?** → tower: scene under `features/towers/player_cell/`, data under `data/player_cells/`; resource cell: scene under `features/resource_grid/cell_resource/`, data under `data/resource_cells/`.
 - **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
 - **New meta upgrade?** → today: enum + apply helper on `UpgradeManager` (Phase 4: `.tres` under upgrades data). Do not add match arms in unrelated managers.
 - **New menu?** → `NodePopupMenu` subclass; register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable.
@@ -37,7 +37,7 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 |--------|--------------|--------|
 | Boot / thin autoload | `Scripts/g.gd`, `Scenes/Main/`, `Scenes/Game/` | `core/` + shell scenes |
 | Resource grid | `features/resource_grid/` (+ `data/resource_cells/`, `data/spawn/`) | `features/resource_grid/` |
-| Towers / level upgrades | `Scenes/PlayerCell*`, `Scenes/LevelUpgradeMenu/`, `Scripts/level_upgrade_manager.gd` | `features/towers/` |
+| Towers / level upgrades | `features/towers/` (+ `data/player_cells/`) | `features/towers/` |
 | Combat | `features/combat/` (managers + projectile scenes) | `features/combat/` |
 | Economy | `features/economy/` | `features/economy/` |
 | Buildings | `Scenes/BuildingManager/`, `Scenes/BuildingCell/` | `features/buildings/` |
@@ -45,7 +45,7 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Meta upgrades | `Scripts/upgrade_manager.gd`, `Scenes/UpgradeMenu/`, `Scenes/UpgradeNode/` | `features/meta_upgrades/` |
 | Timers | `Scenes/TimerManager/`, `Scenes/TimerUI/` | `features/timers/` |
 | Shared UI controls | `Scenes/ButtonAnimated/`, `Scenes/ButtonPanel/`, popup helpers | `ui/shared/` |
-| Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`) | `data/<domain>/` |
+| Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`; player cells in `data/player_cells/`) | `data/<domain>/` |
 
 **Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor. Do not big-bang rename the tree.
 
