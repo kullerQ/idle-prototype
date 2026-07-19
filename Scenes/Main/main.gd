@@ -60,7 +60,7 @@ func _input(event):
 		if cell:
 			cell.disabled = !cell.disabled
 	elif event.is_action_pressed("debug_expedition_toggle"):
-		if !G.in_expedition:
+		if !G.expedition_manager.is_active:
 			G.expedition_manager.select_expedition(ExpeditionManager.Types.WHITE_TREE, 1)
 		else:
 			G.expedition_manager.complete_expedition()

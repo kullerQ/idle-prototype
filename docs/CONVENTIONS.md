@@ -79,9 +79,11 @@ Level-upgrade talent trees use a **frozen scene contract**: path nodes named `Pa
 
 ### Do not use `G` for
 
-- New gameplay flags (prefer the owning manager; e.g. expedition active state belongs on `ExpeditionManager` — Phase 2).
+- Gameplay flags (prefer the owning manager; e.g. `ExpeditionManager.is_active`).
+- Highlight / badge Labels (own on `ButtonContainer` / HUD; inject into consumers).
 - Reaching into managers from deep gameplay helpers when a ref can be injected once at setup.
 - Parenting gameplay nodes (`Game` parents; `G` wires).
+- Emitting crit-label feedback from combat/buildings (emit domain `crit_occurred`; `Game` bridges to the UI bus).
 
 ### Prefer injection
 

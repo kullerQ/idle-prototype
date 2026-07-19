@@ -11,6 +11,8 @@ var charged: bool = false
 
 var economy: Economy
 
+signal crit_occurred(pos: Vector2)
+
 
 func _ready() -> void:
 	set_physics_process(false)
@@ -62,7 +64,7 @@ func apply_effects() -> void:
 			var mult: int = 1
 			if randi() % 100 < data.crit_chance:
 				mult = data.crit_chance
-				G.crit_label_requested.emit(progress_bar.global_position + progress_bar.size / 2)
+				crit_occurred.emit(progress_bar.global_position + progress_bar.size / 2)
 				
 			economy.add_resource(i, v * mult)
 

@@ -54,6 +54,8 @@ var tiers: Dictionary = {}
 var separation: Vector2
 var max_lumberjack_count: int = 1
 var economy: Economy
+var expedition_manager: ExpeditionManager
+var projectile_manager: ProjectileManager
 
 ## Composed subsystems (set in _ready).
 var combat: CellCombatResolver
@@ -69,6 +71,7 @@ signal cell_occupied(cell: CellResource)
 func _ready() -> void:
 	combat = CellCombatResolver.new(self)
 	specials = CellSpecialBehaviors.new(self)
+	specials.projectile_manager = projectile_manager
 	druid = DruidObeliskSystem.new(self)
 
 	for i in all_data:
@@ -117,7 +120,7 @@ func add_start_cells() -> void:
 
 
 func add_res(type: Types, amount: int) -> void:
-	if G.in_expedition:
+	if expedition_manager and expedition_manager.is_active:
 		return
 
 	match type:

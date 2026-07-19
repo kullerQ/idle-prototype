@@ -3,8 +3,9 @@ class_name UpgradeMenu
 
 var nodes: Dictionary = {}
 var unlocked_node_count: int = 0
-@onready var highlight_label: Label = G.upgrades_highlight_label
-# TODO: remove G dependency
+## Injected by ButtonContainer (owns the label).
+var highlight_label: Label
+# TODO: remove G dependency (Phase 6)
 @onready var economy: Economy = G.economy
 @onready var upgrade_manager: UpgradeManager = G.upgrade_manager
 
@@ -15,7 +16,7 @@ func _ready() -> void:
 	graphics.clip_contents = true
 	for i in range(1, Economy.Currencies.size()):
 		block_expensive(i, economy.resources[i])
-	
+
 	economy.res_changed.connect(block_expensive)
 
 
@@ -33,7 +34,7 @@ func block_expensive(currency: Economy.Currencies, value: int) -> void:
 	for k in nodes:
 		if !k.has(currency):
 			continue
-			
+
 		for node in nodes[k]:
 			if node.lvl == node.max_lvl || node.locked:
 				continue
@@ -45,19 +46,22 @@ func block_expensive(currency: Economy.Currencies, value: int) -> void:
 						node.block()
 						success = false
 						break
-				
+
 				if !success:
 					continue
-				
+
 			else:
 				if value < node.get_cost(currency):
 					node.block()
 					continue
 
-			
+
 			node.unblock()
 			unlocked += 1
-		
+
+	if !highlight_label:
+		return
+
 	if unlocked > 0:
 		highlight_label.text = str(unlocked)
 	else:
@@ -67,5 +71,5 @@ func block_expensive(currency: Economy.Currencies, value: int) -> void:
 func reg_node(key: Array, node: UpgradeNode) -> void:
 	if !nodes.has(key):
 		nodes[key] = []
-	
+
 	nodes[key].append(node)

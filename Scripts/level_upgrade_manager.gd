@@ -51,6 +51,8 @@ var descriptions: Dictionary = {
 	Types.DRUID_OBELISK_CHANCE: "+10% chance to add 1 druid obelisk if overheals",
 }
 
+var player_cell_manager: PlayerCellManager
+
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 	if _apply_shooter_upgrade(type, cell):
@@ -60,7 +62,7 @@ func apply_upgrade(type: Types, cell: PlayerCell) -> void:
 	elif _apply_rogue_upgrade(type, cell):
 		pass
 
-	G.player_cell_manager.cell_upgraded.emit(cell)
+	player_cell_manager.cell_upgraded.emit(cell)
 
 
 func _apply_shooter_upgrade(type: Types, cell: PlayerCell) -> bool:

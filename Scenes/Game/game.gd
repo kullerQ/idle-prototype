@@ -1,19 +1,15 @@
 extends Node2D
 class_name Game
 
-## Runtime tree:
-##   Game  (editor-visible children: CellManager, PlayerCellManager)
-##   ├── CellManager          ← from game.tscn
-##   ├── PlayerCellManager    ← from game.tscn
-##   ├── ExpeditionManager    ← created in G, parented here
-##   ├── ProjectileContainer
-##   ├── BuildingManager
-##   ├── ParticleContainer
+## Runtime tree (editor ≈ runtime for Node managers):
+##   Game
+##   ├── CellManager
+##   ├── PlayerCellManager
 ##   ├── TimerManager
-##   └── UIPPLayer
-##       └── UIPP
-##           ├── LevelUpgradeMenuLayer / ExpeditionMenuLayer
-##           └── layout elements (TimerUI, ExpeditionUI)
+##   ├── BuildingManager
+##   ├── ExpeditionManager
+##   ├── ProjectileContainer / ParticleContainer   ← created here
+##   └── UIPPLayer / UIPP / menus
 
 const LEVEL_UPGRADE_MENU_SCENE: PackedScene = preload("res://Scenes/LevelUpgradeMenu/level_upgrade_menu.tscn")
 const EXPEDITION_MENU_SCENE: PackedScene = preload("res://Scenes/ExpeditionMenu/expedition_menu.tscn")
@@ -23,14 +19,16 @@ const TIMER_UI_SCENE: PackedScene = preload("res://Scenes/TimerUI/timer_ui.tscn"
 
 
 func _enter_tree() -> void:
-	G.bind_scene_managers($CellManager, $PlayerCellManager)
-
-	add_child(G.expedition_manager)
+	G.bind_scene_managers(
+		$CellManager,
+		$PlayerCellManager,
+		$TimerManager,
+		$BuildingManager,
+		$ExpeditionManager,
+	)
 
 	var projectile_container: Node2D = add_new_node(Node2D, "ProjectileContainer")
 	G.projectile_manager.projectile_container = projectile_container
-
-	add_child(G.building_manager)
 
 	var particle_container: Node2D = add_new_node(Node2D, "ParticleContainer")
 	G.projectile_manager.particle_container = particle_container
@@ -39,7 +37,7 @@ func _enter_tree() -> void:
 	var uipp: UIPP = add_new_node(UIPP, "UIPP", uipp_layer)
 	var level_upgrade_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "LevelUpgradeMenuLayer", uipp)
 	var expedition_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "ExpeditionMenuLayer", uipp)
-	
+
 	var level_upgrade_menu: LevelUpgradeMenu = new_scene(LEVEL_UPGRADE_MENU_SCENE, "LevelUpgradeMenu")
 	level_upgrade_menu.manager = G.level_upgrade_manager
 	level_upgrade_menu.economy = G.economy
@@ -47,7 +45,7 @@ func _enter_tree() -> void:
 	level_upgrade_menu_layer.add_child(level_upgrade_menu)
 
 	var expedition_manager: ExpeditionManager = G.expedition_manager
-	var expedition_menu: ExpeditionMenu = add_scene(EXPEDITION_MENU_SCENE, "ExpeditionMenu", expedition_menu_layer)
+	add_scene(EXPEDITION_MENU_SCENE, "ExpeditionMenu", expedition_menu_layer)
 
 	var expedition_end_screen: ExpeditionEndScreen = new_scene(EXPEDITION_END_SCREEN_SCENE, "ExpeditionEndScreen")
 	expedition_end_screen.manager = expedition_manager
@@ -62,9 +60,15 @@ func _enter_tree() -> void:
 	uipp.add_element(timer_ui)
 	uipp.add_element(expedition_ui)
 
-	add_child(G.timer_manager)
-	
+	# Domain crit signals → UI bus (combat/buildings never call G directly).
+	G.projectile_manager.crit_occurred.connect(_on_crit_occurred)
+	G.building_manager.crit_occurred.connect(_on_crit_occurred)
+
 	uipp.set_layout(UIPP.Layouts.BASE)
+
+
+func _on_crit_occurred(pos: Vector2) -> void:
+	G.crit_label_requested.emit(pos)
 
 
 func add_new_node(type: Variant, _name: String, parent: Node = self) -> Node:

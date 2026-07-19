@@ -22,6 +22,8 @@ var critted: bool = false
 var delay: float = 0
 var particle_container: Node2D
 
+signal crit_occurred(pos: Vector2)
+
 
 func _ready() -> void:
 	if delay:
@@ -118,7 +120,7 @@ func apply_crit(chance: int = crit_chance) -> void:
 	if randi() % 100 < chance:
 		critted = true
 		damage_data[DamageManager.DamageDataTypes.MULT] += crit_mult
-		G.crit_label_requested.emit(global_position)
+		crit_occurred.emit(global_position)
 
 
 func _on_area_entered(a: Area2D) -> void:

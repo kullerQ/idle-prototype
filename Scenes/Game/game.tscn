@@ -1,8 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://c480787aiynb1"]
+[gd_scene load_steps=12 format=3 uid="uid://c480787aiynb1"]
 
 [ext_resource type="Script" path="res://Scenes/Game/game.gd" id="1_4djx6"]
 [ext_resource type="PackedScene" uid="uid://b14oi7hhj8hew" path="res://Scenes/CellManager/cell_manager.tscn" id="2_cell"]
 [ext_resource type="PackedScene" uid="uid://ctck6suxq5bcj" path="res://Scenes/PlayerCellManager/player_cell_manager.tscn" id="3_pcm"]
+[ext_resource type="PackedScene" uid="uid://bd2s6jemxrplh" path="res://Scenes/TimerManager/timer_manager.tscn" id="4_timer"]
+[ext_resource type="PackedScene" uid="uid://4wswmpgy5skt" path="res://Scenes/BuildingManager/building_manager.tscn" id="5_building"]
+[ext_resource type="Script" path="res://Scripts/expedition_manager.gd" id="6_expedition"]
 [ext_resource type="Script" path="res://Scenes/Game/button_container.gd" id="8_vtjp6"]
 
 [sub_resource type="Gradient" id="Gradient_ks4ih"]
@@ -37,6 +40,13 @@ texture = SubResource("GradientTexture1D_q55pm")
 [node name="CellManager" parent="." instance=ExtResource("2_cell")]
 
 [node name="PlayerCellManager" parent="." instance=ExtResource("3_pcm")]
+
+[node name="TimerManager" parent="." instance=ExtResource("4_timer")]
+
+[node name="BuildingManager" parent="." instance=ExtResource("5_building")]
+
+[node name="ExpeditionManager" type="Node" parent="."]
+script = ExtResource("6_expedition")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(320, 0)

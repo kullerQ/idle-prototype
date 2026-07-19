@@ -14,12 +14,20 @@ var all_data: Dictionary = {
 var cells: Dictionary = {}
 var economy: Economy
 
+## Buildings → UI bridge; Game connects this to the crit-label bus.
+signal crit_occurred(pos: Vector2)
+
 
 func _ready() -> void:
 	for i in range(1, Buildings.size()):
 		var cell: BuildingCell = get_child(i - 1)
 		cell.economy = economy
+		cell.crit_occurred.connect(_on_cell_crit)
 		cells[i] = cell
+
+
+func _on_cell_crit(pos: Vector2) -> void:
+	crit_occurred.emit(pos)
 
 
 func set_automated(type: Buildings, enabled: bool) -> void:

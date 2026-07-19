@@ -4,6 +4,7 @@ extends RefCounted
 ## Special cell death / occupy hooks (lumberjack, outpost, forest spawn).
 
 var _manager: CellManager
+var projectile_manager: ProjectileManager
 var first_forest_broken: bool = false
 
 
@@ -21,7 +22,7 @@ func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 
 		CellManager.Names.SPECIAL_LUMBERJACK:
 			var cell_pos: Vector2 = cell.global_position + CellManager.CELL_SIZE / 2
-			G.projectile_manager.add_resource_axe(cell_pos, data.crit_chance, 2, data.dmg_ratio,
+			projectile_manager.add_resource_axe(cell_pos, data.crit_chance, 2, data.dmg_ratio,
 			_manager.get_rand_occupied_cell_global_center([cell], CellManager.Types.WOOD), ProjectileDataModifiers.new(1.5, 0), [cell])
 			if data.spawn_wood_chance > 0:
 				if randi() % 100 < data.spawn_wood_chance:
@@ -31,7 +32,7 @@ func handle_cell_death_func(data: CellResourceData, cell: CellResource) -> void:
 		CellManager.Names.SPECIAL_OUTPOST:
 			for i in data.attacks:
 				var cell_pos: Vector2 = cell.global_position + CellManager.CELL_SIZE / 2
-				G.projectile_manager.add_resource_bullet(cell_pos, 0, 2,
+				projectile_manager.add_resource_bullet(cell_pos, 0, 2,
 				cell_pos.direction_to(_manager.get_rand_occupied_cell_global_center([cell])),
 				ProjectileDataModifiers.new(1.5, data.weakening_chance), [cell], 0.1 * i)
 			return

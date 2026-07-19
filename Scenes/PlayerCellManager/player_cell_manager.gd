@@ -31,7 +31,8 @@ var start_pos: Vector2i = Vector2i(4, 6)
 var highlighted_cell: PlayerCell
 var cells_to_upgrade: Array = []
 var upgrade_cell_idx: int = 0
-@onready var lvl_upgrades_highlight_label: Label = G.lvl_upgrades_highlight_label
+## Injected by ButtonContainer (owns the label).
+var lvl_upgrades_highlight_label: Label
 
 var economy: Economy
 var cell_manager: CellManager
@@ -198,19 +199,23 @@ func _on_cell_lvled_up(cell: PlayerCell, lvl: int) -> void:
 		return
 		
 	cells_to_upgrade.append(cell)
-	lvl_upgrades_highlight_label.show()
-	lvl_upgrades_highlight_label.text = "%d" %cells_to_upgrade.size()
+	if lvl_upgrades_highlight_label:
+		lvl_upgrades_highlight_label.show()
+		lvl_upgrades_highlight_label.text = "%d" %cells_to_upgrade.size()
 
 
 func _on_cell_upgraded(cell: PlayerCell) -> void:
 	if cell.lvl_tokens > 0:
 		return
-		
+
 	cells_to_upgrade.erase(cell)
+	if !lvl_upgrades_highlight_label:
+		return
+
 	lvl_upgrades_highlight_label.text = "%d" %cells_to_upgrade.size()
 	if !cells_to_upgrade.is_empty():
 		return
-	
+
 	lvl_upgrades_highlight_label.hide()
 
 

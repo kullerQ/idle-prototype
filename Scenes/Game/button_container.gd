@@ -1,7 +1,11 @@
 extends HBoxContainer
 class_name ButtonContainer
 
+## Owns highlight badges for upgrade / level-up buttons (not G).
+
 var button_scene: PackedScene = preload("res://Scenes/ButtonPanel/panel_button.tscn")
+var upgrades_highlight_label: Label
+var lvl_upgrades_highlight_label: Label
 
 
 func upgrade_menu_button_func() -> void:
@@ -58,8 +62,15 @@ func _ready() -> void:
 	_make_button("xp+100", xp_func)
 	_make_button("0", zero_func, 12)
 
-	G.lvl_upgrades_highlight_label = G.ui.add_label(lvl_up_button, Vector2.ZERO, "")
-	G.upgrades_highlight_label = G.ui.add_label(upgrade_menu_button, Vector2.ZERO, "")
+	lvl_upgrades_highlight_label = G.ui.add_label(lvl_up_button, Vector2.ZERO, "")
+	upgrades_highlight_label = G.ui.add_label(upgrade_menu_button, Vector2.ZERO, "")
+
+	var player_cell_manager: PlayerCellManager = get_parent().get_node("PlayerCellManager")
+	player_cell_manager.lvl_upgrades_highlight_label = lvl_upgrades_highlight_label
+
+	var upgrade_menu: UpgradeMenu = G.ui.get_node("CanvasLayer/UpgradeMenu")
+	upgrade_menu.highlight_label = upgrades_highlight_label
+
 	await get_tree().process_frame
-	G.lvl_upgrades_highlight_label.global_position = lvl_up_button.global_position - Vector2(14, 10)
-	G.upgrades_highlight_label.global_position = upgrade_menu_button.global_position - Vector2(14, 10)
+	lvl_upgrades_highlight_label.global_position = lvl_up_button.global_position - Vector2(14, 10)
+	upgrades_highlight_label.global_position = upgrade_menu_button.global_position - Vector2(14, 10)

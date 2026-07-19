@@ -1,7 +1,7 @@
 extends Node
 
-const TIMER_MANAGER_SCENE: PackedScene = preload("res://Scenes/TimerManager/timer_manager.tscn")
-const BUILDING_MANAGER_SCENE: PackedScene = preload("res://Scenes/BuildingManager/building_manager.tscn")
+## Thin autoload: service locator + menu / tooltip / crit-label UI bus.
+## Game parents Node managers; G only holds refs and wires deps.
 
 var menu_signals: Dictionary = {
 	UI.Menus.UPGRADE: [upgrade_menu_open_requested, upgrade_menu_close_requested],
@@ -21,11 +21,8 @@ var projectile_manager: ProjectileManager
 var building_manager: BuildingManager
 var level_upgrade_manager: LevelUpgradeManager
 var expedition_manager: ExpeditionManager
-var upgrades_highlight_label: Label
-var lvl_upgrades_highlight_label: Label
 
 var opened_menu_type: UI.Menus = 0
-var in_expedition: bool = false
 
 signal upgrade_menu_open_requested
 signal upgrade_menu_close_requested
@@ -42,17 +39,25 @@ signal level_upgrade_menu_open_requested(cell: PlayerCell)
 signal ui_layout_change_requested(new_layout: UIPP.Layouts)
 
 
-## Creates core systems. CellManager / PlayerCellManager come from Game's scene tree
+## Creates RefCounted core systems. Node managers come from Game's scene tree
 ## via bind_scene_managers (called from Game._enter_tree).
 func initialize() -> void:
 	_create_economy()
 	_create_combat()
 
 
-## Wires scene-placed CellManager / PlayerCellManager, then creates dependent managers.
-func bind_scene_managers(p_cell_manager: CellManager, p_player_cell_manager: PlayerCellManager) -> void:
+## Wires scene-placed managers and creates RefCounted dependents.
+func bind_scene_managers(
+	p_cell_manager: CellManager,
+	p_player_cell_manager: PlayerCellManager,
+	p_timer_manager: TimerManager,
+	p_building_manager: BuildingManager,
+	p_expedition_manager: ExpeditionManager,
+) -> void:
 	cell_manager = p_cell_manager
 	cell_manager.economy = economy
+	cell_manager.expedition_manager = p_expedition_manager
+	cell_manager.projectile_manager = projectile_manager
 	projectile_manager.cell_manager = cell_manager
 
 	player_cell_manager = p_player_cell_manager
@@ -61,9 +66,20 @@ func bind_scene_managers(p_cell_manager: CellManager, p_player_cell_manager: Pla
 	player_cell_manager.cell_manager = cell_manager
 	player_cell_manager.projectile_manager = projectile_manager
 
-	_create_secondary_managers()
+	timer_manager = p_timer_manager
+	timer_manager.cell_manager = cell_manager
+	timer_manager.expedition_manager = p_expedition_manager
+
+	building_manager = p_building_manager
+	building_manager.economy = economy
+
+	expedition_manager = p_expedition_manager
+	expedition_manager.economy = economy
+	expedition_manager.cell_manager = cell_manager
+	expedition_manager.projectile_manager = projectile_manager
+	expedition_manager.timer_manager = timer_manager
+
 	_wire_upgrades()
-	_wire_expedition()
 	_assert_wired()
 
 
@@ -79,16 +95,6 @@ func _create_combat() -> void:
 	projectile_manager.damage_manager = damage_manager
 
 
-func _create_secondary_managers() -> void:
-	timer_manager = TIMER_MANAGER_SCENE.instantiate()
-	timer_manager.name = "TimerManager"
-	timer_manager.cell_manager = cell_manager
-
-	building_manager = BUILDING_MANAGER_SCENE.instantiate()
-	building_manager.name = "BuildingManager"
-	building_manager.economy = economy
-
-
 func _wire_upgrades() -> void:
 	upgrade_manager = UpgradeManager.new()
 	upgrade_manager.cell_manager = cell_manager
@@ -99,15 +105,7 @@ func _wire_upgrades() -> void:
 	upgrade_manager.projectile_manager = projectile_manager
 
 	level_upgrade_manager = LevelUpgradeManager.new()
-
-
-func _wire_expedition() -> void:
-	expedition_manager = ExpeditionManager.new()
-	expedition_manager.name = "ExpeditionManager"
-	expedition_manager.economy = economy
-	expedition_manager.cell_manager = cell_manager
-	expedition_manager.projectile_manager = projectile_manager
-	expedition_manager.timer_manager = timer_manager
+	level_upgrade_manager.player_cell_manager = player_cell_manager
 
 
 func _assert_wired() -> void:
@@ -125,6 +123,8 @@ func _assert_wired() -> void:
 	assert(level_upgrade_manager != null, "G.level_upgrade_manager not wired")
 	assert(expedition_manager != null, "G.expedition_manager not wired")
 	assert(cell_manager.economy != null, "CellManager.economy not wired")
+	assert(cell_manager.expedition_manager != null, "CellManager.expedition_manager not wired")
+	assert(cell_manager.projectile_manager != null, "CellManager.projectile_manager not wired")
 	assert(player_cell_manager.economy != null, "PlayerCellManager.economy not wired")
 	assert(player_cell_manager.damage_manager != null, "PlayerCellManager.damage_manager not wired")
 	assert(player_cell_manager.cell_manager != null, "PlayerCellManager.cell_manager not wired")
@@ -132,11 +132,13 @@ func _assert_wired() -> void:
 	assert(projectile_manager.cell_manager != null, "ProjectileManager.cell_manager not wired")
 	assert(projectile_manager.damage_manager != null, "ProjectileManager.damage_manager not wired")
 	assert(timer_manager.cell_manager != null, "TimerManager.cell_manager not wired")
+	assert(timer_manager.expedition_manager != null, "TimerManager.expedition_manager not wired")
 	assert(building_manager.economy != null, "BuildingManager.economy not wired")
 	assert(expedition_manager.economy != null, "ExpeditionManager.economy not wired")
 	assert(expedition_manager.cell_manager != null, "ExpeditionManager.cell_manager not wired")
 	assert(expedition_manager.projectile_manager != null, "ExpeditionManager.projectile_manager not wired")
 	assert(expedition_manager.timer_manager != null, "ExpeditionManager.timer_manager not wired")
+	assert(level_upgrade_manager.player_cell_manager != null, "LevelUpgradeManager.player_cell_manager not wired")
 
 
 func toggle_menu(menu_type: UI.Menus) -> void:
@@ -147,7 +149,7 @@ func toggle_menu(menu_type: UI.Menus) -> void:
 			return
 		else:
 			menu_signals[opened_menu_type][1].emit() # close signal
-	
+
 	menu_signals[menu_type][0].emit() # open signal
 	opened_menu_type = menu_type
 
@@ -155,14 +157,14 @@ func toggle_menu(menu_type: UI.Menus) -> void:
 func open_menu(menu_type: UI.Menus) -> void:
 	if opened_menu_type == menu_type:
 		return
-	
+
 	menu_signals[menu_type][0].emit() # open signal
-	opened_menu_type = menu_type	
+	opened_menu_type = menu_type
 
 
 func close_menu(menu_type: UI.Menus) -> void:
 	if opened_menu_type != menu_type:
 		return
-	
+
 	menu_signals[opened_menu_type][1].emit() # close signal
 	opened_menu_type = 0

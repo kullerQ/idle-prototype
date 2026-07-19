@@ -42,6 +42,9 @@ var particle_container: Node2D
 var damage_manager: DamageManager
 var cell_manager: CellManager
 
+## Combat → UI bridge; Game connects this to the crit-label bus.
+signal crit_occurred(pos: Vector2)
+
 
 func free_all_projectiles() -> void:
 	for i in projectile_container.get_children():
@@ -88,7 +91,12 @@ func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int,
 	projectile.mod_data = mod_data
 	# Effects roll once at spawn from ProjectileDataModifiers (single path).
 	projectile.weakening = mod_data.weakening_chance > 0 and randi() % 100 < mod_data.weakening_chance
+	projectile.crit_occurred.connect(_on_projectile_crit)
 	return projectile
+
+
+func _on_projectile_crit(pos: Vector2) -> void:
+	crit_occurred.emit(pos)
 
 
 func new_resource_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, mod_data: ProjectileDataModifiers, bonus_damage: Dictionary, _ignore: Array, _delay: float = 0) -> Projectile:

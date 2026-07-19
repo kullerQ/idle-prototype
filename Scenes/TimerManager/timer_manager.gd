@@ -9,6 +9,7 @@ enum Types {
 var timers: Dictionary = {}
 ## Injected by G; spawn timeouts call CellManager façade methods.
 var cell_manager: CellManager
+var expedition_manager: ExpeditionManager
 
 signal timer_added(timer: Timer)
 
@@ -38,7 +39,7 @@ func add_special_cell_spawn_timer(res_name: CellManager.Names, wait_t: float, co
 	timers[Types.CELL_SPAWN][timer] = res_name
 	timer.mytimeout.connect(_on_special_cell_spawn_timeout)
 	add_timer(timer)
-	if !G.in_expedition:
+	if !expedition_manager or !expedition_manager.is_active:
 		timer.start()
 
 	return timer

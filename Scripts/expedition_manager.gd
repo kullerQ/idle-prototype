@@ -23,6 +23,9 @@ var projectile_manager: ProjectileManager
 var timer_manager: TimerManager
 var economy: Economy
 
+## True while an expedition run is selected / in progress (replaces G.in_expedition).
+var is_active: bool = false
+
 var max_hp: float = 0
 var current_expedition_info: Dictionary = {"type": Types.NULL, "level": 0, "goal": Goals.NULL}
 var current_hp: float = 0
@@ -50,7 +53,7 @@ func select_expedition(type: Types, level: int = 1) -> void:
 	cell_manager.free_grid()
 	projectile_manager.free_all_projectiles()
 	timer_manager.stop_timers()
-	G.in_expedition = true
+	is_active = true
 	call_deferred("start_expedition", type, level)
 
 
@@ -77,7 +80,7 @@ func apply_reward(reward_data: ExpeditionRewardData, level: int) -> void:
 
 
 func end_expedition() -> void:
-	G.in_expedition = false
+	is_active = false
 	max_hp = 0
 	cell_manager.free_grid()
 	expedition_ended.emit()
