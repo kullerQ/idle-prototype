@@ -103,6 +103,7 @@ func _wire_upgrades() -> void:
 	upgrade_manager.timer_manager = timer_manager
 	upgrade_manager.damage_manager = damage_manager
 	upgrade_manager.projectile_manager = projectile_manager
+	upgrade_manager.setup()
 
 	level_upgrade_manager = LevelUpgradeManager.new()
 	level_upgrade_manager.player_cell_manager = player_cell_manager
@@ -120,6 +121,7 @@ func _assert_wired() -> void:
 	assert(timer_manager != null, "G.timer_manager not wired")
 	assert(building_manager != null, "G.building_manager not wired")
 	assert(upgrade_manager != null, "G.upgrade_manager not wired")
+	assert(upgrade_manager.applier != null, "UpgradeManager.applier not setup")
 	assert(level_upgrade_manager != null, "G.level_upgrade_manager not wired")
 	assert(expedition_manager != null, "G.expedition_manager not wired")
 	assert(cell_manager.economy != null, "CellManager.economy not wired")

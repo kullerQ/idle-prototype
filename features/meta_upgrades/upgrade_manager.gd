@@ -63,6 +63,17 @@ enum Types {
 	FOREST_ADD,
 	}
 
+const _WOOD_DEFINITION_PATHS: PackedStringArray = [
+	"res://data/upgrades/meta/upgrade_wood_spawnrate.tres",
+	"res://data/upgrades/meta/upgrade_tree_lifetime.tres",
+	"res://data/upgrades/meta/upgrade_tree_durability.tres",
+	"res://data/upgrades/meta/upgrade_grove_add.tres",
+	"res://data/upgrades/meta/upgrade_grove_spawn.tres",
+	"res://data/upgrades/meta/upgrade_grove_value.tres",
+	"res://data/upgrades/meta/upgrade_grove_buffed.tres",
+	"res://data/upgrades/meta/upgrade_forest_add.tres",
+]
+
 var cell_manager : CellManager
 var damage_manager: DamageManager
 var player_cell_manager : PlayerCellManager
@@ -70,6 +81,10 @@ var timer_manager: TimerManager
 var projectile_manager: ProjectileManager
 var building_manager: BuildingManager
 
+var applier: UpgradeApplier
+var _definitions: Dictionary = {} # Types -> UpgradeDefinition
+
+## Legacy descriptions for upgrades not yet migrated to UpgradeDefinition .tres.
 var descriptions: Dictionary = {
 	Types.NULL: "no description",
 	Types.ADD_TOWER_CELL: "+1 additional cell for towers",
@@ -89,12 +104,6 @@ var descriptions: Dictionary = {
 	Types.LUMBERJACK_CRIT: "lumberjack crit chance +10",
 	Types.LUMBERJACK_DMG: "lumberjack deals 5% more damage from tree's hp",
 	Types.LUMBERJACK_CHARGE: "lumberjack charge increase +1",
-	Types.WOOD_SPAWNRATE: "wood resource spawnrate +1",
-	Types.TREE_LIFETIME: "trees live longer for 0.5s",
-	Types.TREE_DURABILITY: "tree durability +20, wood whey destroyed +10",
-	Types.GROVE_ADD: "tree has a chance to become a grove",
-	Types.GROVE_SPAWN: "grove spawn chance +1",
-	Types.GROVE_VALUE: "grove value per hit +1",
 	Types.SHOOTER_XP: "shooters get +1 xp",
 	Types.AXE_BOUNCE: "axe bounces off empty cells",
 	Types.AXE_SPD: "axe speed +5",
@@ -129,8 +138,6 @@ var descriptions: Dictionary = {
 	Types.UNLOCK_OUTPOST: "every 20 seconds a shooter outpost appears",
 	Types.OUTPOST_WEAKENING_CHANCE: "outpost chance to shoot weakening bullet +20%",
 	Types.OUTPOST_MULTIATTACKS: "outpost shoots +1 bullet%",
-	Types.GROVE_BUFFED: "+5% for grove to spawn buffed%",
-	Types.FOREST_ADD: "tree has a chance to become a forest",
 	}
 
 signal upgrade_purchased(type: Types)
@@ -140,14 +147,34 @@ func _init():
 	upgrade_purchased.connect(_on_upgrade_purchased)
 
 
+## Call after manager refs are assigned (from G._wire_upgrades).
+func setup() -> void:
+	applier = UpgradeApplier.new()
+	applier.cell_manager = cell_manager
+	applier.timer_manager = timer_manager
+	applier.player_cell_manager = player_cell_manager
+	applier.building_manager = building_manager
+	applier.projectile_manager = projectile_manager
+	applier.damage_manager = damage_manager
+	for path in _WOOD_DEFINITION_PATHS:
+		var def: UpgradeDefinition = load(path) as UpgradeDefinition
+		if def == null:
+			push_error("UpgradeManager: failed to load definition %s" % path)
+			continue
+		_definitions[def.id] = def
+
+
 func get_description(type: Types) -> String:
+	if _definitions.has(type):
+		return (_definitions[type] as UpgradeDefinition).description
 	return descriptions[type]
 
 
 func _on_upgrade_purchased(type: Types) -> void:
-	if _apply_tower_upgrade(type):
+	if _definitions.has(type):
+		applier.apply(_definitions[type])
 		return
-	if _apply_wood_upgrade(type):
+	if _apply_tower_upgrade(type):
 		return
 	if _apply_building_upgrade(type):
 		return
@@ -200,29 +227,6 @@ func _apply_tower_upgrade(type: Types) -> bool:
 			player_cell_manager.add_crit_mult(PlayerCellData.Types.EXECUTIONER, 1)
 		Types.EXECUTIONER_XP:
 			player_cell_manager.add_xp_increase(PlayerCellData.Types.EXECUTIONER, 1)
-		_:
-			return false
-	return true
-
-
-func _apply_wood_upgrade(type: Types) -> bool:
-	match type:
-		Types.WOOD_SPAWNRATE:
-			timer_manager.sub_timer_wait_t(TimerManager.Types.CELL_SPAWN, CellManager.Types.WOOD, 0.5)
-		Types.TREE_LIFETIME:
-			cell_manager.add_life_time(CellManager.Names.WOOD_TREE, 0.5)
-		Types.TREE_DURABILITY:
-			cell_manager.add_break_and_durability(CellManager.Names.WOOD_TREE, 10, 20)
-		Types.GROVE_ADD:
-			cell_manager.unlock_weighted_resource(CellManager.Names.WOOD_GROVE, 3, CellManager.Types.WOOD)
-		Types.GROVE_SPAWN:
-			cell_manager.add_cell_weight(CellManager.Names.WOOD_GROVE, 1, CellManager.Types.WOOD)
-		Types.GROVE_VALUE:
-			cell_manager.add_value(CellManager.Names.WOOD_GROVE, 1)
-		Types.GROVE_BUFFED:
-			cell_manager.add_buffed_chance(CellManager.Names.WOOD_GROVE, 5)
-		Types.FOREST_ADD:
-			cell_manager.unlock_weighted_resource(CellManager.Names.WOOD_FOREST, 3, CellManager.Types.WOOD)
 		_:
 			return false
 	return true

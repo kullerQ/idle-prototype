@@ -15,8 +15,8 @@ todos:
     content: "Migrate domains one PR at a time into features/ + data/ + ui/ layout (done: economy + combat + resource_grid + towers + buildings + timers + meta_upgrades + expeditions + ui/shared + HUD)"
     status: completed
   - id: m4-upgrade-data
-    content: Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts
-    status: pending
+    content: "Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts (batch 1 wood done; next: towers → buildings → projectiles)"
+    status: in_progress
   - id: m5-run-state
     content: Add RunState + SaveService façade; apply on boot; serialize IDs/levels not full tres blobs
     status: pending
@@ -254,16 +254,18 @@ Today both upgrade systems are **code enums + string dicts + match**. That does 
 ### Target pattern
 
 ```text
-data/upgrades/meta/upgrade_shooter_crit.tres   # UpgradeDefinition Resource
-features/meta_upgrades/upgrade_applier.gd      # Applies typed effects to manager APIs
+data/upgrades/meta/upgrade_wood_spawnrate.tres   # UpgradeDefinition Resource
+features/meta_upgrades/upgrade_applier.gd        # Applies typed effects to manager APIs
 ```
 
-- `UpgradeDefinition`: id, cost, description, prerequisites, **effect list** (Resource effects: `ModifyTowerStat`, `UnlockCellType`, `ModifyProjectileStat`, …).
-- `UpgradeManager.purchase(def)` applies effects via **existing manager mutator APIs** (already partially grouped in `_apply_*_upgrade` helpers) — do not scatter `get_data().field =` again.
-- Level upgrades: same `UpgradeDefinition` shape, scoped to `PlayerCell` instance; UI can keep scene trees short-term, but **effect + text** leave GDScript dicts.
+- `UpgradeDefinition`: id, description, **effect list** (Resource effects under `data/upgrades/effects/`). Cost/prerequisites stay on menu nodes short-term.
+- `UpgradeManager` registers definitions in `setup()`; purchase applies via `UpgradeApplier` — do not scatter `get_data().field =` again.
+- Level upgrades: same `UpgradeDefinition` shape later, scoped to `PlayerCell` instance; UI can keep scene trees short-term.
 - Shared description/effect types between meta and level where stats overlap.
 
-**Migration:** convert upgrades in batches (wood → towers → buildings → projectiles). Keep enum IDs as `UpgradeDefinition.id` during transition if menus still key off enums.
+**Migration:** convert upgrades in batches (~~wood~~ → towers → buildings → projectiles). Keep enum IDs as `UpgradeDefinition.id` during transition if menus still key off enums.
+
+**Batch 1 (wood) done:** `WOOD_SPAWNRATE`, `TREE_LIFETIME`, `TREE_DURABILITY`, `GROVE_*`, `FOREST_ADD` — definitions under `data/upgrades/meta/`; `_apply_wood_upgrade` match removed.
 
 **Done when:** adding a new +10% crit upgrade is “new `.tres` + maybe one effect type if missing” — not a new `match` arm and string in two managers.
 
