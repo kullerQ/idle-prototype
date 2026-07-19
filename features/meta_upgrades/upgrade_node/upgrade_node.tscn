@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://xygpch6h66gc"]
 
-[ext_resource type="Script" path="res://Scenes/UpgradeNode/upgrade_node.gd" id="1_0bmfk"]
+[ext_resource type="Script" path="res://features/meta_upgrades/upgrade_node/upgrade_node.gd" id="1_0bmfk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dm0do"]
 bg_color = Color(0.470588, 0.470588, 0.470588, 1)

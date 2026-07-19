@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://b8o77knuc35ip"]
 
-[ext_resource type="Script" path="res://Scenes/UpgradeMenu/upgrade_menu.gd" id="1_3axdk"]
-[ext_resource type="Script" path="res://Scenes/UpgradeMenu/graphics.gd" id="2_11oit"]
-[ext_resource type="PackedScene" uid="uid://xygpch6h66gc" path="res://Scenes/UpgradeNode/upgrade_node.tscn" id="3_xkrix"]
+[ext_resource type="Script" path="res://features/meta_upgrades/upgrade_menu/upgrade_menu.gd" id="1_3axdk"]
+[ext_resource type="Script" path="res://features/meta_upgrades/upgrade_menu/graphics.gd" id="2_11oit"]
+[ext_resource type="PackedScene" uid="uid://xygpch6h66gc" path="res://features/meta_upgrades/upgrade_node/upgrade_node.tscn" id="3_xkrix"]
 
 [node name="UpgradeMenu" type="Control"]
 layout_mode = 3

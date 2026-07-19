@@ -59,8 +59,8 @@ Main
 | **ProjectileManager** | Spawn projectiles; domain signal `crit_occurred`. Lives under `features/combat/`. Injects `cell_manager` / `particle_container` onto each `Projectile` at spawn. |
 | **DamageManager** | Damage compile / stats dictionaries under `features/combat/`. Helpers: `compile_damage`, `build_projectile_damage`, `new_kill_damage`. |
 | **Economy** | Currencies and awards under `features/economy/`. |
-| **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `LevelUpgradeManager` lives under `features/towers/` and holds injected `player_cell_manager`. |
-| **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. Highlight label from `ButtonContainer`. |
+| **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `UpgradeManager` lives under `features/meta_upgrades/`; `LevelUpgradeManager` under `features/towers/` (holds injected `player_cell_manager`). |
+| **UpgradeMenu** | Meta-upgrade UI under `features/meta_upgrades/`; injects `economy` / `upgrade_manager` onto `UpgradeNode`s. Highlight label from `ButtonContainer`. |
 | **ButtonContainer** | Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
 | **TimerManager** | World timers under `features/timers/` (with `TimerUI` / `TimerProgressBar`). Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
 | **BuildingManager** | Side buildings under `features/buildings/`; domain signal `crit_occurred`. Injects `economy` onto `BuildingCell`s. Building data under `data/buildings/`. |
@@ -136,5 +136,6 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Economy: `features/economy/economy.gd`. Combat: `features/combat/` (managers + projectile scenes); projectile `.tres` under `data/projectiles/`.
 - Buildings: `features/buildings/` (`BuildingManager`, `BuildingCell`); building `.tres` under `data/buildings/`.
 - Timers: `features/timers/` (`TimerManager`, `TimerUI`, `TimerProgressBar`).
+- Meta upgrades: `features/meta_upgrades/` (`UpgradeManager`, `UpgradeMenu`, `UpgradeNode`); `UpgradeNodeData` script under `data/upgrades/` (Phase 4 will add definition `.tres` here).
 - Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).
