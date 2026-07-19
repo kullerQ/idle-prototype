@@ -186,6 +186,53 @@ func get_data(_name: Names) -> CellResourceData:
 	return all_data[_name]
 
 
+func add_life_time(_name: Names, amount: float) -> void:
+	all_data[_name].life_time += amount
+
+
+func multiply_life_time(_name: Names, factor: float) -> void:
+	all_data[_name].life_time *= factor
+
+
+func add_value(_name: Names, amount: int) -> void:
+	all_data[_name].value += amount
+
+
+func add_buffed_chance(_name: Names, amount: int) -> void:
+	all_data[_name].buffed_chance += amount
+
+
+func add_break_and_durability(_name: Names, break_amount: int, durability_amount: int) -> void:
+	var data: CellResourceData = all_data[_name]
+	data.break_value += break_amount
+	data.durability += durability_amount
+
+
+func add_lumberjack_crit(amount: int) -> void:
+	(all_data[Names.SPECIAL_LUMBERJACK] as LumberjackData).crit_chance += amount
+
+
+func add_lumberjack_dmg_ratio(amount: float) -> void:
+	(all_data[Names.SPECIAL_LUMBERJACK] as LumberjackData).dmg_ratio += amount
+
+
+func add_lumberjack_spawn_wood_chance(amount: int) -> void:
+	(all_data[Names.SPECIAL_LUMBERJACK] as LumberjackData).spawn_wood_chance += amount
+
+
+func add_outpost_weakening_chance(amount: int) -> void:
+	(all_data[Names.SPECIAL_OUTPOST] as OutpostData).weakening_chance += amount
+
+
+func add_outpost_attacks(amount: int) -> void:
+	(all_data[Names.SPECIAL_OUTPOST] as OutpostData).attacks += amount
+
+
+func unlock_weighted_resource(_name: Names, weight: int, type: Types) -> void:
+	add_cell_weight(_name, weight, type)
+	add_resource(_name)
+
+
 func get_type_from_name(_name: Names) -> Types:
 	return Types.get(Names.keys()[_name].split("_")[0])
 

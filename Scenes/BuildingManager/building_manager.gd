@@ -35,5 +35,13 @@ func get_data(type: Buildings) -> BuildingData:
 	return all_data[type]
 
 
+func add_cooldown(type: Buildings, amount: float) -> void:
+	all_data[type].cooldown += amount
+
+
+func add_charge_per_hit(type: Buildings, amount: int) -> void:
+	all_data[type].charge_per_hit += amount
+
+
 func add_production(type: Buildings, currency: Economy.Currencies, value: int) -> void:
 	all_data[type].production[currency] += value

@@ -16,7 +16,7 @@ todos:
     status: completed
   - id: phase-3-upgrades
     content: "Phase 3: group UpgradeManager match into domain helpers against new APIs"
-    status: pending
+    status: completed
   - id: phase-4-combat
     content: "Phase 4: projectile/damage/PlayerCell consistency; remove redundant G lookups"
     status: pending

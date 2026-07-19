@@ -25,7 +25,7 @@ Editor scene tree ≠ runtime tree: managers are created in code, then `add_chil
 | **ProjectileManager** | Spawn projectiles; owns projectile scenes/data (e.g. axe `bounce` on `ProjectileData`). |
 | **DamageManager** | Damage compile / stats dictionaries. |
 | **Economy** | Currencies and awards. |
-| **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums to managers. |
+| **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers (`_apply_tower_upgrade`, `_apply_wood_upgrade`, `_apply_building_upgrade`, `_apply_projectile_upgrade`). Prefer manager mutators over nested `get_data(...).field` writes. |
 | **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. |
 | **TimerManager** | World timers (spawn ticks, etc.). Pass `CellManager` into `TimerResource` when creating one. |
 | **BuildingManager** | Side buildings; injects `economy` onto `BuildingCell`s. |

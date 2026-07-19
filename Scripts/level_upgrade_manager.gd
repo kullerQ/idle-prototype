@@ -53,73 +53,77 @@ var descriptions: Dictionary = {
 
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
+	if _apply_shooter_upgrade(type, cell):
+		pass
+	elif _apply_druid_upgrade(type, cell):
+		pass
+	elif _apply_rogue_upgrade(type, cell):
+		pass
+
+	G.player_cell_manager.cell_upgraded.emit(cell)
+
+
+func _apply_shooter_upgrade(type: Types, cell: PlayerCell) -> bool:
 	match type:
 		Types.SHOOTER_SUPPORT:
 			cell.projectile_mod_data.weakening_chance += 40
-			
 		Types.SHOOTER_DPS:
 			cell.projectile_mod_data.weakened_dmg_mod += 0.5
-		
 		Types.SHOOTER_WEAK_RIC:
 			cell.projectile_mod_data.ricochet_if_weakened = true
-			
 		Types.SHOOTER_WEAK:
 			cell.projectile_mod_data.weakening_chance += 20
-			
 		Types.SHOOTER_AUTO_WEAK:
 			cell.auto_weakening_chance += 50
-			
 		Types.SHOOTER_DPS_CD_RESET_WEAK:
 			cell.projectile_mod_data.reduce_cd_if_weakened += 1
-
 		Types.SHOOTER_DPS_BULLET_SPD:
 			cell.projectile_mod_data.bonus_bullet_spd += 30
-
-		Types.DRUID_MULTIATTACK:
-			cell.bonus_attacks += 2
-
-		Types.DRUID_CD_FOR_HEALED:
-			cell.reduce_cd_if_heal += 0.05
-
 		Types.SHOOTER_DPS_RICOCHET:
 			cell.projectile_mod_data.ricochet_after_kill = true
-
-		Types.DRUID_AUTOAIM:
-			cell.auto_aim = true
-			cell.bonus_attacks += 1
-
-		Types.DRUID_ADD_RES_ON_ATTACK:
-			cell.attack_effects.append(PlayerCellManager.AttackEffects.RES_BREAK_VALUE)
-
-		Types.DRUID_SPREAD:
-			cell.projectile_mod_data.spread_damage_ratio += 0.5
-			cell.projectile_mod_data.spread_damage_to += 2
-			
 		Types.SHOOTER_DPS_DMG:
 			cell.projectile_mod_data.bonus_bullet_spd -= 30
 			DamageManager.add_hit_hp(cell.bonus_damage, 10)
-			
-		Types.DRUID_OVERHEAL_SPAWN_WEAK: 
+		_:
+			return false
+	return true
+
+
+func _apply_druid_upgrade(type: Types, cell: PlayerCell) -> bool:
+	match type:
+		Types.DRUID_MULTIATTACK:
+			cell.bonus_attacks += 2
+		Types.DRUID_CD_FOR_HEALED:
+			cell.reduce_cd_if_heal += 0.05
+		Types.DRUID_AUTOAIM:
+			cell.auto_aim = true
+			cell.bonus_attacks += 1
+		Types.DRUID_ADD_RES_ON_ATTACK:
+			cell.attack_effects.append(PlayerCellManager.AttackEffects.RES_BREAK_VALUE)
+		Types.DRUID_SPREAD:
+			cell.projectile_mod_data.spread_damage_ratio += 0.5
+			cell.projectile_mod_data.spread_damage_to += 2
+		Types.DRUID_OVERHEAL_SPAWN_WEAK:
 			cell.weakening_chance = 100
 			cell.spawn_tree_on_overheal_chance += 25
-
-		Types.DRUID_SPAWN_WOOD_RIGHT: 
+		Types.DRUID_SPAWN_WOOD_RIGHT:
 			cell.spawn_wood_to_the_right_chance += 10
-			
-		Types.DRUID_OVERHEAL_LVLUP: 
+		Types.DRUID_OVERHEAL_LVLUP:
 			cell.cell_lvlup_chance += 35
-			
-		Types.ROGUE_CRIT_WEAK:
-			cell.projectile_mod_data.bonus_crit_chance_on_weakened += 30
-			
 		Types.DRUID_OBELISK_CHANCE:
 			cell.obelisk_spawn_chance += 10
+		_:
+			return false
+	return true
 
-#			"if overheals: 25% chance to spawn weakened wood resource",
-#			cell.projectile_mod_data.add_overwrite = {DamageData.Values.HP: 2}
-#			cell.projectile_mod_data.sub_overwrite = {DamageData.Values.LIFE_TIME: 1}
 
-	G.player_cell_manager.cell_upgraded.emit(cell)
+func _apply_rogue_upgrade(type: Types, cell: PlayerCell) -> bool:
+	match type:
+		Types.ROGUE_CRIT_WEAK:
+			cell.projectile_mod_data.bonus_crit_chance_on_weakened += 30
+		_:
+			return false
+	return true
 
 
 func get_description(type: Types) -> String:

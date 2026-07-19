@@ -124,6 +124,26 @@ func get_data(type: PlayerCellData.Types) -> PlayerCellData:
 	return all_data[type]
 
 
+func add_cooldown(type: PlayerCellData.Types, amount: float) -> void:
+	all_data[type].cooldown += amount
+
+
+func add_accuracy(type: PlayerCellData.Types, amount: float) -> void:
+	all_data[type].accuracy += amount
+
+
+func add_crit_chance(type: PlayerCellData.Types, amount: int) -> void:
+	all_data[type].crit_chance += amount
+
+
+func add_crit_mult(type: PlayerCellData.Types, amount: int) -> void:
+	all_data[type].crit_mult += amount
+
+
+func add_xp_increase(type: PlayerCellData.Types, amount: float) -> void:
+	all_data[type].xp_increase += amount
+
+
 func add_tower_at(type: PlayerCellData.Types, coords: Vector2i) -> void:
 	add_tower(type, cells[coords])
 

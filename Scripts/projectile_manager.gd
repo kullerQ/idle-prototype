@@ -56,6 +56,30 @@ func get_data(type: Types) -> ProjectileData:
 	return projectile_data[type]
 
 
+func add_spd(type: Types, amount: float) -> void:
+	projectile_data[type].spd += amount
+
+
+func add_max_range(type: Types, amount: float) -> void:
+	projectile_data[type].max_range += amount
+
+
+func add_max_piercings(type: Types, amount: int) -> void:
+	projectile_data[type].max_piercings += amount
+
+
+func set_bounce(type: Types, enabled: bool) -> void:
+	projectile_data[type].bounce = enabled
+
+
+func set_backstab(type: Types, enabled: bool) -> void:
+	projectile_data[type].backstab = enabled
+
+
+func add_backstab_bonus_dmg(type: Types, amount: int) -> void:
+	projectile_data[type].backstab_bonus_dmg += amount
+
+
 # TODO: refactor effects
 func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int, _mod_data: ProjectileDataModifiers, bonus_damage: Dictionary) -> Projectile:
 	var projectile: Projectile = projectile_scenes[type].instantiate()
