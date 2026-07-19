@@ -64,10 +64,10 @@ Main
 | **ButtonContainer** | Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
 | **TimerManager** | World timers under `features/timers/` (with `TimerUI` / `TimerProgressBar`). Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
 | **BuildingManager** | Side buildings under `features/buildings/`; domain signal `crit_occurred`. Injects `economy` onto `BuildingCell`s. Building data under `data/buildings/`. |
-| **ExpeditionManager** | Expedition state (`is_active`); domain signals `expedition_selected` / `started` / `completed` / `ended`. |
-| **ExpeditionEditor** | Extends CellManager; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
-| **ExpeditionMenu** | Injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
-| **ExpeditionEndScreen** | Opens on `expedition_completed`; calls `manager.end_expedition()`. |
+| **ExpeditionManager** | Expedition state (`is_active`) under `features/expeditions/`; domain signals `expedition_selected` / `started` / `completed` / `ended`. JSON layouts + reward `.tres` under `data/expeditions/`. |
+| **ExpeditionEditor** | Extends CellManager under `features/expeditions/expedition_editor/`; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
+| **ExpeditionMenu** | Under `features/expeditions/expedition_menu/`; injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
+| **ExpeditionEndScreen** | Under `features/expeditions/expedition_end_screen/`; opens on `expedition_completed`; calls `manager.end_expedition()`. |
 | **UI / UIPP** | Listen to G UI signals + expedition domain signals; layout swap (base vs expedition). |
 
 ---
@@ -137,5 +137,6 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Buildings: `features/buildings/` (`BuildingManager`, `BuildingCell`); building `.tres` under `data/buildings/`.
 - Timers: `features/timers/` (`TimerManager`, `TimerUI`, `TimerProgressBar`).
 - Meta upgrades: `features/meta_upgrades/` (`UpgradeManager`, `UpgradeMenu`, `UpgradeNode`); `UpgradeNodeData` script under `data/upgrades/` (Phase 4 will add definition `.tres` here).
+- Expeditions: `features/expeditions/` (`ExpeditionManager`, menu / UI / end screen / editor); JSON layouts + `ExpeditionRewardData` under `data/expeditions/`.
 - Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).

@@ -1,20 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://dihjhmgs3n5d1"]
+[gd_scene load_steps=3 format=3 uid="uid://cf0ulssjiksm4"]
 
-[ext_resource type="Script" path="res://Scenes/ExpeditionMenu/expedition_menu.gd" id="1_dyncl"]
-[ext_resource type="PackedScene" uid="uid://devaw75wfpsh1" path="res://Scenes/ExpeditionMenu/ExpeditionButton/expedition_button.tscn" id="2_dmfl6"]
+[ext_resource type="Script" path="res://features/expeditions/expedition_end_screen/expedition_end_screen.gd" id="1_vqa7x"]
+[ext_resource type="PackedScene" uid="uid://tb22m3814na3" path="res://Scenes/ButtonAnimated/animated_button.tscn" id="2_b5u1b"]
 
-[node name="ExpeditionMenu" type="Control"]
-custom_minimum_size = Vector2(320, 180)
+[node name="ExpeditionEndScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("1_dyncl")
-type = 2
-metadata/_edit_lock_ = true
+script = ExtResource("1_vqa7x")
+type = 3
 
 [node name="Graphics" type="Control" parent="."]
 custom_minimum_size = Vector2(112, 148)
@@ -54,16 +51,9 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="GridContainer" type="GridContainer" parent="Graphics/MarginContainer"]
+[node name="AnimatedButton" parent="Graphics/MarginContainer" instance=ExtResource("2_b5u1b")]
+custom_minimum_size = Vector2(32, 12)
 layout_mode = 2
-columns = 3
-
-[node name="ExpeditionButton" parent="Graphics/MarginContainer/GridContainer" instance=ExtResource("2_dmfl6")]
-layout_mode = 2
-type = 1
-
-[node name="ExpeditionButton2" parent="Graphics/MarginContainer/GridContainer" instance=ExtResource("2_dmfl6")]
-layout_mode = 2
-
-[node name="ExpeditionButton3" parent="Graphics/MarginContainer/GridContainer" instance=ExtResource("2_dmfl6")]
-layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "end"

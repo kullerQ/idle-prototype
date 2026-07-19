@@ -25,6 +25,7 @@ Quick checks:
 - **New tower / resource cell?** → tower: scene under `features/towers/player_cell/`, data under `data/player_cells/`; resource cell: scene under `features/resource_grid/cell_resource/`, data under `data/resource_cells/`.
 - **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
 - **New meta upgrade?** → today: enum + apply helper on `UpgradeManager` under `features/meta_upgrades/` (Phase 4: `.tres` under `data/upgrades/`). Do not add match arms in unrelated managers.
+- **New expedition?** → layout JSON + reward `.tres` under `data/expeditions/`; runtime/UI under `features/expeditions/`; register via `ExpeditionManager` (not a new field on `G`).
 - **New menu?** → `NodePopupMenu` subclass; register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable.
 
 ---
@@ -41,11 +42,11 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Combat | `features/combat/` (managers + projectile scenes) | `features/combat/` |
 | Economy | `features/economy/` | `features/economy/` |
 | Buildings | `features/buildings/` (+ `data/buildings/`) | `features/buildings/` |
-| Expeditions | `Scripts/expedition_manager.gd`, `Scenes/Expedition*` | `features/expeditions/` |
+| Expeditions | `features/expeditions/` (+ `data/expeditions/`) | `features/expeditions/` |
 | Meta upgrades | `features/meta_upgrades/` (+ `data/upgrades/`) | `features/meta_upgrades/` |
 | Timers | `features/timers/` | `features/timers/` |
 | Shared UI controls | `Scenes/ButtonAnimated/`, `Scenes/ButtonPanel/`, popup helpers | `ui/shared/` |
-| Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`; player cells in `data/player_cells/`; buildings in `data/buildings/`; upgrade scripts in `data/upgrades/`) | `data/<domain>/` |
+| Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`; player cells in `data/player_cells/`; buildings in `data/buildings/`; upgrade scripts in `data/upgrades/`; expedition JSON + rewards in `data/expeditions/`) | `data/<domain>/` |
 
 **Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor. Do not big-bang rename the tree.
 

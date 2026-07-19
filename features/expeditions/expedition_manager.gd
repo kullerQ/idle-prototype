@@ -12,8 +12,8 @@ enum Goals {
 	BREAK_TARGETS,
 }
 
-const FOLDER_PATH: String = "res://Resources/Expeditions/"
-const _REWARD_WHITE_TREE: ExpeditionRewardData = preload("res://Resources/ExpeditionRewards/expedition_reward_forest.tres")
+const FOLDER_PATH: String = "res://data/expeditions/"
+const _REWARD_WHITE_TREE: ExpeditionRewardData = preload("res://data/expeditions/expedition_reward_forest.tres")
 const REWARD_DATA: Dictionary = {
 	Types.WHITE_TREE: _REWARD_WHITE_TREE,
 }

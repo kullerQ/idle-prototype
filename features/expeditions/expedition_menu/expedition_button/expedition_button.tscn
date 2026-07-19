@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://devaw75wfpsh1"]
 
-[ext_resource type="Script" path="res://Scenes/ExpeditionMenu/ExpeditionButton/expedition_button.gd" id="1_x53gv"]
+[ext_resource type="Script" path="res://features/expeditions/expedition_menu/expedition_button/expedition_button.gd" id="1_x53gv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kt4ax"]
 bg_color = Color(0.337255, 0.337255, 0.337255, 1)

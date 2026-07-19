@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bf8jqj25r6w8t"]
 
-[ext_resource type="Script" path="res://Scenes/ExpeditionEditor/expedition_editor.gd" id="1_xx0i5"]
+[ext_resource type="Script" path="res://features/expeditions/expedition_editor/expedition_editor.gd" id="1_xx0i5"]
 [ext_resource type="PackedScene" uid="uid://dudk7nqk514vr" path="res://features/resource_grid/cell_resource/cell_resource.tscn" id="2_2fsvh"]
-[ext_resource type="Script" path="res://Scenes/ExpeditionEditor/expedition_editor_cell_resource.gd" id="3_78leq"]
+[ext_resource type="Script" path="res://features/expeditions/expedition_editor/expedition_editor_cell_resource.gd" id="3_78leq"]
 
 [node name="ExpeditionEditor" type="GridContainer"]
 offset_left = 102.0

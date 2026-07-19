@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ExpeditionRewardData" load_steps=2 format=3 uid="uid://cihmx8o4xoavx"]
 
-[ext_resource type="Script" path="res://Resources/_scr_expedition_reward.gd" id="1_q5r4w"]
+[ext_resource type="Script" path="res://data/expeditions/_scr_expedition_reward.gd" id="1_q5r4w"]
 
 [resource]
 script = ExtResource("1_q5r4w")
