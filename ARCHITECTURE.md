@@ -13,7 +13,7 @@ Short map of boot, ownership, and signals. Prefer this over rediscovering `G.ini
 | Grid / tower / expedition / building behavior | Matching feature folder (`features/<domain>/` when migrated; else `Scenes/<Domain>/`) — scene + script together |
 | Pure logic with no Node | Feature folder, or `Scripts/` / `core/` if cross-cutting |
 | Tunable numbers / unlocks / descriptions | `data/<domain>/` or `Resources/` (as domains migrate) as `.tres` + `_scr_*.gd` |
-| Menu / HUD / tooltip | `UI` / `UIPP` / shared button scenes |
+| Menu / HUD / tooltip | `ui/main_hud/`, `ui/game_hud/`, `ui/shared/` |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit label | `G` UI bus only (combat/buildings emit domain `crit_occurred`; `Game` bridges to the bus) |
 | Debug cheats | `Main` + InputMap, `OS.is_debug_build()` only |
@@ -61,14 +61,16 @@ Main
 | **Economy** | Currencies and awards under `features/economy/`. |
 | **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `UpgradeManager` lives under `features/meta_upgrades/`; `LevelUpgradeManager` under `features/towers/` (holds injected `player_cell_manager`). |
 | **UpgradeMenu** | Meta-upgrade UI under `features/meta_upgrades/`; injects `economy` / `upgrade_manager` onto `UpgradeNode`s. Highlight label from `ButtonContainer`. |
-| **ButtonContainer** | Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
+| **UI** (outer) | Shell chrome under `ui/main_hud/` (`ui.gd` + `tooltip.gd`), hosted by `Scenes/Main/main.tscn` above the SubViewport. Currencies + tooltip bus listeners. |
+| **UIPP** (in-world) | Game-view HUD under `ui/game_hud/uipp.gd`: crit labels (`label_crit/`), TimerUI / ExpeditionUI layout swap. Created by `Game` under a CanvasLayer. |
+| **ButtonContainer** | In-world button bar under `ui/game_hud/button_container.gd` (child of `game.tscn`). Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
+| **Shared UI** | `ui/shared/`: `AnimatedButton`, `PanelButton`, `ButtonUpgrades`, `NodePopupMenu` — reused by feature menus. |
 | **TimerManager** | World timers under `features/timers/` (with `TimerUI` / `TimerProgressBar`). Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
 | **BuildingManager** | Side buildings under `features/buildings/`; domain signal `crit_occurred`. Injects `economy` onto `BuildingCell`s. Building data under `data/buildings/`. |
 | **ExpeditionManager** | Expedition state (`is_active`) under `features/expeditions/`; domain signals `expedition_selected` / `started` / `completed` / `ended`. JSON layouts + reward `.tres` under `data/expeditions/`. |
 | **ExpeditionEditor** | Extends CellManager under `features/expeditions/expedition_editor/`; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
 | **ExpeditionMenu** | Under `features/expeditions/expedition_menu/`; injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
 | **ExpeditionEndScreen** | Under `features/expeditions/expedition_end_screen/`; opens on `expedition_completed`; calls `manager.end_expedition()`. |
-| **UI / UIPP** | Listen to G UI signals + expedition domain signals; layout swap (base vs expedition). |
 
 ---
 
@@ -138,5 +140,18 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Timers: `features/timers/` (`TimerManager`, `TimerUI`, `TimerProgressBar`).
 - Meta upgrades: `features/meta_upgrades/` (`UpgradeManager`, `UpgradeMenu`, `UpgradeNode`); `UpgradeNodeData` script under `data/upgrades/` (Phase 4 will add definition `.tres` here).
 - Expeditions: `features/expeditions/` (`ExpeditionManager`, menu / UI / end screen / editor); JSON layouts + `ExpeditionRewardData` under `data/expeditions/`.
-- Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
+- UI: `ui/shared/` (buttons + `NodePopupMenu`), `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (`UIPP`, `ButtonContainer`, `LabelCrit`).
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).
+
+---
+
+## UI / UIPP split (intentional)
+
+The game renders through a SubViewport. HUD is split on purpose:
+
+| Plane | Lives | Why |
+|-------|-------|-----|
+| Outer `UI` | Sibling of SubViewportContainer in Main | Chrome that must stay sharp / above the pixel view (currencies, tooltips, some menus) |
+| In-world `UIPP` | Inside Game (CanvasLayer) | Feedback tied to game-space coords (crit labels) and layout that swaps with expedition state |
+
+Shared leaf controls (`AnimatedButton`, `PanelButton`, `NodePopupMenu`) live under `ui/shared/` and are used by either plane / feature menus. Do not put new shared widgets back under `Scenes/`.

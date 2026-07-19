@@ -3,7 +3,7 @@ class_name ButtonContainer
 
 ## Owns highlight badges for upgrade / level-up buttons (not G).
 
-var button_scene: PackedScene = preload("res://Scenes/ButtonPanel/panel_button.tscn")
+var button_scene: PackedScene = preload("res://ui/shared/panel_button/panel_button.tscn")
 var upgrades_highlight_label: Label
 var lvl_upgrades_highlight_label: Label
 

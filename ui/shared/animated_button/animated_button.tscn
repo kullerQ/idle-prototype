@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://tb22m3814na3"]
 
-[ext_resource type="Script" path="res://Scenes/ButtonAnimated/animated_button.gd" id="1_w2tqq"]
-[ext_resource type="Script" path="res://Scenes/Game/button_upgrades.gd" id="2_8inwq"]
+[ext_resource type="Script" path="res://ui/shared/animated_button/animated_button.gd" id="1_w2tqq"]
+[ext_resource type="Script" path="res://ui/shared/animated_button/button_upgrades.gd" id="2_8inwq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wjxge"]
 bg_color = Color(0.121569, 0.121569, 0.121569, 1)

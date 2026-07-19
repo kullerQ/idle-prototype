@@ -1,7 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1b7sfau2swnf"]
-
-[ext_resource type="PackedScene" uid="uid://tb22m3814na3" path="res://Scenes/ButtonAnimated/animated_button.tscn" id="1_q2cai"]
-[ext_resource type="Script" path="res://Scenes/ButtonPanel/panel_button.gd" id="2_spfkf"]
-
-[node name="PanelButton" instance=ExtResource("1_q2cai")]
-script = ExtResource("2_spfkf")

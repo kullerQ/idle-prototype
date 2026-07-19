@@ -13,7 +13,7 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 | Grid / tower / expedition / building behavior | Matching feature folder (migrated: `features/<domain>/`; else `Scenes/<Domain>/`) — scene + script together |
 | Pure logic with no Node | Same feature folder, or `Scripts/` / `core/` only if truly cross-cutting |
 | Tunable numbers / unlocks / descriptions | `data/<domain>/` when migrated (else `Resources/`) as `.tres` + `_scr_*.gd` |
-| Menu / HUD / tooltip | Outer `UI` / in-world `UIPP` / shared controls under `Scenes/` (target: `ui/`) |
+| Menu / HUD / tooltip | `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (UIPP, crit labels, button bar), `ui/shared/` (buttons, `NodePopupMenu`) |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit-label flash | `G` UI bus only |
 | Debug cheats | `Main` + InputMap actions, `OS.is_debug_build()` only |
@@ -26,13 +26,14 @@ Quick checks:
 - **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
 - **New meta upgrade?** → today: enum + apply helper on `UpgradeManager` under `features/meta_upgrades/` (Phase 4: `.tres` under `data/upgrades/`). Do not add match arms in unrelated managers.
 - **New expedition?** → layout JSON + reward `.tres` under `data/expeditions/`; runtime/UI under `features/expeditions/`; register via `ExpeditionManager` (not a new field on `G`).
-- **New menu?** → `NodePopupMenu` subclass; register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable.
+- **New menu?** → `NodePopupMenu` subclass (base under `ui/shared/popup_menu/`); register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable. Feature-specific menus stay under `features/<domain>/`.
+- **New shared button / HUD widget?** → reusable control under `ui/shared/`; outer-chrome under `ui/main_hud/`; in-world HUD under `ui/game_hud/`.
 
 ---
 
 ## Folder map (current → target)
 
-Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes match this map even if paths still say `Scenes/` / `Scripts/` / `Resources/`.
+Phase 3 feature + UI folder moves are done. Remaining physical moves (e.g. `G` → `core/`) wait for later phases. Logical homes:
 
 | Domain | Current home | Target |
 |--------|--------------|--------|
@@ -45,7 +46,9 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Expeditions | `features/expeditions/` (+ `data/expeditions/`) | `features/expeditions/` |
 | Meta upgrades | `features/meta_upgrades/` (+ `data/upgrades/`) | `features/meta_upgrades/` |
 | Timers | `features/timers/` | `features/timers/` |
-| Shared UI controls | `Scenes/ButtonAnimated/`, `Scenes/ButtonPanel/`, popup helpers | `ui/shared/` |
+| Shared UI controls | `ui/shared/` (`animated_button/`, `panel_button/`, `popup_menu/`) | `ui/shared/` |
+| Outer HUD | `ui/main_hud/` (`ui.gd`, `tooltip.gd`; hosted by `Scenes/Main/main.tscn`) | `ui/main_hud/` |
+| In-world HUD | `ui/game_hud/` (`uipp.gd`, `button_container.gd`, `label_crit/`) | `ui/game_hud/` |
 | Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`; player cells in `data/player_cells/`; buildings in `data/buildings/`; upgrade scripts in `data/upgrades/`; expedition JSON + rewards in `data/expeditions/`) | `data/<domain>/` |
 
 **Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor. Do not big-bang rename the tree.
@@ -59,11 +62,7 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Files / folders | `snake_case` | `cell_manager.gd`, `player_cell.tscn` |
 | `class_name` | `PascalCase` | `CellManager`, `AnimatedButton` |
 | Resource scripts | `_scr_<name>.gd` next to or under `data/<domain>/` / `Resources/` | `_scr_cell_resource_data.gd` |
-| Scene folder ≈ type | Folder name may be PascalCase for editor visibility; script file stays snake_case | `Scenes/ButtonAnimated/animated_button.gd` → `class_name AnimatedButton` |
-
-Known leftover (documented, not urgent to rename):
-
-- Folder `Scenes/ButtonAnimated/` holds `animated_button.gd` / `.tscn` (`AnimatedButton`). Prefer the file name when searching; do not invent a second control type.
+| Scene folder ≈ type | Folder name may be PascalCase for editor visibility; script file stays snake_case | `ui/shared/animated_button/animated_button.gd` → `class_name AnimatedButton` |
 
 Level-upgrade talent trees use a **frozen scene contract**: path nodes named `Path_%d` with nested `Root`. Do not rename those nodes without updating `LevelUpgradeMenu` path-walking code. Prefer data-driven UI when the tree is redesigned (Phase 7).
 
@@ -137,12 +136,17 @@ Pass containers / managers via `setup()` or instance fields from `Game` / the sp
 
 ## UI layers (intentional split)
 
-| Layer | Role |
-|-------|------|
-| `UI` (outer, over SubViewport) | Shell chrome, menus that sit above the pixel view |
-| `UIPP` (inside game view) | In-world HUD, crit labels, layout swap (base vs expedition) |
+Pixel-art games that render through a SubViewport need **two HUD planes**. That split is intentional — do not merge them “for simplicity.”
 
-Both may listen to `G` UI signals and to expedition domain signals. Prefer one registration style for all `NodePopupMenu` subclasses (Phase 6).
+| Layer | Path | Role |
+|-------|------|------|
+| Outer `UI` | `ui/main_hud/ui.gd` (node in `Scenes/Main/main.tscn`, sibling of SubViewportContainer) | Shell chrome above the pixel view: currency labels, tooltip host, menus that must not be scaled with the game view |
+| Tooltip | `ui/main_hud/tooltip.gd` | Listens to `G` tooltip bus; lives under outer `UI` |
+| In-world `UIPP` | `ui/game_hud/uipp.gd` (created under Game’s CanvasLayer) | Crit labels, TimerUI / ExpeditionUI layout swap (base vs expedition) — coordinates match the game SubViewport |
+| Button bar | `ui/game_hud/button_container.gd` (child of `game.tscn`) | In-world debug/action buttons + highlight badge ownership |
+| Shared controls | `ui/shared/` | `AnimatedButton`, `PanelButton`, `ButtonUpgrades`, `NodePopupMenu` — reusable by any feature menu |
+
+Both HUD layers may listen to `G` UI signals and to expedition domain signals. Prefer one registration style for all `NodePopupMenu` subclasses (Phase 6).
 
 ---
 

@@ -12,8 +12,8 @@ todos:
     content: Move in_expedition to ExpeditionManager; Game parents Node managers; G only wires + UI bus; inject deps into gameplay
     status: completed
   - id: m3-feature-folders
-    content: "Migrate domains one PR at a time into features/ + data/ layout (done: economy + combat + resource_grid + towers + buildings + timers + meta_upgrades + expeditions; remaining: ui/shared + HUD)"
-    status: pending
+    content: "Migrate domains one PR at a time into features/ + data/ + ui/ layout (done: economy + combat + resource_grid + towers + buildings + timers + meta_upgrades + expeditions + ui/shared + HUD)"
+    status: completed
   - id: m4-upgrade-data
     content: Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts
     status: pending
@@ -239,7 +239,7 @@ Migrate in this order (dependency-friendly):
 4. ~~`buildings` + `timers`~~ (done → `features/buildings/`, `data/buildings/`, `features/timers/`)
 5. ~~`meta_upgrades`~~ (done → `features/meta_upgrades/`, `data/upgrades/`)
 6. ~~`expeditions`~~ (done → `features/expeditions/`, `data/expeditions/`)
-7. `ui/shared` + HUD split documented
+7. ~~`ui/shared` + HUD split documented~~ (done → `ui/shared/`, `ui/main_hud/`, `ui/game_hud/`)
 
 After each domain: update [ARCHITECTURE.md](ARCHITECTURE.md) ownership table; smoke-test main loop + expedition editor.
 
@@ -298,7 +298,7 @@ This forces clearer ownership: if state isn’t on RunState or a manager API, it
 
 - Document the intentional **two-layer HUD** (outer `UI` over SubViewport vs in-world `UIPP`) in ARCHITECTURE — it is valid for pixel-art SubViewport setups.
 - **One menu host rule:** all `NodePopupMenu` subclasses registered the same way (signals via G menu router; deps injected by host, not `@onready G.`*).
-- Finish TODOs in [ui.gd](Scenes/Main/ui.gd) / [upgrade_menu.gd](features/meta_upgrades/upgrade_menu/upgrade_menu.gd) (“remove G dependency”) via injection from Main/Game.
+- Finish TODOs in [ui.gd](ui/main_hud/ui.gd) / [upgrade_menu.gd](features/meta_upgrades/upgrade_menu/upgrade_menu.gd) (“remove G dependency”) via injection from Main/Game.
 - Crit labels / tooltips: listen to a single UI-facing signal source wired in composition root.
 
 Optional later: extract `MenuRouter` from `G` if `g.gd` is still noisy — only after Phase 2.

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cf0ulssjiksm4"]
 
 [ext_resource type="Script" path="res://features/expeditions/expedition_end_screen/expedition_end_screen.gd" id="1_vqa7x"]
-[ext_resource type="PackedScene" uid="uid://tb22m3814na3" path="res://Scenes/ButtonAnimated/animated_button.tscn" id="2_b5u1b"]
+[ext_resource type="PackedScene" uid="uid://tb22m3814na3" path="res://ui/shared/animated_button/animated_button.tscn" id="2_b5u1b"]
 
 [node name="ExpeditionEndScreen" type="Control"]
 layout_mode = 3
