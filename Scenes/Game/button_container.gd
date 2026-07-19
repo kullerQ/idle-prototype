@@ -4,10 +4,6 @@ class_name ButtonContainer
 var button_scene: PackedScene = preload("res://Scenes/ButtonPanel/panel_button.tscn")
 
 
-func _enter_tree() -> void:
-	PanelButton.container = self
-
-
 func upgrade_menu_button_func() -> void:
 	G.toggle_menu(UI.Menus.UPGRADE)
 
@@ -32,47 +28,36 @@ func zero_func() -> void:
 func lvl_up_func() -> void:
 	if G.opened_menu_type:
 		return
-		
+
 	var player_cell_manager: PlayerCellManager = G.player_cell_manager
 	var cell: PlayerCell = player_cell_manager.get_cell_to_upgrade()
 	if !cell:
 		return
-		
+
 	if player_cell_manager.highlighted_cell:
 		player_cell_manager.highlighted_cell.set_highlight(false)
-		
+
 	cell.set_highlight(true)
 	player_cell_manager.highlighted_cell = cell
 	G.level_upgrade_menu_open_requested.emit(cell)
 
 
+func _make_button(text: String, pressed_func: Callable, xsize: int = 25) -> PanelButton:
+	var button: PanelButton = button_scene.instantiate()
+	button.setup(self)
+	button.initialize(text, pressed_func, xsize)
+	add_child(button)
+	return button
+
+
 func _ready() -> void:
-	var b: PanelButton = button_scene.instantiate()
-	
-	var expedition: PanelButton = b.duplicate()
-	expedition.initialize("expedition", expedition_func, 33)
-	add_child(expedition)
+	_make_button("expedition", expedition_func, 33)
+	var lvl_up_button: PanelButton = _make_button("level up", lvl_up_func, 32)
+	var upgrade_menu_button: PanelButton = _make_button("upgrades", upgrade_menu_button_func, 32)
+	_make_button("w+1000", wood_func)
+	_make_button("xp+100", xp_func)
+	_make_button("0", zero_func, 12)
 
-	var lvl_up_button: PanelButton = b.duplicate()
-	lvl_up_button.initialize("level up", lvl_up_func, 32)
-	add_child(lvl_up_button)
-	
-	var upgrade_menu_button: PanelButton = b.duplicate()
-	upgrade_menu_button.initialize("upgrades", upgrade_menu_button_func, 32)
-	add_child(upgrade_menu_button)
-
-	var wood_button: PanelButton = b.duplicate()
-	wood_button.initialize("w+1000", wood_func)
-	add_child(wood_button)
-
-	var xp_button: PanelButton = b.duplicate()
-	xp_button.initialize("xp+100", xp_func)
-	add_child(xp_button)
-
-	var zero: PanelButton = b.duplicate()
-	zero.initialize("0", zero_func, 12)
-	add_child(zero)
-	
 	G.lvl_upgrades_highlight_label = G.ui.add_label(lvl_up_button, Vector2.ZERO, "")
 	G.upgrades_highlight_label = G.ui.add_label(upgrade_menu_button, Vector2.ZERO, "")
 	await get_tree().process_frame

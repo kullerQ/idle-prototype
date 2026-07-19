@@ -1,7 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://dbvm0xe75co22"]
-
-[ext_resource type="PackedScene" uid="uid://3url7yuxxjew" path="res://Scenes/Projectile/projectile.tscn" id="1_sk3bg"]
-[ext_resource type="Script" path="res://Scenes/Projectiles/Magic/magic.gd" id="2_jqaph"]
-
-[node name="Magic" instance=ExtResource("1_sk3bg")]
-script = ExtResource("2_jqaph")

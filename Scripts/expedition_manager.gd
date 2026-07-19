@@ -21,6 +21,7 @@ const REWARD_DATA: Dictionary = {
 var cell_manager: CellManager
 var projectile_manager: ProjectileManager
 var timer_manager: TimerManager
+var economy: Economy
 
 var max_hp: float = 0
 var current_expedition_info: Dictionary = {"type": Types.NULL, "level": 0, "goal": Goals.NULL}
@@ -59,11 +60,20 @@ func start_expedition(type: Types, level: int = 1) -> void:
 
 
 func handle_expedition_result() -> void:
-	var reward_data: ExpeditionRewardData = REWARD_DATA.get(current_expedition_info.type)
-	if reward_data:
-		print(reward_data.wood[current_expedition_info.level - 1])
-	push_warning("WIP: Not implemented yet: expedition_reward")
+	apply_reward(REWARD_DATA.get(current_expedition_info.type), current_expedition_info.level)
 	expedition_completed.emit()
+
+
+## Awards expedition rewards. Wood only for now; expand when more currencies/unlocks land.
+func apply_reward(reward_data: ExpeditionRewardData, level: int) -> void:
+	if reward_data == null or economy == null:
+		return
+
+	var idx: int = level - 1
+	if idx < 0 or idx >= reward_data.wood.size():
+		return
+
+	economy.add_resource(Economy.Currencies.WOOD, reward_data.wood[idx])
 
 
 func end_expedition() -> void:

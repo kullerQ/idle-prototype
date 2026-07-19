@@ -28,33 +28,6 @@ func set_data(_data: BuildingData) -> void:
 		automate()
 
 
-#region resource_cell_hitted
-# NOTE: resource_cell_hitted is not exists
-
-	# if !data.automated:
-	# 	G.resource_cell_hitted.connect(_on_resource_hitted)
-	# 	return
-	
-	# automate()
-
-# func _on_resource_hitted(type: CellManager.Types, _name: CellManager.Names) -> void:
-# 	if charged:
-# 		return
-
-# 	if type != Economy.Currencies.WOOD:
-# 		return
-
-# 	current_charge += 1
-# 	if current_charge >= data.charge:
-# 		set_charged(true)
-# 		current_charge -= data.charge
-# 		apply_effects()
-	
-# 	progress_bar.value = float(current_charge) / data.charge
-# 	return
-#endregion resource_cell_hitted
-
-
 func _physics_process(delta: float) -> void:
 	progress_bar.value =  timer.time_left / graphics_cd
 
@@ -67,8 +40,6 @@ func set_charged(enabled: bool) -> void:
 
 
 func automate() -> void:
-# NOTE: resource_cell_hitted is not exists
-# G.resource_cell_hitted.disconnect(_on_resource_hitted)
 	data.automated = true
 	timer.wait_time = data.cooldown
 	graphics_cd = timer.wait_time

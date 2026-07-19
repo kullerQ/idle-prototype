@@ -21,15 +21,6 @@ var all_data: Dictionary = {
 	PlayerCellData.Types.DRUID: _DATA_DRUID.duplicate(),
 	PlayerCellData.Types.EXECUTIONER: _DATA_EXECUTIONER.duplicate(),
 }
-#var damage_data: Dictionary = {
-#	PlayerCellData.Types.NULL: DamageData.new(),
-#	PlayerCellData.Types.SHOOTER: load("uid://b25j3a61ph37i").duplicate(),
-#}
-#var damage_mod_data: Dictionary = {
-#	PlayerCellData.Types.NULL: DamageModData.new(),
-#	PlayerCellData.Types.SHOOTER: load("").duplicate(),
-#
-#}
 
 var free_cells: Array = []
 var added_cells: int = 0

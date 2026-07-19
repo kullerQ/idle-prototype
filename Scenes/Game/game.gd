@@ -33,7 +33,7 @@ func _enter_tree() -> void:
 	add_child(G.building_manager)
 
 	var particle_container: Node2D = add_new_node(Node2D, "ParticleContainer")
-	Projectile.particle_container = particle_container
+	G.projectile_manager.particle_container = particle_container
 
 	var uipp_layer: CanvasLayer = add_new_node(CanvasLayer, "UIPPLayer")
 	var uipp: UIPP = add_new_node(UIPP, "UIPP", uipp_layer)

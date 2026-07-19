@@ -11,12 +11,13 @@ class_name ExpeditionEditor
 
 
 func _input(event):
-	if event is InputEventKey && event.is_pressed():
-		match event.keycode:
-			KEY_ESCAPE:
-				get_tree().quit()
-			KEY_S:
-				save_expedition()
+	if !(event is InputEventKey && event.is_pressed() && !event.echo):
+		return
+
+	if event.is_action_pressed("quit"):
+		get_tree().quit()
+	elif event.is_action_pressed("editor_save"):
+		save_expedition()
 
 
 func save_expedition() -> void:

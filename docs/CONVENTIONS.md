@@ -109,7 +109,7 @@ Level-upgrade talent trees use a **frozen scene contract**: path nodes named `Pa
 | Spawn weights / tables | Tiny constants local to one function |
 | Future upgrade definitions + descriptions (Phase 4) | Temporary enums during migration |
 
-Do not add a second parallel damage Resource path while live combat uses `DamageManager` dictionaries (Phase 1 deletes the abandoned DamageData path).
+Do not add a second parallel damage Resource path while live combat uses `DamageManager` dictionaries. The abandoned `DamageData` / `DamageModData` Resource path was deleted in Phase 1.
 
 ---
 
@@ -117,19 +117,17 @@ Do not add a second parallel damage Resource path while live combat uses `Damage
 
 **No new `static var` dependency injection.**
 
-Legacy (remove in Phase 1 when touching those types):
+Pass containers / managers via `setup()` or instance fields from `Game` / the spawner instead:
 
-- `Projectile.particle_container`
-- `PanelButton.container`
-
-Pass containers / managers via `setup()` or instance fields from `Game` / the spawner instead.
+- `Projectile.particle_container` — assigned per projectile from `ProjectileManager` (set by `Game`)
+- `PanelButton.container` — via `PanelButton.setup(ButtonContainer)`
 
 ---
 
 ## InputMap
 
-- New gameplay or debug keys → Project Settings **InputMap** actions, then `Input.is_action_just_pressed("…")`.
-- Do not add new hardcoded `KEY_*` checks in `main.gd` (Phase 1 migrates existing debug/Escape bindings).
+- Gameplay or debug keys → Project Settings **InputMap** actions, then `event.is_action_pressed("…")` / `Input.is_action_just_pressed("…")`.
+- Do not add new hardcoded `KEY_*` checks in `main.gd` or the expedition editor.
 - Debug actions must still be gated with `OS.is_debug_build()`.
 
 ---

@@ -1,9 +1,15 @@
 extends AnimatedButton
 class_name PanelButton
 
-static var container: ButtonContainer
+var container: ButtonContainer
+
+
+func setup(p_container: ButtonContainer) -> void:
+	container = p_container
+	_owner = p_container
 
 
 func _ready() -> void:
-	_owner = container
+	if container:
+		_owner = container
 	super()

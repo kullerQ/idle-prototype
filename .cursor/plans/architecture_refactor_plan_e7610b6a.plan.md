@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: m1-hygiene
     content: Delete dead DamageData/G.cell_hitted/WIP noise; remove static injection; InputMap; debug asserts on wire
-    status: pending
+    status: completed
   - id: m2-shrink-g
     content: Move in_expedition to ExpeditionManager; Game parents Node managers; G only wires + UI bus; inject deps into gameplay
     status: pending

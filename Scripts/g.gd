@@ -36,7 +36,6 @@ signal expedition_end_close_requested
 signal tooltip_requested(text: String)
 signal tooltip_close_required
 signal crit_label_requested(pos: Vector2)
-signal cell_hitted(type: CellManager.Types, _name: CellManager.Names)
 signal player_cell_pressed(cell: PlayerCell)
 signal level_upgrade_menu_close_requested
 signal level_upgrade_menu_open_requested(cell: PlayerCell)
@@ -65,6 +64,7 @@ func bind_scene_managers(p_cell_manager: CellManager, p_player_cell_manager: Pla
 	_create_secondary_managers()
 	_wire_upgrades()
 	_wire_expedition()
+	_assert_wired()
 
 
 func _create_economy() -> void:
@@ -104,9 +104,39 @@ func _wire_upgrades() -> void:
 func _wire_expedition() -> void:
 	expedition_manager = ExpeditionManager.new()
 	expedition_manager.name = "ExpeditionManager"
+	expedition_manager.economy = economy
 	expedition_manager.cell_manager = cell_manager
 	expedition_manager.projectile_manager = projectile_manager
 	expedition_manager.timer_manager = timer_manager
+
+
+func _assert_wired() -> void:
+	if !OS.is_debug_build():
+		return
+
+	assert(economy != null, "G.economy not wired")
+	assert(damage_manager != null, "G.damage_manager not wired")
+	assert(projectile_manager != null, "G.projectile_manager not wired")
+	assert(cell_manager != null, "G.cell_manager not wired")
+	assert(player_cell_manager != null, "G.player_cell_manager not wired")
+	assert(timer_manager != null, "G.timer_manager not wired")
+	assert(building_manager != null, "G.building_manager not wired")
+	assert(upgrade_manager != null, "G.upgrade_manager not wired")
+	assert(level_upgrade_manager != null, "G.level_upgrade_manager not wired")
+	assert(expedition_manager != null, "G.expedition_manager not wired")
+	assert(cell_manager.economy != null, "CellManager.economy not wired")
+	assert(player_cell_manager.economy != null, "PlayerCellManager.economy not wired")
+	assert(player_cell_manager.damage_manager != null, "PlayerCellManager.damage_manager not wired")
+	assert(player_cell_manager.cell_manager != null, "PlayerCellManager.cell_manager not wired")
+	assert(player_cell_manager.projectile_manager != null, "PlayerCellManager.projectile_manager not wired")
+	assert(projectile_manager.cell_manager != null, "ProjectileManager.cell_manager not wired")
+	assert(projectile_manager.damage_manager != null, "ProjectileManager.damage_manager not wired")
+	assert(timer_manager.cell_manager != null, "TimerManager.cell_manager not wired")
+	assert(building_manager.economy != null, "BuildingManager.economy not wired")
+	assert(expedition_manager.economy != null, "ExpeditionManager.economy not wired")
+	assert(expedition_manager.cell_manager != null, "ExpeditionManager.cell_manager not wired")
+	assert(expedition_manager.projectile_manager != null, "ExpeditionManager.projectile_manager not wired")
+	assert(expedition_manager.timer_manager != null, "ExpeditionManager.timer_manager not wired")
 
 
 func toggle_menu(menu_type: UI.Menus) -> void:

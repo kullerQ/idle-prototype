@@ -4,7 +4,6 @@ enum Types {
 	NULL,
 	BULLET,
 	KNIFE,
-	MAGIC,
 	AXE,
 	DRUID_MAGIC,
 	GREATAXE,
@@ -12,14 +11,12 @@ enum Types {
 
 const _SCENE_BULLET: PackedScene = preload("res://Scenes/Projectiles/Bullet/bullet.tscn")
 const _SCENE_KNIFE: PackedScene = preload("res://Scenes/Projectiles/Knife/knife.tscn")
-const _SCENE_MAGIC: PackedScene = preload("res://Scenes/Projectiles/Magic/magic.tscn")
 const _SCENE_AXE: PackedScene = preload("res://Scenes/Projectiles/Axe/axe.tscn")
 const _SCENE_DRUID_MAGIC: PackedScene = preload("res://Scenes/Projectiles/DruidMagic/druid_magic.tscn")
 const _SCENE_GREATAXE: PackedScene = preload("res://Scenes/Projectiles/Greataxe/greataxe.tscn")
 
 const _DATA_BULLET: ProjectileData = preload("res://Resources/Projectiles/projectile_data_bullet.tres")
 const _DATA_KNIFE: ProjectileData = preload("res://Resources/Projectiles/projectile_data_knife.tres")
-const _DATA_MAGIC: ProjectileData = preload("res://Resources/Projectiles/projectile_data_magic.tres")
 const _DATA_AXE: ProjectileData = preload("res://Resources/Projectiles/projectile_data_axe.tres")
 const _DATA_DRUID_MAGIC: ProjectileData = preload("res://Resources/Projectiles/projectile_data_druid_magic.tres")
 const _DATA_GREATAXE: ProjectileData = preload("res://Resources/Projectiles/projectile_data_greataxe.tres")
@@ -27,7 +24,6 @@ const _DATA_GREATAXE: ProjectileData = preload("res://Resources/Projectiles/proj
 var projectile_scenes: Dictionary = {
 	Types.BULLET: _SCENE_BULLET,
 	Types.KNIFE: _SCENE_KNIFE,
-	Types.MAGIC: _SCENE_MAGIC,
 	Types.AXE: _SCENE_AXE,
 	Types.DRUID_MAGIC: _SCENE_DRUID_MAGIC,
 	Types.GREATAXE: _SCENE_GREATAXE,
@@ -36,13 +32,13 @@ var projectile_scenes: Dictionary = {
 var projectile_data: Dictionary = {
 	Types.BULLET: _DATA_BULLET.duplicate(),
 	Types.KNIFE: _DATA_KNIFE.duplicate(),
-	Types.MAGIC: _DATA_MAGIC.duplicate(),
 	Types.AXE: _DATA_AXE.duplicate(),
 	Types.DRUID_MAGIC: _DATA_DRUID_MAGIC.duplicate(),
 	Types.GREATAXE: _DATA_GREATAXE.duplicate(),
 }
 
 var projectile_container: Node2D
+var particle_container: Node2D
 var damage_manager: DamageManager
 var cell_manager: CellManager
 
@@ -87,6 +83,7 @@ func new_projectile(pos: Vector2, type: Types, crit_chance: int, crit_mult: int,
 	projectile.crit_mult = crit_mult
 	projectile.global_position = pos
 	projectile.cell_manager = cell_manager
+	projectile.particle_container = particle_container
 	projectile.damage_data = damage_manager.build_projectile_damage(type, bonus_damage)
 	projectile.mod_data = mod_data
 	# Effects roll once at spawn from ProjectileDataModifiers (single path).

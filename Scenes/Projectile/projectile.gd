@@ -20,8 +20,7 @@ var weakening: bool = false
 var base_mult: int = 1
 var critted: bool = false
 var delay: float = 0
-
-static var particle_container: Node2D
+var particle_container: Node2D
 
 
 func _ready() -> void:

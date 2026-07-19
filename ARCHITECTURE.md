@@ -82,7 +82,6 @@ Menus: `toggle_menu` / `open_menu` / `close_menu` → pair of open/close signals
 | `level_upgrade_menu_*` | LevelUpgradeMenu |
 | `tooltip_requested` / `tooltip_close_required` | Tooltip |
 | `crit_label_requested` | UIPP |
-| `cell_hitted` | UI / feedback (legacy on G; prefer `CellManager.cell_hitted` — Phase 1) |
 | `player_cell_pressed` | Level-up / selection UI |
 | `ui_layout_change_requested` | UIPP (debug / manual); expeditions use domain signals instead |
 
@@ -98,17 +97,26 @@ Gameplay systems emit on their manager (e.g. `ExpeditionManager.expedition_selec
 | **Injection** | Feature scripts need a manager/container — assign from `Game` or parent `setup` |
 | **Domain signal** | Something happened in a system and others (often UI) should react |
 
+Cell hit feedback uses `CellManager.cell_hitted` (not a G bus signal).
+
 ---
 
-## Remaining static injection (legacy)
+## Injection (no static DI)
 
-Still set at runtime for convenience: `Projectile.particle_container`, `PanelButton.container`. Prefer explicit `setup` / manager APIs when touching those types. **No new static injection** — see [docs/CONVENTIONS.md](docs/CONVENTIONS.md).
+Containers and managers are passed via `setup` / assignment from `Game` or the owning manager:
+
+- `ProjectileManager.particle_container` → copied onto each `Projectile` at spawn
+- `PanelButton.setup(ButtonContainer)` from `ButtonContainer`
+
+**No new `static var` dependency injection.**
 
 ---
 
 ## Debug input
 
-Cheat / spawn / reload hotkeys in `Scenes/Main/main.gd` run only when `OS.is_debug_build()`. Escape always quits. New bindings should use InputMap actions (Phase 1 migrates existing `KEY_*` checks).
+Cheat / spawn / reload hotkeys use Project Settings **InputMap** actions (see `project.godot` `[input]`). Handled in `Scenes/Main/main.gd` only when `OS.is_debug_build()`. `quit` (Escape) always works. Expedition editor uses `quit` + `editor_save`.
+
+Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 
 ---
 
@@ -118,4 +126,5 @@ Cheat / spawn / reload hotkeys in `Scenes/Main/main.gd` run only when `OS.is_deb
 - Resource cell data under `Resources/ResourceCells/` (`cell_resource_*.tres`).
 - Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` in `Resources/`.
 - Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
+- Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).
 |
