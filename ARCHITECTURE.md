@@ -62,8 +62,8 @@ Main
 | **UpgradeManager** / **LevelUpgradeManager** | Apply upgrade enums via domain helpers. `LevelUpgradeManager` lives under `features/towers/` and holds injected `player_cell_manager`. |
 | **UpgradeMenu** | Injects `economy` / `upgrade_manager` onto `UpgradeNode`s. Highlight label from `ButtonContainer`. |
 | **ButtonContainer** | Owns upgrades / level-up highlight labels; injects them into `UpgradeMenu` / `PlayerCellManager`. |
-| **TimerManager** | World timers. Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
-| **BuildingManager** | Side buildings; domain signal `crit_occurred`. Injects `economy` onto `BuildingCell`s. |
+| **TimerManager** | World timers under `features/timers/` (with `TimerUI` / `TimerProgressBar`). Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
+| **BuildingManager** | Side buildings under `features/buildings/`; domain signal `crit_occurred`. Injects `economy` onto `BuildingCell`s. Building data under `data/buildings/`. |
 | **ExpeditionManager** | Expedition state (`is_active`); domain signals `expedition_selected` / `started` / `completed` / `ended`. |
 | **ExpeditionEditor** | Extends CellManager; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
 | **ExpeditionMenu** | Injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
@@ -134,5 +134,7 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Resource cell data under `data/resource_cells/` (`cell_resource_*.tres` + `_scr_*.gd`).
 - Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` under `data/spawn/`.
 - Economy: `features/economy/economy.gd`. Combat: `features/combat/` (managers + projectile scenes); projectile `.tres` under `data/projectiles/`.
+- Buildings: `features/buildings/` (`BuildingManager`, `BuildingCell`); building `.tres` under `data/buildings/`.
+- Timers: `features/timers/` (`TimerManager`, `TimerUI`, `TimerProgressBar`).
 - Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).

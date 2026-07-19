@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="BuildingData" load_steps=2 format=3 uid="uid://cns5x6t2lsryk"]
 
-[ext_resource type="Script" path="res://Resources/_scr_building_data.gd" id="1_5sako"]
+[ext_resource type="Script" path="res://data/buildings/_scr_building_data.gd" id="1_5sako"]
 
 [resource]
 script = ExtResource("1_5sako")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bd2s6jemxrplh"]
 
-[ext_resource type="Script" path="res://Scenes/TimerManager/timer_manager.gd" id="1_ga0gy"]
+[ext_resource type="Script" path="res://features/timers/timer_manager.gd" id="1_ga0gy"]
 
 [node name="TimerManager" type="Node"]
 script = ExtResource("1_ga0gy")

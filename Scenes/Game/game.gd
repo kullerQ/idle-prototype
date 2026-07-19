@@ -15,7 +15,7 @@ const LEVEL_UPGRADE_MENU_SCENE: PackedScene = preload("res://features/towers/lev
 const EXPEDITION_MENU_SCENE: PackedScene = preload("res://Scenes/ExpeditionMenu/expedition_menu.tscn")
 const EXPEDITION_END_SCREEN_SCENE: PackedScene = preload("res://Scenes/ExpeditionEndScreen/expedition_end_screen.tscn")
 const EXPEDITION_UI_SCENE: PackedScene = preload("res://Scenes/ExpeditionUI/expedition_ui.tscn")
-const TIMER_UI_SCENE: PackedScene = preload("res://Scenes/TimerUI/timer_ui.tscn")
+const TIMER_UI_SCENE: PackedScene = preload("res://features/timers/timer_ui/timer_ui.tscn")
 
 
 func _enter_tree() -> void:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://ssqv0nnuhyg0"]
 
-[ext_resource type="Script" path="res://Scenes/BuildingCell/building_cell.gd" id="1_hof3l"]
+[ext_resource type="Script" path="res://features/buildings/building_cell/building_cell.gd" id="1_hof3l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qe1us"]
 bg_color = Color(0.317647, 0.317647, 0.317647, 1)

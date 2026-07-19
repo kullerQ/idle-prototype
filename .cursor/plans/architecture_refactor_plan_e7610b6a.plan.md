@@ -12,7 +12,7 @@ todos:
     content: Move in_expedition to ExpeditionManager; Game parents Node managers; G only wires + UI bus; inject deps into gameplay
     status: completed
   - id: m3-feature-folders
-    content: "Migrate domains one PR at a time into features/ + data/ layout (done: economy + combat + resource_grid + towers)"
+    content: "Migrate domains one PR at a time into features/ + data/ layout (done: economy + combat + resource_grid + towers + buildings + timers)"
     status: pending
   - id: m4-upgrade-data
     content: Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts
@@ -236,7 +236,7 @@ Migrate in this order (dependency-friendly):
 1. ~~`economy` + `combat`~~ (done → `features/economy/`, `features/combat/`, `data/projectiles/`)
 2. ~~`resource_grid`~~ (done → `features/resource_grid/`, `data/resource_cells/`, `data/spawn/`)
 3. ~~`towers` + level upgrades~~ (done → `features/towers/`, `data/player_cells/`)
-4. `buildings` + `timers`
+4. ~~`buildings` + `timers`~~ (done → `features/buildings/`, `data/buildings/`, `features/timers/`)
 5. `meta_upgrades`
 6. `expeditions` (incl. editor + JSON under `data/expeditions/`)
 7. `ui/shared` + HUD split documented
