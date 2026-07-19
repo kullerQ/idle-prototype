@@ -99,5 +99,26 @@ func _apply_effect(effect: UpgradeEffect) -> void:
 	elif effect is UpgradeEffectAddOutpostAttacks:
 		var e: UpgradeEffectAddOutpostAttacks = effect as UpgradeEffectAddOutpostAttacks
 		cell_manager.add_outpost_attacks(e.amount)
+	elif effect is UpgradeEffectAddProjectileDamage:
+		var e: UpgradeEffectAddProjectileDamage = effect as UpgradeEffectAddProjectileDamage
+		damage_manager.add_flat_damage_bonus(e.projectile_type as ProjectileManager.Types, e.amount)
+	elif effect is UpgradeEffectAddProjectileSpd:
+		var e: UpgradeEffectAddProjectileSpd = effect as UpgradeEffectAddProjectileSpd
+		projectile_manager.add_spd(e.projectile_type as ProjectileManager.Types, e.amount)
+	elif effect is UpgradeEffectAddProjectileMaxRange:
+		var e: UpgradeEffectAddProjectileMaxRange = effect as UpgradeEffectAddProjectileMaxRange
+		projectile_manager.add_max_range(e.projectile_type as ProjectileManager.Types, e.amount)
+	elif effect is UpgradeEffectAddProjectileMaxPiercings:
+		var e: UpgradeEffectAddProjectileMaxPiercings = effect as UpgradeEffectAddProjectileMaxPiercings
+		projectile_manager.add_max_piercings(e.projectile_type as ProjectileManager.Types, e.amount)
+	elif effect is UpgradeEffectSetProjectileBounce:
+		var e: UpgradeEffectSetProjectileBounce = effect as UpgradeEffectSetProjectileBounce
+		projectile_manager.set_bounce(e.projectile_type as ProjectileManager.Types, e.enabled)
+	elif effect is UpgradeEffectSetProjectileBackstab:
+		var e: UpgradeEffectSetProjectileBackstab = effect as UpgradeEffectSetProjectileBackstab
+		projectile_manager.set_backstab(e.projectile_type as ProjectileManager.Types, e.enabled)
+	elif effect is UpgradeEffectAddProjectileBackstabBonusDmg:
+		var e: UpgradeEffectAddProjectileBackstabBonusDmg = effect as UpgradeEffectAddProjectileBackstabBonusDmg
+		projectile_manager.add_backstab_bonus_dmg(e.projectile_type as ProjectileManager.Types, e.amount)
 	else:
 		push_error("UpgradeApplier: unhandled effect type %s" % effect.get_class())
