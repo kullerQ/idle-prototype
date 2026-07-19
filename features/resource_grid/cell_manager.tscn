@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://b14oi7hhj8hew"]
 
-[ext_resource type="Script" path="res://Scenes/CellManager/cell_manager.gd" id="1_oad01"]
-[ext_resource type="PackedScene" uid="uid://dudk7nqk514vr" path="res://Scenes/CellResource/cell_resource.tscn" id="2_a3vdj"]
-[ext_resource type="Resource" path="res://Resources/cell_spawn_config.tres" id="3_spawn"]
+[ext_resource type="Script" path="res://features/resource_grid/cell_manager.gd" id="1_oad01"]
+[ext_resource type="PackedScene" uid="uid://dudk7nqk514vr" path="res://features/resource_grid/cell_resource/cell_resource.tscn" id="2_a3vdj"]
+[ext_resource type="Resource" path="res://data/spawn/cell_spawn_config.tres" id="3_spawn"]
 
 [node name="CellManager" type="GridContainer"]
 offset_left = 102.0

@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://c480787aiynb1"]
 
 [ext_resource type="Script" path="res://Scenes/Game/game.gd" id="1_4djx6"]
-[ext_resource type="PackedScene" uid="uid://b14oi7hhj8hew" path="res://Scenes/CellManager/cell_manager.tscn" id="2_cell"]
+[ext_resource type="PackedScene" uid="uid://b14oi7hhj8hew" path="res://features/resource_grid/cell_manager.tscn" id="2_cell"]
 [ext_resource type="PackedScene" uid="uid://ctck6suxq5bcj" path="res://Scenes/PlayerCellManager/player_cell_manager.tscn" id="3_pcm"]
 [ext_resource type="PackedScene" uid="uid://bd2s6jemxrplh" path="res://Scenes/TimerManager/timer_manager.tscn" id="4_timer"]
 [ext_resource type="PackedScene" uid="uid://4wswmpgy5skt" path="res://Scenes/BuildingManager/building_manager.tscn" id="5_building"]

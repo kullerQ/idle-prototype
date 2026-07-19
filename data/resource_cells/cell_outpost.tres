@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="OutpostData" load_steps=2 format=3 uid="uid://bkofoigt7mcgd"]
 
-[ext_resource type="Script" path="res://Resources/_scr_cell_outpost_data.gd" id="1_sj7mj"]
+[ext_resource type="Script" path="res://data/resource_cells/_scr_cell_outpost_data.gd" id="1_sj7mj"]
 
 [resource]
 script = ExtResource("1_sj7mj")

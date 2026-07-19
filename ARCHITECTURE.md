@@ -10,9 +10,9 @@ Short map of boot, ownership, and signals. Prefer this over rediscovering `G.ini
 
 | New thing | Put it here |
 |-----------|-------------|
-| Grid / tower / expedition / building behavior | Matching feature folder (`Scenes/<Domain>/` today; `features/<domain>/` as domains migrate) — scene + script together |
+| Grid / tower / expedition / building behavior | Matching feature folder (`features/<domain>/` when migrated; else `Scenes/<Domain>/`) — scene + script together |
 | Pure logic with no Node | Feature folder, or `Scripts/` / `core/` if cross-cutting |
-| Tunable numbers / unlocks / descriptions | `Resources/` or `data/<domain>/` (as domains migrate) as `.tres` + `_scr_*.gd` |
+| Tunable numbers / unlocks / descriptions | `data/<domain>/` or `Resources/` (as domains migrate) as `.tres` + `_scr_*.gd` |
 | Menu / HUD / tooltip | `UI` / `UIPP` / shared button scenes |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit label | `G` UI bus only (combat/buildings emit domain `crit_occurred`; `Game` bridges to the bus) |
@@ -51,7 +51,7 @@ Main
 |-------|----------------|
 | **G** | Service locator + menu/tooltip/crit-label UI bus. Holds refs; does **not** parent gameplay nodes or store gameplay flags. |
 | **Game** | Scene hosts all Node managers; creates containers/UIPP/menus; bridges combat/building crit domain signals to the UI bus. |
-| **CellManager** | Resource grid façade: spawn, occupy/free, coords, weights. Holds injected `expedition_manager` / `projectile_manager`. Composes RefCounted siblings under `Scenes/CellManager/`. |
+| **CellManager** | Resource grid façade: spawn, occupy/free, coords, weights. Lives under `features/resource_grid/`. Holds injected `expedition_manager` / `projectile_manager`. Composes RefCounted siblings (`CellCombatResolver`, `CellSpecialBehaviors`, `DruidObeliskSystem`). |
 | **CellCombatResolver** | Hit compile, spread damage, kill_grid/kill_cell; emits via CellManager signals. |
 | **CellSpecialBehaviors** | Death hooks (lumberjack/outpost/forest) + forest occupy spawn + lumberjack cap. Uses injected `projectile_manager` (not `G`). |
 | **DruidObeliskSystem** | Obelisk links, buff graph, overheal procs. |
@@ -129,8 +129,9 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 ## Naming notes
 
 - Player tower scene lives under `Scenes/PlayerCell/` (`class_name PlayerCell`).
-- Resource cell data under `Resources/ResourceCells/` (`cell_resource_*.tres`).
-- Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` in `Resources/`.
+- Resource grid: `features/resource_grid/` (`CellManager`, `CellResource`, combat/specials/druid helpers).
+- Resource cell data under `data/resource_cells/` (`cell_resource_*.tres` + `_scr_*.gd`).
+- Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` under `data/spawn/`.
 - Economy: `features/economy/economy.gd`. Combat: `features/combat/` (managers + projectile scenes); projectile `.tres` under `data/projectiles/`.
 - Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
 - Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).

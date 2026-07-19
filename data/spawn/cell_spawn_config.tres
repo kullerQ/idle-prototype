@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="CellSpawnConfig" load_steps=8 format=3 uid="uid://cr5fby48nrklw"]
 
-[ext_resource type="Script" path="res://Resources/_scr_cell_spawn_config.gd" id="1_config"]
-[ext_resource type="Script" path="res://Resources/_scr_cell_spawn_table.gd" id="2_table"]
-[ext_resource type="Script" path="res://Resources/_scr_cell_spawn_weight.gd" id="3_weight"]
+[ext_resource type="Script" path="res://data/spawn/_scr_cell_spawn_config.gd" id="1_config"]
+[ext_resource type="Script" path="res://data/spawn/_scr_cell_spawn_table.gd" id="2_table"]
+[ext_resource type="Script" path="res://data/spawn/_scr_cell_spawn_weight.gd" id="3_weight"]
 
 [sub_resource type="Resource" id="weight_tree"]
 script = ExtResource("3_weight")

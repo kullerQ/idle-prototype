@@ -12,7 +12,7 @@ todos:
     content: Move in_expedition to ExpeditionManager; Game parents Node managers; G only wires + UI bus; inject deps into gameplay
     status: completed
   - id: m3-feature-folders
-    content: "Migrate domains one PR at a time into features/ + data/ layout (done: economy + combat)"
+    content: "Migrate domains one PR at a time into features/ + data/ layout (done: economy + combat + resource_grid)"
     status: pending
   - id: m4-upgrade-data
     content: Introduce UpgradeDefinition Resources + appliers; migrate meta then level upgrades off giant match/dicts
@@ -223,7 +223,7 @@ RefCounted managers (`Economy`, `DamageManager`, `ProjectileManager`, `UpgradeMa
 ### 2.4 Injection discipline
 
 - Prefer constructor/`setup` / exported refs set by `Game` over `@onready var x = G.x` in feature scripts.
-- Allow `G` reads in **UI shell** and **debug** only; gameplay managers should not call `G.projectile_manager` (e.g. [cell_special_behaviors.gd](Scenes/CellManager/cell_special_behaviors.gd) should use injected refs).
+- Allow `G` reads in **UI shell** and **debug** only; gameplay managers should not call `G.projectile_manager` (e.g. [cell_special_behaviors.gd](features/resource_grid/cell_special_behaviors.gd) should use injected refs).
 
 **Done when:** reading `g.gd` fits on one screen of responsibilities; new gameplay feature does not need a new field on `G` unless it is a top-level manager.
 
@@ -234,7 +234,7 @@ RefCounted managers (`Economy`, `DamageManager`, `ProjectileManager`, `UpgradeMa
 Migrate in this order (dependency-friendly):
 
 1. ~~`economy` + `combat`~~ (done → `features/economy/`, `features/combat/`, `data/projectiles/`)
-2. `resource_grid` (already cohesive under `Scenes/CellManager/`)
+2. ~~`resource_grid`~~ (done → `features/resource_grid/`, `data/resource_cells/`, `data/spawn/`)
 3. `towers` + level upgrades
 4. `buildings` + `timers`
 5. `meta_upgrades`

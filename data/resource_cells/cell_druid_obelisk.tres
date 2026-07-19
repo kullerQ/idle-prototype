@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DruidObeliskData" load_steps=2 format=3 uid="uid://dim8xt8cu1j1i"]
 
-[ext_resource type="Script" path="res://Resources/_scr_cell_druid_obelisk_data.gd" id="1_uxq4p"]
+[ext_resource type="Script" path="res://data/resource_cells/_scr_cell_druid_obelisk_data.gd" id="1_uxq4p"]
 
 [resource]
 script = ExtResource("1_uxq4p")

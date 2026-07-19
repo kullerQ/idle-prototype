@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="LumberjackData" load_steps=2 format=3 uid="uid://tcqsywu5xh4d"]
 
-[ext_resource type="Script" path="res://Resources/_scr_cell_lumberjack_data.gd" id="1_evuec"]
+[ext_resource type="Script" path="res://data/resource_cells/_scr_cell_lumberjack_data.gd" id="1_evuec"]
 
 [resource]
 script = ExtResource("1_evuec")

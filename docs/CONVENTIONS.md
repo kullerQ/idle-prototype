@@ -10,9 +10,9 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 
 | New thing | Put it here |
 |-----------|-------------|
-| Grid / tower / expedition / building behavior | Matching feature folder (today: `Scenes/<Domain>/`; target: `features/<domain>/`) — scene + script together |
+| Grid / tower / expedition / building behavior | Matching feature folder (migrated: `features/<domain>/`; else `Scenes/<Domain>/`) — scene + script together |
 | Pure logic with no Node | Same feature folder, or `Scripts/` / `core/` only if truly cross-cutting |
-| Tunable numbers / unlocks / descriptions | `Resources/` (target: `data/<domain>/`) as `.tres` + `_scr_*.gd` |
+| Tunable numbers / unlocks / descriptions | `data/<domain>/` when migrated (else `Resources/`) as `.tres` + `_scr_*.gd` |
 | Menu / HUD / tooltip | Outer `UI` / in-world `UIPP` / shared controls under `Scenes/` (target: `ui/`) |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit-label flash | `G` UI bus only |
@@ -22,7 +22,7 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 Quick checks:
 
 - **New building type?** → building scene/script next to `BuildingManager` / `BuildingCell`, data as `.tres` under `Resources/`, register/unlock via `BuildingManager` API — not a new field on `G`.
-- **New tower / resource cell?** → `PlayerCell` / `CellResource` scene + `Resources/PlayerCells/` or `Resources/ResourceCells/` data.
+- **New tower / resource cell?** → tower: `PlayerCell` scene + `Resources/PlayerCells/` data; resource cell: scene under `features/resource_grid/cell_resource/`, data under `data/resource_cells/`.
 - **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
 - **New meta upgrade?** → today: enum + apply helper on `UpgradeManager` (Phase 4: `.tres` under upgrades data). Do not add match arms in unrelated managers.
 - **New menu?** → `NodePopupMenu` subclass; register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable.
@@ -36,7 +36,7 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Domain | Current home | Target |
 |--------|--------------|--------|
 | Boot / thin autoload | `Scripts/g.gd`, `Scenes/Main/`, `Scenes/Game/` | `core/` + shell scenes |
-| Resource grid | `Scenes/CellManager/`, `Scenes/CellResource/` | `features/resource_grid/` |
+| Resource grid | `features/resource_grid/` (+ `data/resource_cells/`, `data/spawn/`) | `features/resource_grid/` |
 | Towers / level upgrades | `Scenes/PlayerCell*`, `Scenes/LevelUpgradeMenu/`, `Scripts/level_upgrade_manager.gd` | `features/towers/` |
 | Combat | `features/combat/` (managers + projectile scenes) | `features/combat/` |
 | Economy | `features/economy/` | `features/economy/` |
@@ -45,7 +45,7 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 | Meta upgrades | `Scripts/upgrade_manager.gd`, `Scenes/UpgradeMenu/`, `Scenes/UpgradeNode/` | `features/meta_upgrades/` |
 | Timers | `Scenes/TimerManager/`, `Scenes/TimerUI/` | `features/timers/` |
 | Shared UI controls | `Scenes/ButtonAnimated/`, `Scenes/ButtonPanel/`, popup helpers | `ui/shared/` |
-| Data (`.tres`) | `Resources/` (projectiles already in `data/projectiles/`) | `data/<domain>/` |
+| Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`) | `data/<domain>/` |
 
 **Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor. Do not big-bang rename the tree.
 
@@ -57,7 +57,7 @@ Physical moves happen domain-by-domain (Phase 3). Until then, **logical** homes 
 |------|------------|---------|
 | Files / folders | `snake_case` | `cell_manager.gd`, `player_cell.tscn` |
 | `class_name` | `PascalCase` | `CellManager`, `AnimatedButton` |
-| Resource scripts | `_scr_<name>.gd` next to or under `Resources/` | `_scr_player_cell_data.gd` |
+| Resource scripts | `_scr_<name>.gd` next to or under `data/<domain>/` / `Resources/` | `_scr_cell_resource_data.gd` |
 | Scene folder ≈ type | Folder name may be PascalCase for editor visibility; script file stays snake_case | `Scenes/ButtonAnimated/animated_button.gd` → `class_name AnimatedButton` |
 
 Known leftover (documented, not urgent to rename):

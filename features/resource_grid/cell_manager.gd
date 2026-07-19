@@ -19,13 +19,13 @@ enum Types {
 	SPECIAL
 }
 
-const _DATA_WOOD_TREE: CellResourceData = preload("res://Resources/ResourceCells/cell_resource_tree.tres")
-const _DATA_WOOD_GROVE: CellResourceData = preload("res://Resources/ResourceCells/cell_resource_grove.tres")
-const _DATA_WOOD_FOREST: ForestData = preload("res://Resources/ResourceCells/cell_resource_forest.tres")
-const _DATA_SPECIAL_LUMBERJACK: LumberjackData = preload("res://Resources/ResourceCells/cell_lumberjack.tres")
-const _DATA_SPECIAL_OUTPOST: OutpostData = preload("res://Resources/ResourceCells/cell_outpost.tres")
-const _DATA_SPECIAL_DRUID_OBELISK: DruidObeliskData = preload("res://Resources/ResourceCells/cell_druid_obelisk.tres")
-const _DEFAULT_SPAWN_CONFIG = preload("res://Resources/cell_spawn_config.tres")
+const _DATA_WOOD_TREE: CellResourceData = preload("res://data/resource_cells/cell_resource_tree.tres")
+const _DATA_WOOD_GROVE: CellResourceData = preload("res://data/resource_cells/cell_resource_grove.tres")
+const _DATA_WOOD_FOREST: ForestData = preload("res://data/resource_cells/cell_resource_forest.tres")
+const _DATA_SPECIAL_LUMBERJACK: LumberjackData = preload("res://data/resource_cells/cell_lumberjack.tres")
+const _DATA_SPECIAL_OUTPOST: OutpostData = preload("res://data/resource_cells/cell_outpost.tres")
+const _DATA_SPECIAL_DRUID_OBELISK: DruidObeliskData = preload("res://data/resource_cells/cell_druid_obelisk.tres")
+const _DEFAULT_SPAWN_CONFIG = preload("res://data/spawn/cell_spawn_config.tres")
 
 var all_data: Dictionary = {
 	Names.WOOD_TREE: _DATA_WOOD_TREE.duplicate(),
