@@ -7,7 +7,6 @@ var path: int
 @export var next_node: LevelUpgradeNode
 @export var cost: int = 100
 var locked_for: Array = []
-static var manager: UpgradeManager
 
 
 func _ready() -> void:

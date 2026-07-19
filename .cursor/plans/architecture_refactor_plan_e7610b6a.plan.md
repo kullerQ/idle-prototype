@@ -4,7 +4,7 @@ overview: "A phased architecture refactor that makes Idle Prototype consistent a
 todos:
   - id: m0-conventions
     content: Write docs/CONVENTIONS.md + expand ARCHITECTURE.md with where-to-put table and G vs domain signal rules
-    status: pending
+    status: completed
   - id: m1-hygiene
     content: Delete dead DamageData/G.cell_hitted/WIP noise; remove static injection; InputMap; debug asserts on wire
     status: pending

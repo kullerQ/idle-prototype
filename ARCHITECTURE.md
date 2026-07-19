@@ -2,6 +2,27 @@
 
 Short map of boot, ownership, and signals. Prefer this over rediscovering `G.initialize`.
 
+**Team rules / where to put code:** [docs/CONVENTIONS.md](docs/CONVENTIONS.md).
+
+---
+
+## Where do I put…?
+
+| New thing | Put it here |
+|-----------|-------------|
+| Grid / tower / expedition / building behavior | Matching feature folder (`Scenes/<Domain>/` today; `features/<domain>/` after Phase 3) — scene + script together |
+| Pure logic with no Node | Feature folder, or `Scripts/` / `core/` if cross-cutting |
+| Tunable numbers / unlocks / descriptions | `Resources/` (later `data/<domain>/`) as `.tres` + `_scr_*.gd` |
+| Menu / HUD / tooltip | `UI` / `UIPP` / shared button scenes |
+| Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
+| Menu open/close, tooltip, crit label | `G` UI bus only |
+| Debug cheats | `Main` + InputMap, `OS.is_debug_build()` only |
+| Saveable progress | RunState / save API (Phase 5) — not ad-hoc `user://` |
+
+Full folder map, naming, and injection rules: [docs/CONVENTIONS.md](docs/CONVENTIONS.md).
+
+---
+
 ## Boot order
 
 1. **Main** (`Scenes/Main/main.tscn`) enters the tree and calls `G.initialize()` (economy + combat only).
@@ -10,7 +31,18 @@ Short map of boot, ownership, and signals. Prefer this over rediscovering `G.ini
    - Creates TimerManager, BuildingManager, UpgradeManager, LevelUpgradeManager, ExpeditionManager
 3. **Game** then parents the remaining runtime nodes (expedition, containers, UIPP/menus).
 
-Editor scene tree ≈ runtime for CellManager / PlayerCellManager (children of `game.tscn`). Other managers are still created in code and `add_child`’d by `Game`.
+Editor scene tree ≈ runtime for CellManager / PlayerCellManager (children of `game.tscn`). Other managers are still created in code and `add_child`’d by `Game`. Target (Phase 2): `G` wires; `Game` parents all Node managers.
+
+```text
+Main
+├── G.initialize()          → Economy, DamageManager, ProjectileManager
+└── Game
+    ├── G.bind_scene_managers(CellManager, PlayerCellManager)
+    ├── parents ExpeditionManager, BuildingManager, TimerManager, containers
+    └── UIPP + menus (deps injected here)
+```
+
+---
 
 ## Who owns what
 
@@ -34,9 +66,13 @@ Editor scene tree ≈ runtime for CellManager / PlayerCellManager (children of `
 | **ExpeditionEditor** | Extends CellManager; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
 | **ExpeditionMenu** | Injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
 | **ExpeditionEndScreen** | Opens on `expedition_completed`; calls `manager.end_expedition()` (not raw `G.expedition_manager`). |
-| **UI / UIPP** | Listen to G UI signals + expedition domain signals; layout swap (base vs expedition). |
+| **UI / UIPP** | Listen to G UI signals + expedition domain signals; layout swap (base vs expedition). Two-layer HUD is intentional (outer chrome vs in-world pixel HUD). |
 
-## Signal map (via G)
+---
+
+## Signal rules
+
+### Via `G` (UI bus only)
 
 Menus: `toggle_menu` / `open_menu` / `close_menu` → pair of open/close signals per `UI.Menus`.
 
@@ -46,22 +82,40 @@ Menus: `toggle_menu` / `open_menu` / `close_menu` → pair of open/close signals
 | `level_upgrade_menu_*` | LevelUpgradeMenu |
 | `tooltip_requested` / `tooltip_close_required` | Tooltip |
 | `crit_label_requested` | UIPP |
-| `cell_hitted` | UI / feedback |
+| `cell_hitted` | UI / feedback (legacy on G; prefer `CellManager.cell_hitted` — Phase 1) |
 | `player_cell_pressed` | Level-up / selection UI |
 | `ui_layout_change_requested` | UIPP (debug / manual); expeditions use domain signals instead |
 
-Gameplay systems should prefer domain signals on their manager (e.g. `expedition_selected` / `started` / `completed` / `ended`) and let UI react—avoid new raw UI emits from combat/expedition code. Menu open/close still goes through `G.open_menu` / `G.close_menu` from UI listeners.
+### Domain signals (preferred for gameplay)
+
+Gameplay systems emit on their manager (e.g. `ExpeditionManager.expedition_selected` / `started` / `completed` / `ended`). UI connects and may then call `G.open_menu` / `G.close_menu`.
+
+**Do not** add new raw UI emits from combat/expedition/grid code. **Do not** add new gameplay flags on `G` — put them on the owning manager.
+
+| Use | When |
+|-----|------|
+| **G** | Menu open/close, tooltip, crit-label flash, holding manager refs |
+| **Injection** | Feature scripts need a manager/container — assign from `Game` or parent `setup` |
+| **Domain signal** | Something happened in a system and others (often UI) should react |
+
+---
 
 ## Remaining static injection (legacy)
 
-Still set at runtime for convenience: `Projectile.particle_container`, `PanelButton.container`, `LevelUpgradeNode.manager`. Prefer explicit `setup` / manager APIs when touching those types.
+Still set at runtime for convenience: `Projectile.particle_container`, `PanelButton.container`. Prefer explicit `setup` / manager APIs when touching those types. **No new static injection** — see [docs/CONVENTIONS.md](docs/CONVENTIONS.md).
+
+---
 
 ## Debug input
 
-Cheat / spawn / reload hotkeys in `Scenes/Main/main.gd` run only when `OS.is_debug_build()`. Escape always quits.
+Cheat / spawn / reload hotkeys in `Scenes/Main/main.gd` run only when `OS.is_debug_build()`. Escape always quits. New bindings should use InputMap actions (Phase 1 migrates existing `KEY_*` checks).
+
+---
 
 ## Naming notes
 
 - Player tower scene lives under `Scenes/PlayerCell/` (`class_name PlayerCell`).
 - Resource cell data under `Resources/ResourceCells/` (`cell_resource_*.tres`).
 - Spawn weights: `CellSpawnConfig` / `CellSpawnTable` / `CellSpawnWeight` in `Resources/`.
+- Folder `ButtonAnimated` vs files `animated_button.*` / `class_name AnimatedButton` — search by file or class name; do not duplicate the control.
+|
