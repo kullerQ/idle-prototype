@@ -61,7 +61,7 @@ func test_restore_saved_upgrades_remaps_legacy_enum_ints() -> void:
 	cell.reset_level_modifiers()
 
 	# Pre-3a save: DRUID_OVERHEAL_SPAWN_WEAK was enum int 17 before dead slots were removed.
-	manager.restore_saved_upgrades(cell, [17])
+	manager.restore_saved_upgrades(cell, [17], 0)
 
 	assert_eq(cell.weakening_chance, 100)
 	assert_eq(cell.spawn_tree_on_overheal_chance, 25)
@@ -83,7 +83,8 @@ func test_restore_saved_upgrades_skips_removed_dead_slots() -> void:
 			LevelUpgradeManager.Types.SHOOTER_SUPPORT,
 			12,
 			LevelUpgradeManager.Types.SHOOTER_WEAK,
-		]
+		],
+		0
 	)
 
 	assert_eq(cell.projectile_mod_data.weakening_chance, 60)
@@ -117,3 +118,61 @@ func test_level_upgrade_manager_loads_definitions() -> void:
 			manager.get_description(type) != "no description",
 			"missing definition for %s" % type_name
 		)
+
+
+func test_all_live_upgrade_types_apply_without_error() -> void:
+	var manager := LevelUpgradeManager.new()
+	manager.setup()
+
+	for type_name in LevelUpgradeManager.Types.keys():
+		if type_name == "NULL":
+			continue
+		var type: int = LevelUpgradeManager.Types[type_name]
+		var cell: PlayerCell = _make_test_cell()
+		cell.reset_level_modifiers()
+		manager.apply_for_load(type, cell)
+
+
+func test_restore_saved_upgrades_multi_path_save_payload() -> void:
+	var manager := LevelUpgradeManager.new()
+	manager.setup()
+	var cell: PlayerCell = _make_test_cell()
+	cell.reset_level_modifiers()
+
+	manager.restore_saved_upgrades(
+		cell,
+		[
+			LevelUpgradeManager.Types.SHOOTER_SUPPORT,
+			LevelUpgradeManager.Types.DRUID_SPREAD,
+			LevelUpgradeManager.Types.ROGUE_CRIT_WEAK,
+		]
+	)
+
+	assert_eq(cell.projectile_mod_data.weakening_chance, 40)
+	assert_eq(cell.projectile_mod_data.spread_damage_ratio, 0.5)
+	assert_eq(cell.projectile_mod_data.spread_damage_to, 2)
+	assert_eq(cell.projectile_mod_data.bonus_crit_chance_on_weakened, 30)
+	assert_eq(
+		cell.applied_level_upgrades,
+		[
+			LevelUpgradeManager.Types.SHOOTER_SUPPORT,
+			LevelUpgradeManager.Types.DRUID_SPREAD,
+			LevelUpgradeManager.Types.ROGUE_CRIT_WEAK,
+		]
+	)
+
+
+func test_current_schema_preserves_enum_types_in_dead_slot_range() -> void:
+	var manager := LevelUpgradeManager.new()
+	manager.setup()
+	var cell: PlayerCell = _make_test_cell()
+	cell.reset_level_modifiers()
+
+	manager.restore_saved_upgrades(
+		cell,
+		[LevelUpgradeManager.Types.ROGUE_CRIT_WEAK],
+		LevelUpgradeManager.LEVEL_UPGRADE_SAVE_SCHEMA
+	)
+
+	assert_eq(cell.projectile_mod_data.bonus_crit_chance_on_weakened, 30)
+	assert_eq(cell.applied_level_upgrades, [LevelUpgradeManager.Types.ROGUE_CRIT_WEAK])

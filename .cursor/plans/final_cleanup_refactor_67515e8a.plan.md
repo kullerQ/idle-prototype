@@ -10,10 +10,13 @@ todos:
     status: pending
   - id: p3-level-effects
     content: "Phase 3a: Add LevelUpgradeEffect subclasses for all current match arms"
-    status: pending
+    status: completed
   - id: p3-level-data
     content: "Phase 3b: Create data/upgrades/level/*.tres; rewrite LevelUpgradeManager + LevelUpgradeApplier"
-    status: pending
+    status: completed
+  - id: p3-level-verify
+    content: "Phase 3d: Verification tests + save/load level upgrade coverage"
+    status: completed
   - id: p4-save
     content: "Phase 4: RunState versioning, load bug fixes, main menu (m5f), document save scope"
     status: pending

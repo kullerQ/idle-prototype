@@ -272,6 +272,7 @@ func to_save_dict() -> Array:
 			"level": cell.lvl,
 			"lvl_tokens": cell.lvl_tokens,
 			"upgrade_path": cell.upgrade_path.duplicate(),
+			"level_upgrade_schema": LevelUpgradeManager.LEVEL_UPGRADE_SAVE_SCHEMA,
 			"level_upgrades": cell.applied_level_upgrades.duplicate(),
 		})
 	return result
@@ -309,7 +310,8 @@ func _restore_cell_progress(cell: PlayerCell, entry: Dictionary) -> void:
 	if level_upgrade_manager:
 		level_upgrade_manager.restore_saved_upgrades(
 			cell,
-			entry.get("level_upgrades", [])
+			entry.get("level_upgrades", []),
+			int(entry.get("level_upgrade_schema", 0))
 		)
 	if cell.lvl_tokens > 0:
 		cell.upgrade_arrow.show()
