@@ -46,8 +46,7 @@ func _ready() -> void:
 	progress_bar_hp.hide()
 #	panel_weaken.hide()
 	cell_hitbox.hitted.connect(_on_hitted)
-	# TODO: change to effect_timers dictionary
-	
+
 	for arr in effect_graphics.values():
 		for node in arr:
 			node.hide()

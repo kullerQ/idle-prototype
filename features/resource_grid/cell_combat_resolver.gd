@@ -57,13 +57,13 @@ func get_cells_to_spread_damage(exclude: CellResource, amount: int, ratio: float
 	return cells_to_damage
 
 
-# TODO: Fix data-type inconsistency
-func _award_resources_for_hit(cell: CellResource, cell_data: CellResourceData, value: float) -> void:
+func _award_resources_for_hit(cell: CellResource, cell_data: CellResourceData, hit_ratio: float) -> void:
 	if !cell_data.value:
 		return
+	var amount: float = float(cell_data.value) * hit_ratio
 	if cell.is_buffed():
-		value *= 2
-	_manager.add_res(cell_data.type, cell_data.value * value)
+		amount *= 2
+	_manager.add_res(cell_data.type, int(amount))
 
 
 func _apply_compiled_damage(cell: CellResource, ratio: float, compiled: Array, damage_data_owner: PlayerCell) -> void:
