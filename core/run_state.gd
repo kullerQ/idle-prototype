@@ -75,6 +75,7 @@ func restore_all(upgrade_manager: UpgradeManager, player_cell_manager: PlayerCel
 	restore_upgrades(upgrade_manager)
 	restore_tower_grid(player_cell_manager)
 	restore_economy(economy)
+	player_cell_manager.sync_free_cells_from_economy(economy)
 
 
 ## Single entry for restoring a save into live managers (+ optional UI sync).

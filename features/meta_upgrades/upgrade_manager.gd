@@ -114,6 +114,11 @@ const _BUILDING_DEFINITION_PATHS: PackedStringArray = [
 	"res://data/upgrades/meta/upgrade_outpost_multiattacks.tres",
 ]
 
+const _SPECIAL_SPAWN_TIMER_TYPES: Array = [
+	Types.UNLOCK_LUMBERJACK,
+	Types.UNLOCK_OUTPOST,
+]
+
 const _PROJECTILE_DEFINITION_PATHS: PackedStringArray = [
 	"res://data/upgrades/meta/upgrade_bullet_dmg.tres",
 	"res://data/upgrades/meta/upgrade_bullet_dist.tres",
@@ -213,6 +218,14 @@ func load_from_dict(d: Dictionary) -> void:
 			continue
 		_levels[type] = level
 		applier.apply(_definitions[type], level, true)
+	_restore_special_spawn_timers()
+
+
+func _restore_special_spawn_timers() -> void:
+	for type in _SPECIAL_SPAWN_TIMER_TYPES:
+		if get_level(type) <= 0 || !_definitions.has(type):
+			continue
+		applier.apply_special_spawn_timers(_definitions[type])
 
 
 func _reset_modifier_baseline() -> void:

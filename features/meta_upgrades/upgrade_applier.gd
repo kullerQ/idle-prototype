@@ -16,8 +16,18 @@ func apply(def: UpgradeDefinition, times: int = 1, for_load: bool = false) -> vo
 			_apply_effect(effect as UpgradeEffect, for_load)
 
 
+func apply_special_spawn_timers(def: UpgradeDefinition) -> void:
+	for effect in def.effects:
+		if effect is UpgradeEffectAddSpecialCellSpawnTimer:
+			_apply_special_cell_spawn_timer(effect as UpgradeEffectAddSpecialCellSpawnTimer)
+
+
 func _apply_effect(effect: UpgradeEffect, for_load: bool = false) -> void:
-	if for_load && (effect is UpgradeEffectAddFreeTowerCell || effect is UpgradeEffectAddTower):
+	if for_load && (
+		effect is UpgradeEffectAddFreeTowerCell
+		|| effect is UpgradeEffectAddTower
+		|| effect is UpgradeEffectAddSpecialCellSpawnTimer
+	):
 		return
 	if effect is UpgradeEffectSubTimerWait:
 		var e: UpgradeEffectSubTimerWait = effect as UpgradeEffectSubTimerWait
@@ -64,13 +74,7 @@ func _apply_effect(effect: UpgradeEffect, for_load: bool = false) -> void:
 		var e: UpgradeEffectAddTowerXpIncrease = effect as UpgradeEffectAddTowerXpIncrease
 		player_cell_manager.add_xp_increase(e.tower_type as PlayerCellData.Types, e.amount)
 	elif effect is UpgradeEffectAddSpecialCellSpawnTimer:
-		var e: UpgradeEffectAddSpecialCellSpawnTimer = effect as UpgradeEffectAddSpecialCellSpawnTimer
-		var cell_name: CellManager.Names = e.cell_name as CellManager.Names
-		timer_manager.add_special_cell_spawn_timer(
-			cell_name,
-			cell_manager.get_data(cell_name).life_time,
-			e.color
-		)
+		_apply_special_cell_spawn_timer(effect as UpgradeEffectAddSpecialCellSpawnTimer)
 	elif effect is UpgradeEffectMultiplyCellLifeTime:
 		var e: UpgradeEffectMultiplyCellLifeTime = effect as UpgradeEffectMultiplyCellLifeTime
 		cell_manager.multiply_life_time(e.cell_name as CellManager.Names, e.factor)
@@ -128,3 +132,12 @@ func _apply_effect(effect: UpgradeEffect, for_load: bool = false) -> void:
 		projectile_manager.add_backstab_bonus_dmg(e.projectile_type as ProjectileManager.Types, e.amount)
 	else:
 		push_error("UpgradeApplier: unhandled effect type %s" % effect.get_class())
+
+
+func _apply_special_cell_spawn_timer(e: UpgradeEffectAddSpecialCellSpawnTimer) -> void:
+	var cell_name: CellManager.Names = e.cell_name as CellManager.Names
+	timer_manager.add_special_cell_spawn_timer(
+		cell_name,
+		cell_manager.get_data(cell_name).life_time,
+		e.color
+	)

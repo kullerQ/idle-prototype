@@ -172,32 +172,78 @@ func _on_xp_added(cell: PlayerCell) -> void:
 
 
 func add_free_cell() -> void:
-	if h_idx >= columns:
+	if !_unlock_cell_slot():
 		return
-		
-	var sign: int = -1 if added_cells % 2 == 0  else 1
+	economy.add_resource(Economy.Currencies.FREE_CELLS, 1)
+
+
+func _unlock_cell_slot() -> bool:
+	if h_idx >= columns:
+		return false
+
+	var sign: int = -1 if added_cells % 2 == 0 else 1
 	var add_y: int = 0
 	if added_cells > 0:
 		if sign < 0:
 			up_added += 1
 			add_y = up_added
-		
 		else:
 			down_added += 1
 			add_y = down_added
-			
-	added_cells += 1 
+
+	added_cells += 1
 	var cell: PlayerCell = cells[start_pos + Vector2i(-h_idx, sign * add_y)]
 	cell.set_data(all_data[0])
-	economy.add_resource(Economy.Currencies.FREE_CELLS, 1)
 	free_cells.append(cell)
 	if added_cells < CELLS_IN_COLUMN:
-		return
-	
+		return true
+
 	added_cells = 0
 	up_added = 0
 	down_added = 0
 	h_idx += 1
+	return true
+
+
+func sync_free_cells_from_economy(economy: Economy) -> void:
+	var placed_count: int = 0
+	for pos in cells:
+		var cell: PlayerCell = cells[pos]
+		if cell.data == null:
+			continue
+		if cell.data.type != PlayerCellData.Types.NULL:
+			placed_count += 1
+
+	var target_unlocked: int = placed_count + economy.get_resource(Economy.Currencies.FREE_CELLS)
+	while _count_unlocked_cells() < target_unlocked:
+		if !_unlock_cell_slot():
+			push_warning(
+				"PlayerCellManager: could not unlock enough cells (have %d, need %d)"
+				% [_count_unlocked_cells(), target_unlocked]
+			)
+			break
+
+	free_cells.clear()
+	for pos in cells:
+		var cell: PlayerCell = cells[pos]
+		if cell.data && cell.data.type == PlayerCellData.Types.NULL:
+			free_cells.append(cell)
+
+	var target_free: int = economy.get_resource(Economy.Currencies.FREE_CELLS)
+	if free_cells.size() != target_free:
+		push_warning(
+			"PlayerCellManager: free_cells pool size %d != economy %d"
+			% [free_cells.size(), target_free]
+		)
+
+
+func _count_unlocked_cells() -> int:
+	var count: int = 0
+	for pos in cells:
+		var cell: PlayerCell = cells[pos]
+		if cell.data != null:
+			count += 1
+	return count
 
 
 func _on_cell_lvled_up(cell: PlayerCell, lvl: int) -> void:
