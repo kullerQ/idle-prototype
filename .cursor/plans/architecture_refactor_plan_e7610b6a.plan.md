@@ -37,7 +37,7 @@ todos:
     status: completed
   - id: m7-safety
     content: Add smoke/boot checks and document expedition JSON; optional pure-function tests for damage/spawn/upgrades
-    status: pending
+    status: completed
 isProject: false
 ---
 

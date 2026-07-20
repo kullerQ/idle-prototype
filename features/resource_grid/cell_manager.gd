@@ -273,18 +273,7 @@ func set_cell_weight(_name: Names, value: int, type: Types = 0) -> void:
 func get_rand_name(type: Types) -> Names:
 	var table: Dictionary = tiers[type]
 	var roll: int = randi_range(0, table[0] - 1)
-	for key in table:
-		if key == 0:
-			continue
-
-		var value: int = table[key].weight
-		if roll < value:
-			return key
-
-		roll -= value
-
-	assert(false, "get_rand_name: no entry for type %s" % type)
-	return Names.NULL
+	return CellSpawnRoll.pick_weighted(table, roll) as Names
 
 
 func add_rand_resource(type: Types) -> CellResource:

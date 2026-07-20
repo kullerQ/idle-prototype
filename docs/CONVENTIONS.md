@@ -181,4 +181,17 @@ Domain `crit_occurred` is bridged once in `Game` → `G.crit_label_requested` �
 4. Domain signal for non-UI events; `G` only for menu/tooltip/crit bus.
 5. Inject deps from `Game` / parent manager; no new statics; no new `G` field unless it is a top-level manager.
 6. If it is saveable progress, plan for RunState (Phase 5) — do not invent a one-off save file.
-|
+7. Pure logic worth locking down? Add a `test_*` method under `tests/unit/` (extends `TestCase`). Run all tests: `godot --headless -s res://tests/run_tests.gd`.
+
+---
+
+## Testing
+
+| What | Where |
+|------|-------|
+| Headless test runner | `tests/run_tests.gd` |
+| Unit tests (pure functions) | `tests/unit/` — damage compile, spawn roll, upgrade applier |
+| Boot smoke (Main + G wiring) | `tests/boot_smoke.gd` |
+| Expedition JSON schema | `data/expeditions/README.md` |
+
+Prefer extracting testable static helpers (e.g. `CellSpawnRoll.pick_weighted`) over scene-heavy tests at this scale. GUT is optional later.

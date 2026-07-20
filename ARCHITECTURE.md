@@ -67,7 +67,7 @@ Main
 | **Shared UI** | `ui/shared/`: `AnimatedButton`, `PanelButton`, `ButtonUpgrades`, `NodePopupMenu` — reused by feature menus. |
 | **TimerManager** | World timers under `features/timers/` (with `TimerUI` / `TimerProgressBar`). Holds `cell_manager` + `expedition_manager`; skips auto-start of special spawns while expedition `is_active`. |
 | **BuildingManager** | Side buildings under `features/buildings/`; domain signal `crit_occurred`. Injects `economy` onto `BuildingCell`s. Building data under `data/buildings/`. |
-| **ExpeditionManager** | Expedition state (`is_active`) under `features/expeditions/`; domain signals `expedition_selected` / `started` / `completed` / `ended`. JSON layouts + reward `.tres` under `data/expeditions/`. |
+| **ExpeditionManager** | Expedition state (`is_active`) under `features/expeditions/`; domain signals `expedition_selected` / `started` / `completed` / `ended`. JSON layouts + `ExpeditionRewardData` under `data/expeditions/` — schema in [data/expeditions/README.md](data/expeditions/README.md). |
 | **ExpeditionEditor** | Extends CellManager under `features/expeditions/expedition_editor/`; uses public `cells` / `occupied_cells` / `get_data` / `set_cell_data` only. |
 | **ExpeditionMenu** | Under `features/expeditions/expedition_menu/`; injects `ExpeditionManager` onto buttons; closes on `expedition_selected`. |
 | **ExpeditionEndScreen** | Under `features/expeditions/expedition_end_screen/`; opens on `expedition_completed`; calls `manager.end_expedition()`. |
@@ -173,3 +173,26 @@ Leaf controls (`UpgradeNode`, `ExpeditionButton`) receive deps from their menu h
 ### UI bus bridge (single entry for domain → presentation)
 
 Combat and buildings emit domain `crit_occurred(pos)`. **`Game._on_crit_occurred`** is the only bridge to `G.crit_label_requested`; `UIPP` listens to the bus. Tooltips use `G.tooltip_requested` / `tooltip_close_required` from leaf controls; `Tooltip` listens on the outer UI plane. Do not add second crit/tooltip paths.
+
+---
+
+## Testing (Phase 8)
+
+Lightweight checks without a full GUT suite. Run headless from the project root:
+
+```bash
+godot --headless -s res://tests/run_tests.gd
+```
+
+Exit code `0` = pass, `1` = failure.
+
+| Check | Location | What it covers |
+|-------|----------|----------------|
+| Unit: damage compile | `tests/unit/test_damage_compile.gd` | `DamageManager.compile_damage` (BASE + BONUS × MULT) |
+| Unit: spawn roll | `tests/unit/test_spawn_roll.gd` | `CellSpawnRoll.pick_weighted` (extracted from `CellManager`) |
+| Unit: upgrade effect | `tests/unit/test_upgrade_effect.gd` | `UpgradeApplier` + `UpgradeEffectAddProjectileDamage` |
+| Boot smoke | `tests/boot_smoke.gd` | Instantiates `Main`, asserts `G` + manager wiring after boot |
+
+Add new pure-function tests under `tests/unit/` by extending `TestCase` (`tests/test_case.gd`) with `test_*` methods. Expedition layout JSON schema: [data/expeditions/README.md](data/expeditions/README.md).
+
+Debug builds still assert wiring in `G._assert_wired()` at bind time — boot smoke catches regressions in CI or before a push.
