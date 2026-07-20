@@ -19,7 +19,7 @@ todos:
     status: completed
   - id: m5a-save-service
     content: "Phase 5a: Add SaveService (user:// JSON read/write) + empty RunState dict -- no manager integration yet; just prove file I/O works"
-    status: pending
+    status: completed
   - id: m5b-economy-save
     content: "Phase 5b: Serialize/restore Economy.resources only -- the narrowest round-trip; verify wood/xp/cells survive save+load"
     status: pending

@@ -68,3 +68,6 @@ func _input(event):
 		G.ui_layout_change_requested.emit(UIPP.Layouts.BASE)
 	elif event.is_action_pressed("debug_layout_expedition"):
 		G.ui_layout_change_requested.emit(UIPP.Layouts.EXPEDITION)
+	elif event.is_action_pressed("debug_save_test"):
+		SaveService.save_to_file(RunState.new().to_dict())
+		print(SaveService.load_from_file())
