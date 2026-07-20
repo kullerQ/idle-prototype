@@ -141,7 +141,7 @@ Do not add new hardcoded `KEY_*` checks — add an InputMap action instead.
 - Meta upgrades: `features/meta_upgrades/` (`UpgradeManager`, `UpgradeApplier`, `UpgradeMenu`, `UpgradeNode`); `UpgradeDefinition` + effect Resources under `data/upgrades/` (wood + towers + buildings + projectiles batches migrated).
 - Expeditions: `features/expeditions/` (`ExpeditionManager`, menu / UI / end screen / editor); JSON layouts + `ExpeditionRewardData` under `data/expeditions/`.
 - UI: `ui/shared/` (buttons + `NodePopupMenu`), `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (`UIPP`, `ButtonContainer`, `LabelCrit`).
-- Wizard tower remains placeable; attack is a stub until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).
+- **Wizard tower stub:** `PlayerCellData.Types.WIZARD` and `data/player_cells/player_cell_wizard.tres` remain for internal/layout use only. No production UI or meta upgrade unlocks it; the `debug_add_wizard` hotkey was removed. `wizard_attack()` is a no-op in release builds until Magic combat returns. Expedition rewards go through `ExpeditionManager.apply_reward` (wood only for now).
 
 ---
 

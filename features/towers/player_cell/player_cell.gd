@@ -271,8 +271,9 @@ func rogue_attack() -> void:
 
 
 func wizard_attack() -> void:
-	# Wizard / Magic projectile not implemented yet — keep tower placeable for layout/debug.
-	push_warning("WIP: wizard_attack stub (Magic projectile removed from registries)")
+	# Wizard / Magic projectile not implemented — data stub only; no production UI.
+	if OS.is_debug_build():
+		push_warning("WIP: wizard_attack stub (Magic projectile removed from registries)")
 
 
 func druid_attack() -> void:

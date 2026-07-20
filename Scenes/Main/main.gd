@@ -61,8 +61,6 @@ func _input(event):
 		G.player_cell_manager.add_tower(PlayerCellData.Types.SHOOTER)
 	elif event.is_action_pressed("debug_add_rogue"):
 		G.player_cell_manager.add_tower(PlayerCellData.Types.ROGUE)
-	elif event.is_action_pressed("debug_add_wizard"):
-		G.player_cell_manager.add_tower(PlayerCellData.Types.WIZARD)
 	elif event.is_action_pressed("debug_add_druid"):
 		G.player_cell_manager.add_tower(PlayerCellData.Types.DRUID)
 	elif event.is_action_pressed("debug_add_executioner"):
