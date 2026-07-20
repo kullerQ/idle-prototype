@@ -63,80 +63,11 @@ enum Types {
 	FOREST_ADD,
 	}
 
-const _WOOD_DEFINITION_PATHS: PackedStringArray = [
-	"res://data/upgrades/meta/upgrade_wood_spawnrate.tres",
-	"res://data/upgrades/meta/upgrade_tree_lifetime.tres",
-	"res://data/upgrades/meta/upgrade_tree_durability.tres",
-	"res://data/upgrades/meta/upgrade_grove_add.tres",
-	"res://data/upgrades/meta/upgrade_grove_spawn.tres",
-	"res://data/upgrades/meta/upgrade_grove_value.tres",
-	"res://data/upgrades/meta/upgrade_grove_buffed.tres",
-	"res://data/upgrades/meta/upgrade_forest_add.tres",
-]
-
-const _TOWER_DEFINITION_PATHS: PackedStringArray = [
-	"res://data/upgrades/meta/upgrade_add_tower_cell.tres",
-	"res://data/upgrades/meta/upgrade_shooter.tres",
-	"res://data/upgrades/meta/upgrade_shooter_cooldown.tres",
-	"res://data/upgrades/meta/upgrade_shooter_accuracy.tres",
-	"res://data/upgrades/meta/upgrade_shooter_crit.tres",
-	"res://data/upgrades/meta/upgrade_shooter_crit_mult.tres",
-	"res://data/upgrades/meta/upgrade_shooter_xp.tres",
-	"res://data/upgrades/meta/upgrade_druid.tres",
-	"res://data/upgrades/meta/upgrade_druid_cooldown.tres",
-	"res://data/upgrades/meta/upgrade_druid_crit.tres",
-	"res://data/upgrades/meta/upgrade_druid_crit_mult.tres",
-	"res://data/upgrades/meta/upgrade_druid_xp.tres",
-	"res://data/upgrades/meta/upgrade_rogue.tres",
-	"res://data/upgrades/meta/upgrade_rogue_cooldown.tres",
-	"res://data/upgrades/meta/upgrade_rogue_crit.tres",
-	"res://data/upgrades/meta/upgrade_rogue_crit_mult.tres",
-	"res://data/upgrades/meta/upgrade_rogue_xp.tres",
-	"res://data/upgrades/meta/upgrade_executioner.tres",
-	"res://data/upgrades/meta/upgrade_executioner_cooldown.tres",
-	"res://data/upgrades/meta/upgrade_executioner_crit.tres",
-	"res://data/upgrades/meta/upgrade_executioner_crit_mult.tres",
-	"res://data/upgrades/meta/upgrade_executioner_xp.tres",
-]
-
-const _BUILDING_DEFINITION_PATHS: PackedStringArray = [
-	"res://data/upgrades/meta/upgrade_unlock_lumberjack.tres",
-	"res://data/upgrades/meta/upgrade_add_lumberjack.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_automation.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_cd.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_wood.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_crit.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_dmg.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_charge.tres",
-	"res://data/upgrades/meta/upgrade_lumberjack_wood_spawn.tres",
-	"res://data/upgrades/meta/upgrade_unlock_outpost.tres",
-	"res://data/upgrades/meta/upgrade_outpost_weakening_chance.tres",
-	"res://data/upgrades/meta/upgrade_outpost_multiattacks.tres",
-]
+const _META_DEFINITIONS_DIR: String = "res://data/upgrades/meta/"
 
 const _SPECIAL_SPAWN_TIMER_TYPES: Array = [
 	Types.UNLOCK_LUMBERJACK,
 	Types.UNLOCK_OUTPOST,
-]
-
-const _PROJECTILE_DEFINITION_PATHS: PackedStringArray = [
-	"res://data/upgrades/meta/upgrade_bullet_dmg.tres",
-	"res://data/upgrades/meta/upgrade_bullet_dist.tres",
-	"res://data/upgrades/meta/upgrade_bullet_spd.tres",
-	"res://data/upgrades/meta/upgrade_axe_bounce.tres",
-	"res://data/upgrades/meta/upgrade_axe_spd.tres",
-	"res://data/upgrades/meta/upgrade_druid_magic_dmg.tres",
-	"res://data/upgrades/meta/upgrade_druid_magic_spd.tres",
-	"res://data/upgrades/meta/upgrade_knife_dmg.tres",
-	"res://data/upgrades/meta/upgrade_knife_spd.tres",
-	"res://data/upgrades/meta/upgrade_knife_piercing.tres",
-	"res://data/upgrades/meta/upgrade_knife_range.tres",
-	"res://data/upgrades/meta/upgrade_greataxe_dmg.tres",
-	"res://data/upgrades/meta/upgrade_greataxe_backstab.tres",
-	"res://data/upgrades/meta/upgrade_greataxe_backstab_dmg.tres",
-	"res://data/upgrades/meta/upgrade_greataxe_spd.tres",
-	"res://data/upgrades/meta/upgrade_greataxe_piercing.tres",
-	"res://data/upgrades/meta/upgrade_greataxe_range.tres",
 ]
 
 var cell_manager : CellManager
@@ -166,14 +97,18 @@ func setup() -> void:
 	applier.building_manager = building_manager
 	applier.projectile_manager = projectile_manager
 	applier.damage_manager = damage_manager
-	_register_definitions(_WOOD_DEFINITION_PATHS)
-	_register_definitions(_TOWER_DEFINITION_PATHS)
-	_register_definitions(_BUILDING_DEFINITION_PATHS)
-	_register_definitions(_PROJECTILE_DEFINITION_PATHS)
+	_register_definitions_from_dir(_META_DEFINITIONS_DIR)
 
 
-func _register_definitions(paths: PackedStringArray) -> void:
-	for path in paths:
+func _register_definitions_from_dir(dir_path: String) -> void:
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		push_error("UpgradeManager: failed to open %s" % dir_path)
+		return
+	for file_name in dir.get_files():
+		if !file_name.ends_with(".tres"):
+			continue
+		var path := dir_path.path_join(file_name)
 		var def: UpgradeDefinition = load(path) as UpgradeDefinition
 		if def == null:
 			push_error("UpgradeManager: failed to load definition %s" % path)
