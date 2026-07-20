@@ -4,10 +4,10 @@ overview: "Complete the architecture refactor with enforced consistency: unify l
 todos:
   - id: p1-consolidate
     content: "Phase 1: Move Scripts/ to core/features, delete UpgradeNodeData, fix trivial TODOs"
-    status: pending
+    status: completed
   - id: p2-signals
     content: "Phase 2: Decouple PlayerCellManager from G; UI.get_upgrade_menu(); add architecture_lint test"
-    status: pending
+    status: completed
   - id: p3-level-effects
     content: "Phase 3a: Add LevelUpgradeEffect subclasses for all current match arms"
     status: completed
@@ -19,13 +19,13 @@ todos:
     status: completed
   - id: p4-save
     content: "Phase 4: RunState versioning, load bug fixes, main menu (m5f), document save scope"
-    status: pending
+    status: completed
   - id: p5-ui-wip
     content: "Phase 5: Refactor block_expensive, meta auto-discovery, ExpeditionUI minimal, hide Wizard debug"
-    status: pending
+    status: completed
   - id: p6-docs
     content: "Phase 6: Finalize CONVENTIONS/ARCHITECTURE, close refactor plan, verify definition-of-done"
-    status: pending
+    status: completed
 isProject: false
 ---
 
@@ -278,14 +278,14 @@ Replace four `_DEFINITION_PATHS` arrays in [`upgrade_manager.gd`](features/meta_
 
 **Definition of done checklist:**
 
-- [ ] `godot --headless -s res://tests/run_tests.gd` passes (unit + boot smoke + architecture lint)
-- [ ] Fresh game: main menu → New Game → playable
-- [ ] Continue restores economy + upgrades + towers + level upgrades
-- [ ] No `push_warning` WIP in normal expedition flow
-- [ ] `grep G\. features/` returns zero (or only allowlisted bridge if unavoidable)
-- [ ] `Scripts/` folder does not exist
-- [ ] Adding meta upgrade = new `.tres` in `data/upgrades/meta/` only (no path array edit)
-- [ ] Adding level upgrade = new `.tres` in `data/upgrades/level/` + scene node with matching `type` export
+- [x] `godot --headless -s res://tests/run_tests.gd` passes (unit + boot smoke + architecture lint)
+- [x] Fresh game: main menu → New Game → playable (`ui/main_menu/` + `run/main_scene` wired)
+- [x] Continue restores economy + upgrades + towers + level upgrades (`RunState.apply_to` + save tests)
+- [x] No `push_warning` WIP in normal expedition flow
+- [x] `grep G\. features/` returns only allowlisted UI menu scripts (+ comment-only lines)
+- [x] `Scripts/` folder does not exist
+- [x] Adding meta upgrade = new `.tres` in `data/upgrades/meta/` only (DirAccess auto-discovery)
+- [x] Adding level upgrade = new `.tres` in `data/upgrades/level/` + scene node with matching `type` export
 
 ---
 

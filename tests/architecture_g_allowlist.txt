@@ -1,0 +1,6 @@
+# Feature scripts allowed to reference G (UI bus: menus, tooltips).
+# Goal: zero gameplay G usage under features/; add paths here only when unavoidable.
+features/meta_upgrades/upgrade_node/upgrade_node.gd
+features/expeditions/expedition_end_screen/expedition_end_screen.gd
+features/expeditions/expedition_menu/expedition_menu.gd
+features/towers/level_upgrade_menu/level_upgrade_menu.gd

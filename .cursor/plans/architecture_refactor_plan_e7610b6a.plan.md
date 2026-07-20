@@ -30,8 +30,8 @@ todos:
     content: "Phase 5d: Serialize tower grid placements (cell type + position); rebuild via PlayerCellManager on load"
     status: completed
   - id: m5f-menu-save
-    content: "Deferred: Wire save/load to main menu (Continue / New Game / Save) -- explicit player action, never auto-load at boot"
-    status: pending
+    content: "Wire save/load to main menu (Continue / New Game) -- explicit player action, never auto-load at boot"
+    status: completed
   - id: m6-ui-ownership
     content: Inject menu deps from composition root; document UI/UIPP split; finish remove-G TODOs
     status: completed

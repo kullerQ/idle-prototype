@@ -2,7 +2,7 @@
 
 Team defaults for a 2–3 person Godot project. Follow these before inventing a second place for the same kind of thing.
 
-Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
+Companion: [ARCHITECTURE.md](ARCHITECTURE.md) (boot, ownership, signals).
 
 ---
 
@@ -10,10 +10,10 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 
 | New thing | Put it here |
 |-----------|-------------|
-| Grid / tower / expedition / building behavior | Matching feature folder (migrated: `features/<domain>/`; else `Scenes/<Domain>/`) — scene + script together |
-| Pure logic with no Node | Same feature folder, or `Scripts/` / `core/` only if truly cross-cutting |
-| Tunable numbers / unlocks / descriptions | `data/<domain>/` when migrated (else `Resources/`) as `.tres` + `_scr_*.gd`. Meta upgrade effects/text: `data/upgrades/` (`UpgradeDefinition` + effect scripts; wood + towers + buildings + projectiles batches done) |
-| Menu / HUD / tooltip | `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (UIPP, crit labels, button bar), `ui/shared/` (buttons, `NodePopupMenu`) |
+| Grid / tower / expedition / building behavior | Matching feature folder under `features/<domain>/` — scene + script together |
+| Pure logic with no Node | Same feature folder, or `core/` if truly cross-cutting |
+| Tunable numbers / unlocks / descriptions | `data/<domain>/` as `.tres` + `_scr_*.gd`. Meta upgrades: `data/upgrades/meta/` + effect scripts under `data/upgrades/effects/`. Level upgrades: `data/upgrades/level/` + effect scripts under `data/upgrades/effects/level/` |
+| Menu / HUD / tooltip | `ui/main_hud/` (outer `UI` + tooltip), `ui/game_hud/` (UIPP, crit labels, button bar), `ui/shared/` (buttons, `NodePopupMenu`), `ui/main_menu/` (boot entry) |
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit-label flash | `G` UI bus only |
 | Debug cheats | `Main` + InputMap actions, `OS.is_debug_build()` only |
@@ -24,34 +24,34 @@ Quick checks:
 - **New building type?** → scene/script under `features/buildings/`, data as `.tres` under `data/buildings/`, register/unlock via `BuildingManager` API — not a new field on `G`.
 - **New tower / resource cell?** → tower: scene under `features/towers/player_cell/`, data under `data/player_cells/`; resource cell: scene under `features/resource_grid/cell_resource/`, data under `data/resource_cells/`.
 - **New projectile?** → scene under `features/combat/projectiles/`, data under `data/projectiles/`, spawn via `ProjectileManager`.
-- **New meta upgrade?** → Prefer `UpgradeDefinition` `.tres` under `data/upgrades/meta/` + effect Resources under `data/upgrades/effects/` (wood + towers + buildings + projectiles batches done this way). Register path in `UpgradeManager._WOOD_DEFINITION_PATHS` / `_TOWER_DEFINITION_PATHS` / `_BUILDING_DEFINITION_PATHS` / `_PROJECTILE_DEFINITION_PATHS`. Effect/id fields use `int` (not manager enums) to avoid `class_name` cycles — same pattern as `CellSpawnWeight`. Do not add match arms in unrelated managers.
+- **New meta upgrade?** → `UpgradeDefinition` `.tres` under `data/upgrades/meta/` + effect Resources under `data/upgrades/effects/`. `UpgradeManager.setup()` auto-discovers all `.tres` in that folder — no path array edits. Effect/id fields use `int` (not manager enums) to avoid `class_name` cycles — same pattern as `CellSpawnWeight`. Do not add match arms in unrelated managers.
+- **New level upgrade?** → `UpgradeDefinition` `.tres` under `data/upgrades/level/` + `LevelUpgradeEffect` script(s) under `data/upgrades/effects/level/`. `LevelUpgradeManager.setup()` auto-discovers definitions. Add a matching `LevelUpgradeNode` in the frozen talent-tree scene with the same `type` export (enum int). Do not add `_apply_*` match arms.
 - **New expedition?** → layout JSON + reward `.tres` under `data/expeditions/`; runtime/UI under `features/expeditions/`; register via `ExpeditionManager` (not a new field on `G`).
 - **New menu?** → `NodePopupMenu` subclass (base under `ui/shared/popup_menu/`); register open/close on `G`; inject manager deps from `Game` / host, not `@onready var x = G.x` in leaf controls when avoidable. Feature-specific menus stay under `features/<domain>/`.
 - **New shared button / HUD widget?** → reusable control under `ui/shared/`; outer-chrome under `ui/main_hud/`; in-world HUD under `ui/game_hud/`.
 
 ---
 
-## Folder map (current → target)
+## Folder map
 
-Phase 3 feature + UI folder moves are done. Remaining physical moves (e.g. `G` → `core/`) wait for later phases. Logical homes:
+| Domain | Home |
+|--------|------|
+| Boot / autoload / save | `core/` (`g.gd`, `run_state.gd`, `save_service.gd`, `cell_spawn_roll.gd`) + shell scenes (`Scenes/Main/`, `Scenes/Game/`) |
+| Main menu | `ui/main_menu/` |
+| Resource grid | `features/resource_grid/` + `data/resource_cells/`, `data/spawn/` |
+| Towers / level upgrades | `features/towers/` + `data/player_cells/`, `data/upgrades/level/`, `data/upgrades/effects/level/` |
+| Combat | `features/combat/` + `data/projectiles/` |
+| Economy | `features/economy/` |
+| Buildings | `features/buildings/` + `data/buildings/` |
+| Expeditions | `features/expeditions/` + `data/expeditions/` |
+| Meta upgrades | `features/meta_upgrades/` + `data/upgrades/meta/`, `data/upgrades/effects/` |
+| Timers | `features/timers/` |
+| Shared UI controls | `ui/shared/` |
+| Outer HUD | `ui/main_hud/` |
+| In-world HUD | `ui/game_hud/` |
+| Tests | `tests/` (`unit/`, `boot_smoke.gd`, `architecture_lint.gd`) |
 
-| Domain | Current home | Target |
-|--------|--------------|--------|
-| Boot / thin autoload | `Scripts/g.gd`, `Scenes/Main/`, `Scenes/Game/` | `core/` + shell scenes |
-| Resource grid | `features/resource_grid/` (+ `data/resource_cells/`, `data/spawn/`) | `features/resource_grid/` |
-| Towers / level upgrades | `features/towers/` (+ `data/player_cells/`) | `features/towers/` |
-| Combat | `features/combat/` (managers + projectile scenes) | `features/combat/` |
-| Economy | `features/economy/` | `features/economy/` |
-| Buildings | `features/buildings/` (+ `data/buildings/`) | `features/buildings/` |
-| Expeditions | `features/expeditions/` (+ `data/expeditions/`) | `features/expeditions/` |
-| Meta upgrades | `features/meta_upgrades/` (+ `data/upgrades/` — `UpgradeDefinition` `.tres` under `meta/`, effect scripts under `effects/`; wood + towers + buildings + projectiles migrated) | `features/meta_upgrades/` |
-| Timers | `features/timers/` | `features/timers/` |
-| Shared UI controls | `ui/shared/` (`animated_button/`, `panel_button/`, `popup_menu/`) | `ui/shared/` |
-| Outer HUD | `ui/main_hud/` (`ui.gd`, `tooltip.gd`; hosted by `Scenes/Main/main.tscn`) | `ui/main_hud/` |
-| In-world HUD | `ui/game_hud/` (`uipp.gd`, `button_container.gd`, `label_crit/`) | `ui/game_hud/` |
-| Data (`.tres`) | `Resources/` (projectiles in `data/projectiles/`; resource cells in `data/resource_cells/`; spawn in `data/spawn/`; player cells in `data/player_cells/`; buildings in `data/buildings/`; upgrade scripts in `data/upgrades/`; expedition JSON + rewards in `data/expeditions/`) | `data/<domain>/` |
-
-**Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor. Do not big-bang rename the tree.
+**Rule:** one domain per PR when moving files. Update `preload` / `res://` paths; open touched scenes once in the editor.
 
 ---
 
@@ -61,12 +61,12 @@ Phase 3 feature + UI folder moves are done. Remaining physical moves (e.g. `G` �
 |------|------------|---------|
 | Files / folders | `snake_case` | `cell_manager.gd`, `player_cell.tscn` |
 | `class_name` | `PascalCase` | `CellManager`, `AnimatedButton` |
-| Resource scripts | `_scr_<name>.gd` next to or under `data/<domain>/` / `Resources/` | `_scr_cell_resource_data.gd` |
+| Resource scripts | `_scr_<name>.gd` under `data/<domain>/` | `_scr_cell_resource_data.gd` |
 | Scene folder ≈ type | Folder name may be PascalCase for editor visibility; script file stays snake_case | `ui/shared/animated_button/animated_button.gd` → `class_name AnimatedButton` |
 
 ### Level upgrade scene contract (frozen)
 
-`features/towers/level_upgrade_menu/level_upgrade_menu.tscn` encodes talent-tree layout in node names and hierarchy. Runtime code walks the tree by name — treat these as a **frozen contract** until Phase 7 (data-driven UI):
+`features/towers/level_upgrade_menu/level_upgrade_menu.tscn` encodes talent-tree layout in node names and hierarchy. Runtime code walks the tree by name — treat these as a **frozen contract** until a data-driven UI redesign:
 
 | Rule | Why |
 |------|-----|
@@ -75,7 +75,7 @@ Phase 3 feature + UI folder moves are done. Remaining physical moves (e.g. `G` �
 | Do **not** rename `ShooterUpgrades`, `RogueUpgrades`, or `DruidUpgrades` | `LevelUpgradeMenu.upgrade_paths` maps `PlayerCellData.Types` → those `$…/UpgradesContainer/*` nodes |
 | Do **not** reparent `LevelUpgradeNode` instances casually | `LevelUpgradeNode.path` is set in `_ready` from the **parent** name: `int(get_parent().name.split("_")[1])` — moving a node under a different `Path_*` changes its path index |
 
-If you rename or reparent nodes, update `level_upgrade_menu.gd` and `level_upgrade_node.gd` in the same PR and re-test all three tower trees. Prefer a data-driven redesign (Phase 7) over incremental scene renames.
+If you rename or reparent nodes, update `level_upgrade_menu.gd` and `level_upgrade_node.gd` in the same PR and re-test all three tower trees.
 
 ---
 
@@ -95,6 +95,7 @@ If you rename or reparent nodes, update `level_upgrade_menu.gd` and `level_upgra
 - Reaching into managers from deep gameplay helpers when a ref can be injected once at setup.
 - Parenting gameplay nodes (`Game` parents; `G` wires).
 - Emitting crit-label feedback from combat/buildings (emit domain `crit_occurred`; `Game` bridges to the UI bus).
+- Tower selection / level-upgrade targeting (`PlayerCellManager` domain signals; `Game` bridges to the UI bus).
 
 ### Prefer injection
 
@@ -103,13 +104,14 @@ If you rename or reparent nodes, update `level_upgrade_menu.gd` and `level_upgra
 
 ### Prefer domain signals
 
-- Events that mean something in the game world or a system: `expedition_selected` / `started` / `completed` / `ended`, cell hit/kill, tower leveled, etc.
+- Events that mean something in the game world or a system: `expedition_selected` / `started` / `completed` / `ended`, `tower_pressed` / `level_upgrade_requested`, cell hit/kill, tower leveled, etc.
 - Owning manager emits; UI (or other domains) connect.
 - UI then may call `G.open_menu` / `G.close_menu` — that hop is intentional.
 
 ### Allowed `G` reads
 
 - UI shell, composition root (`Main` / `Game`), and debug code.
+- Feature menu scripts listed in `tests/architecture_g_allowlist.txt` (tooltip / menu bus only).
 - New feature scripts under managers/combat should take injected refs instead of growing `@onready var x = G.x`.
 
 ---
@@ -120,9 +122,9 @@ If you rename or reparent nodes, update `level_upgrade_menu.gd` and `level_upgra
 |-----------------------------------|------------------|
 | Cell / tower / projectile / building stats | One-off glue and orchestration |
 | Spawn weights / tables | Tiny constants local to one function |
-| Upgrade definitions + descriptions (`data/upgrades/`; wood + towers + buildings + projectiles done) | Temporary enums / description dict only if a new batch is still mid-migration |
+| Meta + level upgrade definitions + descriptions (`data/upgrades/`) | Manager enums for save compatibility only; no description dicts or `_apply_*` match blocks |
 
-Do not add a second parallel damage Resource path while live combat uses `DamageManager` dictionaries. The abandoned `DamageData` / `DamageModData` Resource path was deleted in Phase 1.
+Do not add a second parallel damage Resource path while live combat uses `DamageManager` dictionaries.
 
 ---
 
@@ -145,7 +147,9 @@ After load, the resource grid respawns via `TimerManager` baseline timers — ac
 
 - Never write ad-hoc `user://` saves from random scripts.
 - New saveable data → extend `RunState.to_dict()` / `from_dict()` and bump `SAVE_VERSION` when the on-disk format changes.
-- Debug save/load hotkeys stay in `Main` (`OS.is_debug_build()` only); production uses the main menu (and optional in-game save if added later).
+- Debug save/load hotkeys stay in `Main` (`OS.is_debug_build()` only); production uses the main menu.
+
+Press **F5** in the editor to start at the main menu (not directly in-game).
 
 ---
 
@@ -157,6 +161,8 @@ Pass containers / managers via `setup()` or instance fields from `Game` / the sp
 
 - `Projectile.particle_container` — assigned per projectile from `ProjectileManager` (set by `Game`)
 - `PanelButton.container` — via `PanelButton.setup(ButtonContainer)`
+
+The only allowed `static var` today is `RunState._pending` (menu → session handoff). `architecture_lint.gd` enforces this.
 
 ---
 
@@ -182,7 +188,7 @@ Pixel-art games that render through a SubViewport need **two HUD planes**. That 
 
 Both HUD layers may listen to `G` UI signals and to expedition domain signals.
 
-### Menu host rule (Phase 6)
+### Menu host rule
 
 All `NodePopupMenu` subclasses share one registration style:
 
@@ -192,7 +198,7 @@ All `NodePopupMenu` subclasses share one registration style:
 4. **In-world host** — `Game` wires `LevelUpgradeMenu`, `ExpeditionMenu`, `ExpeditionEndScreen`, `UIPP`, and `ButtonContainer.setup(...)`.
 5. **Leaf controls** — menus inject into `UpgradeNode` / `ExpeditionButton`; those nodes may still emit tooltip bus signals on `G`.
 
-Domain `crit_occurred` is bridged once in `Game` → `G.crit_label_requested` → `UIPP`. Do not add parallel crit-label paths.
+Domain `crit_occurred` is bridged once in `Game` → `G.crit_label_requested` → `UIPP`. Tower selection is bridged once in `Game` between `PlayerCellManager` domain signals and `G.level_upgrade_menu_*`. Do not add parallel crit/tooltip/selection paths.
 
 ---
 
@@ -213,8 +219,15 @@ Domain `crit_occurred` is bridged once in `Game` → `G.crit_label_requested` �
 | What | Where |
 |------|-------|
 | Headless test runner | `tests/run_tests.gd` |
-| Unit tests (pure functions) | `tests/unit/` — damage compile, spawn roll, upgrade applier |
+| Unit tests (pure functions) | `tests/unit/` — damage compile, spawn roll, upgrade applier, run state, save/load |
 | Boot smoke (Main + G wiring) | `tests/boot_smoke.gd` |
+| Architecture lint | `tests/architecture_lint.gd` — no `G.` under `features/` (except allowlist), no `Scripts/` / `Resources/` folders or path refs, no `static var` outside `core/` |
 | Expedition JSON schema | `data/expeditions/README.md` |
 
-Prefer extracting testable static helpers (e.g. `CellSpawnRoll.pick_weighted`) over scene-heavy tests at this scale. GUT is optional later.
+Run everything headless from the project root:
+
+```bash
+godot --headless -s res://tests/run_tests.gd
+```
+
+Exit code `0` = pass, `1` = failure. Prefer extracting testable static helpers (e.g. `CellSpawnRoll.pick_weighted`) over scene-heavy tests at this scale.
