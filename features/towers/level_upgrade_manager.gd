@@ -78,6 +78,18 @@ func apply_for_load(type: Types, cell: PlayerCell) -> void:
 	applier.apply(_definitions[type], cell)
 
 
+## Re-applies saved level upgrades after reset_level_modifiers (load path).
+## Saved ints are current enum values; pre-3a saves may use legacy ints remapped here.
+func restore_saved_upgrades(cell: PlayerCell, saved_upgrades: Array) -> void:
+	for upgrade_type in saved_upgrades:
+		var remapped_type: int = remap_legacy_type(int(upgrade_type))
+		if remapped_type == Types.NULL:
+			continue
+		var type: Types = remapped_type as Types
+		apply_for_load(type, cell)
+		cell.applied_level_upgrades.append(type)
+
+
 func get_description(type: Types) -> String:
 	if type == Types.NULL:
 		return "no description"

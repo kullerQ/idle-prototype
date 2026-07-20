@@ -306,15 +306,11 @@ func _restore_cell_progress(cell: PlayerCell, entry: Dictionary) -> void:
 	cell.lvl = int(entry.get("level", 0))
 	cell.lvl_tokens = int(entry.get("lvl_tokens", 0))
 	cell.upgrade_path = entry.get("upgrade_path", []).duplicate()
-	var saved_upgrades: Array = entry.get("level_upgrades", [])
 	if level_upgrade_manager:
-		for upgrade_type in saved_upgrades:
-			var remapped_type: int = LevelUpgradeManager.remap_legacy_type(int(upgrade_type))
-			if remapped_type == LevelUpgradeManager.Types.NULL:
-				continue
-			var type: LevelUpgradeManager.Types = remapped_type as LevelUpgradeManager.Types
-			level_upgrade_manager.apply_for_load(type, cell)
-			cell.applied_level_upgrades.append(type)
+		level_upgrade_manager.restore_saved_upgrades(
+			cell,
+			entry.get("level_upgrades", [])
+		)
 	if cell.lvl_tokens > 0:
 		cell.upgrade_arrow.show()
 
