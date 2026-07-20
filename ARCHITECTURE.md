@@ -151,7 +151,25 @@ The game renders through a SubViewport. HUD is split on purpose:
 
 | Plane | Lives | Why |
 |-------|-------|-----|
-| Outer `UI` | Sibling of SubViewportContainer in Main | Chrome that must stay sharp / above the pixel view (currencies, tooltips, some menus) |
+| Outer `UI` | Sibling of SubViewportContainer in Main | Chrome that must stay sharp / above the pixel view (currencies, tooltips, UpgradeMenu) |
 | In-world `UIPP` | Inside Game (CanvasLayer) | Feedback tied to game-space coords (crit labels) and layout that swaps with expedition state |
 
 Shared leaf controls (`AnimatedButton`, `PanelButton`, `NodePopupMenu`) live under `ui/shared/` and are used by either plane / feature menus. Do not put new shared widgets back under `Scenes/`.
+
+### Menu host rule (Phase 6)
+
+All `NodePopupMenu` subclasses follow the same contract:
+
+| Step | Who | What |
+|------|-----|------|
+| Open/close routing | `NodePopupMenu._ready` | Connect to the paired signals in `G.menu_signals[type]` |
+| Manager deps | Composition root | Inject via `setup(...)` or assigned fields **before** `_ready` — never `@onready var x = G.x` in leaf menus |
+| Outer menus | `UI` (Main scene) | `UpgradeMenu` registers with `UI.register_upgrade_menu` in `_enter_tree`; `UI` holds shell refs wired after `Game.bind_scene_managers` |
+| In-world menus | `Game` | `LevelUpgradeMenu`, `ExpeditionMenu`, `ExpeditionEndScreen` — assign manager/economy deps in `Game._enter_tree` before or right after `add_child` |
+| Highlight badges | `ButtonContainer` | Owns labels; injects into `UpgradeMenu` / `PlayerCellManager` via `setup()` (deferred until `G.ui` exists) |
+
+Leaf controls (`UpgradeNode`, `ExpeditionButton`) receive deps from their menu host's `_inject_*_deps`, not from `G`.
+
+### UI bus bridge (single entry for domain → presentation)
+
+Combat and buildings emit domain `crit_occurred(pos)`. **`Game._on_crit_occurred`** is the only bridge to `G.crit_label_requested`; `UIPP` listens to the bus. Tooltips use `G.tooltip_requested` / `tooltip_close_required` from leaf controls; `Tooltip` listens on the outer UI plane. Do not add second crit/tooltip paths.

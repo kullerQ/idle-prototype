@@ -146,7 +146,19 @@ Pixel-art games that render through a SubViewport need **two HUD planes**. That 
 | Button bar | `ui/game_hud/button_container.gd` (child of `game.tscn`) | In-world debug/action buttons + highlight badge ownership |
 | Shared controls | `ui/shared/` | `AnimatedButton`, `PanelButton`, `ButtonUpgrades`, `NodePopupMenu` — reusable by any feature menu |
 
-Both HUD layers may listen to `G` UI signals and to expedition domain signals. Prefer one registration style for all `NodePopupMenu` subclasses (Phase 6).
+Both HUD layers may listen to `G` UI signals and to expedition domain signals.
+
+### Menu host rule (Phase 6)
+
+All `NodePopupMenu` subclasses share one registration style:
+
+1. **Open/close** — base class connects to `G.menu_signals[type]` in `_ready`; callers use `G.toggle_menu` / `open_menu` / `close_menu`.
+2. **Deps** — composition root injects managers (`setup()` or fields set before `_ready`). No `@onready var x = G.x` in leaf menus.
+3. **Outer host** — `UI` in Main wires `UpgradeMenu` via `register_upgrade_menu` (after `Game.bind_scene_managers` so `upgrade_manager` exists).
+4. **In-world host** — `Game` wires `LevelUpgradeMenu`, `ExpeditionMenu`, `ExpeditionEndScreen`, `UIPP`, and `ButtonContainer.setup(...)`.
+5. **Leaf controls** — menus inject into `UpgradeNode` / `ExpeditionButton`; those nodes may still emit tooltip bus signals on `G`.
+
+Domain `crit_occurred` is bridged once in `Game` → `G.crit_label_requested` → `UIPP`. Do not add parallel crit-label paths.
 
 ---
 

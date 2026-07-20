@@ -27,6 +27,8 @@ func _enter_tree() -> void:
 		$ExpeditionManager,
 	)
 
+	var expedition_manager: ExpeditionManager = G.expedition_manager
+
 	var projectile_container: Node2D = add_new_node(Node2D, "ProjectileContainer")
 	G.projectile_manager.projectile_container = projectile_container
 
@@ -35,6 +37,7 @@ func _enter_tree() -> void:
 
 	var uipp_layer: CanvasLayer = add_new_node(CanvasLayer, "UIPPLayer")
 	var uipp: UIPP = add_new_node(UIPP, "UIPP", uipp_layer)
+	uipp.expedition_manager = expedition_manager
 	var level_upgrade_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "LevelUpgradeMenuLayer", uipp)
 	var expedition_menu_layer: CanvasLayer = add_new_node(CanvasLayer, "ExpeditionMenuLayer", uipp)
 
@@ -44,8 +47,8 @@ func _enter_tree() -> void:
 	level_upgrade_menu.player_cell_manager = G.player_cell_manager
 	level_upgrade_menu_layer.add_child(level_upgrade_menu)
 
-	var expedition_manager: ExpeditionManager = G.expedition_manager
-	add_scene(EXPEDITION_MENU_SCENE, "ExpeditionMenu", expedition_menu_layer)
+	var expedition_menu: ExpeditionMenu = add_scene(EXPEDITION_MENU_SCENE, "ExpeditionMenu", expedition_menu_layer) as ExpeditionMenu
+	expedition_menu.setup(expedition_manager)
 
 	var expedition_end_screen: ExpeditionEndScreen = new_scene(EXPEDITION_END_SCREEN_SCENE, "ExpeditionEndScreen")
 	expedition_end_screen.manager = expedition_manager
@@ -65,6 +68,14 @@ func _enter_tree() -> void:
 	G.building_manager.crit_occurred.connect(_on_crit_occurred)
 
 	uipp.set_layout(UIPP.Layouts.BASE)
+
+	# Outer UI enters after Game; defer until G.ui is registered by Main/UI.
+	call_deferred("_wire_button_container")
+
+
+func _wire_button_container() -> void:
+	var upgrade_menu: UpgradeMenu = G.ui.get_node("CanvasLayer/UpgradeMenu") as UpgradeMenu
+	$ButtonContainer.setup(G.ui, G.economy, G.player_cell_manager, upgrade_menu)
 
 
 func _on_crit_occurred(pos: Vector2) -> void:

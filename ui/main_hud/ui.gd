@@ -12,17 +12,25 @@ enum Menus {
 }
 
 var si_suffex: Array = ["", "K", "M", "B"]
+var economy: Economy
+var upgrade_manager: UpgradeManager
 @onready var label_xp: Label = $HBoxContainer/LabelXP
 @onready var label_wood: Label = $HBoxContainer/LabelWood
 
 
-# TODO: implement ui manager and refactor ui node to add ui manager
 func _enter_tree() -> void:
 	G.ui = self
+	# Shell wiring: Game.bind_scene_managers runs before this node enters (SubViewport is first).
+	economy = G.economy
+	upgrade_manager = G.upgrade_manager
 
 
 func _ready() -> void:
-	G.economy.res_changed.connect(_on_resource_changed)
+	economy.res_changed.connect(_on_resource_changed)
+
+
+func register_upgrade_menu(menu: UpgradeMenu) -> void:
+	menu.setup(economy, upgrade_manager)
 
 
 func add_label(control: Control, pos: Vector2, text: String) -> Label:

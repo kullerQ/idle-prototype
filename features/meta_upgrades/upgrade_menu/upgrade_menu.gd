@@ -5,13 +5,25 @@ var nodes: Dictionary = {}
 var unlocked_node_count: int = 0
 ## Injected by ButtonContainer (owns the label).
 var highlight_label: Label
-# TODO: remove G dependency (Phase 6)
-@onready var economy: Economy = G.economy
-@onready var upgrade_manager: UpgradeManager = G.upgrade_manager
+var economy: Economy
+var upgrade_manager: UpgradeManager
+
+
+func setup(p_economy: Economy, p_upgrade_manager: UpgradeManager) -> void:
+	economy = p_economy
+	upgrade_manager = p_upgrade_manager
+
+
+func _enter_tree() -> void:
+	var ui: UI = get_parent().get_parent() as UI
+	ui.register_upgrade_menu(self)
 
 
 func _ready() -> void:
 	super()
+	if OS.is_debug_build():
+		assert(economy != null, "UpgradeMenu.economy not injected")
+		assert(upgrade_manager != null, "UpgradeMenu.upgrade_manager not injected")
 	_inject_node_deps()
 	graphics.clip_contents = true
 	for i in range(1, Economy.Currencies.size()):

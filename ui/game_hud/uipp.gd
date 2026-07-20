@@ -13,6 +13,7 @@ enum Layouts {
 var label_crit_scene: PackedScene = preload("res://ui/game_hud/label_crit/label_crit.tscn")
 var timer_ui: TimerUI
 var expedition_ui: ExpeditionUI
+var expedition_manager: ExpeditionManager
 
 var layouts_visibility: Dictionary = {
 	Layouts.BASE: ["timer_ui"],
@@ -27,7 +28,6 @@ func _ready() -> void:
 	G.ui_layout_change_requested.connect(set_layout)
 	G.uipp = self
 
-	var expedition_manager: ExpeditionManager = G.expedition_manager
 	expedition_manager.expedition_started.connect(_on_expedition_started)
 	expedition_manager.expedition_ended.connect(_on_expedition_ended)
 

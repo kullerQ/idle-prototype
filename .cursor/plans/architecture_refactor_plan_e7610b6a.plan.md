@@ -34,7 +34,7 @@ todos:
     status: pending
   - id: m6-ui-ownership
     content: Inject menu deps from composition root; document UI/UIPP split; finish remove-G TODOs
-    status: pending
+    status: completed
   - id: m7-safety
     content: Add smoke/boot checks and document expedition JSON; optional pure-function tests for damage/spawn/upgrades
     status: pending

@@ -1,6 +1,10 @@
 extends Control
 class_name NodePopupMenu
 
+## Menu host contract (Phase 6): subclasses connect open/close via G.menu_signals in _ready.
+## Manager deps are injected by the composition root (Main/UI or Game) through setup() or
+## assigned fields before _ready — not @onready G.* reads in leaf menus.
+
 @onready var graphics = $Graphics
 @onready var init_graphics_y: float = graphics.position.y
 @export var type: UI.Menus
