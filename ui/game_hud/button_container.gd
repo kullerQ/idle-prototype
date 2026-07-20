@@ -28,6 +28,10 @@ func setup(
 	_wire_highlight_labels()
 
 
+func create_floating_label(control: Control, pos: Vector2, label_text: String) -> Label:
+	return ui.add_label(control, pos, label_text)
+
+
 func upgrade_menu_button_func() -> void:
 	G.toggle_menu(UI.Menus.UPGRADE)
 

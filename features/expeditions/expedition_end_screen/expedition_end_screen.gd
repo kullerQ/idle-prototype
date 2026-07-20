@@ -5,6 +5,13 @@ class_name ExpeditionEndScreen
 var manager: ExpeditionManager
 
 
+func _enter_tree() -> void:
+	$Graphics/MarginContainer/AnimatedButton.setup_label_factory(
+		func(control: Control, pos: Vector2, label_text: String) -> Label:
+			return G.ui.add_label(control, pos, label_text)
+	)
+
+
 func _ready():
 	super()
 	button.pressed_func = _on_end_pressed

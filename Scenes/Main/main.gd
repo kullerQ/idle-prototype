@@ -82,6 +82,6 @@ func _input(event):
 		else:
 			var state: RunState = RunState.from_dict(loaded)
 			state.restore_all(G.upgrade_manager, G.player_cell_manager, G.economy)
-			var upgrade_menu: UpgradeMenu = G.ui.get_node("CanvasLayer/UpgradeMenu")
+			var upgrade_menu: UpgradeMenu = G.ui.get_upgrade_menu()
 			upgrade_menu.sync_levels_from(G.upgrade_manager)
 			print("Loaded: ", loaded)

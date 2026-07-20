@@ -14,6 +14,7 @@ enum Menus {
 var si_suffex: Array = ["", "K", "M", "B"]
 var economy: Economy
 var upgrade_manager: UpgradeManager
+var _upgrade_menu: UpgradeMenu
 @onready var label_xp: Label = $HBoxContainer/LabelXP
 @onready var label_wood: Label = $HBoxContainer/LabelWood
 
@@ -30,7 +31,12 @@ func _ready() -> void:
 
 
 func register_upgrade_menu(menu: UpgradeMenu) -> void:
+	_upgrade_menu = menu
 	menu.setup(economy, upgrade_manager)
+
+
+func get_upgrade_menu() -> UpgradeMenu:
+	return _upgrade_menu
 
 
 func add_label(control: Control, pos: Vector2, text: String) -> Label:

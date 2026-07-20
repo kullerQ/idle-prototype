@@ -88,7 +88,7 @@ func _wire_tower_selection_bridge() -> void:
 
 
 func _wire_button_container() -> void:
-	var upgrade_menu: UpgradeMenu = G.ui.get_node("CanvasLayer/UpgradeMenu") as UpgradeMenu
+	var upgrade_menu: UpgradeMenu = G.ui.get_upgrade_menu()
 	$ButtonContainer.setup(G.ui, G.economy, G.player_cell_manager, upgrade_menu)
 
 
