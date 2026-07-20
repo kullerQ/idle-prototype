@@ -43,3 +43,20 @@ func sub_resource(type: Currencies, amount: int) -> void:
 func set_resource(type: Currencies, new_v: int) -> void:
 	resources[type] = new_v
 	res_changed.emit(type, new_v)
+
+
+func to_save_dict() -> Dictionary:
+	return {
+		"wood": resources[Currencies.WOOD],
+		"free_cells": resources[Currencies.FREE_CELLS],
+		"xp": resources[Currencies.XP],
+	}
+
+
+func load_from_dict(d: Dictionary) -> void:
+	if d.has("wood"):
+		set_resource(Currencies.WOOD, int(d["wood"]))
+	if d.has("free_cells"):
+		set_resource(Currencies.FREE_CELLS, int(d["free_cells"]))
+	if d.has("xp"):
+		set_resource(Currencies.XP, int(d["xp"]))

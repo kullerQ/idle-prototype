@@ -69,5 +69,15 @@ func _input(event):
 	elif event.is_action_pressed("debug_layout_expedition"):
 		G.ui_layout_change_requested.emit(UIPP.Layouts.EXPEDITION)
 	elif event.is_action_pressed("debug_save_test"):
-		SaveService.save_to_file(RunState.new().to_dict())
-		print(SaveService.load_from_file())
+		var state: RunState = RunState.new()
+		state.snapshot_economy(G.economy)
+		SaveService.save_to_file(state.to_dict())
+		print("Saved: ", state.to_dict())
+	elif event.is_action_pressed("debug_load_test"):
+		var loaded: Dictionary = SaveService.load_from_file()
+		if loaded.is_empty():
+			print("No save file found")
+		else:
+			var state: RunState = RunState.from_dict(loaded)
+			state.restore_economy(G.economy)
+			print("Loaded: ", loaded)

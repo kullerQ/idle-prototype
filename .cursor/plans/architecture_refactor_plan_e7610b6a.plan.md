@@ -22,7 +22,7 @@ todos:
     status: completed
   - id: m5b-economy-save
     content: "Phase 5b: Serialize/restore Economy.resources only -- the narrowest round-trip; verify wood/xp/cells survive save+load"
-    status: pending
+    status: completed
   - id: m5c-upgrades-save
     content: "Phase 5c: Serialize purchased meta-upgrade IDs+levels; re-apply via existing UpgradeApplier on load"
     status: pending
