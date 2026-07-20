@@ -1,4 +1,5 @@
 class_name RunState
+## Versioned save blob + menu→session pending handoff. Prefer `apply_to` over calling restores piecemeal.
 
 const SAVE_VERSION: int = 1
 

@@ -90,3 +90,16 @@ func test_sync_free_cells_from_economy() -> void:
 	assert_eq(manager.free_cells.size(), 1)
 	assert_eq(economy.get_resource(Economy.Currencies.FREE_CELLS), 1)
 	assert_eq(manager.free_cells[0], empty)
+
+
+func test_load_skips_free_tower_cell_effect() -> void:
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	var upgrade_manager: UpgradeManager = _make_upgrade_manager(tree)
+	var economy: Economy = Economy.new()
+	upgrade_manager.player_cell_manager.economy = economy
+
+	upgrade_manager.load_from_dict({"ADD_TOWER_CELL": 1})
+
+	assert_eq(upgrade_manager.get_level(UpgradeManager.Types.ADD_TOWER_CELL), 1)
+	assert_eq(economy.get_resource(Economy.Currencies.FREE_CELLS), 0)
+	assert_eq(upgrade_manager.player_cell_manager.free_cells.size(), 0)

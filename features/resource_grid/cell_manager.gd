@@ -1,5 +1,7 @@
 extends GridContainer
 class_name CellManager
+## Resource grid: spawn, occupy, combat façade. Upgrade mutators change `all_data` in place.
+## Combat/specials/druid are composed subsystems created in `_ready`.
 
 const CELL_SIZE: Vector2 = Vector2(16, 16)
 
@@ -138,10 +140,12 @@ func _on_cell_died(cell: CellResource) -> void:
 
 # --- Combat façade ---
 
+## Clears every occupied cell via the combat resolver.
 func kill_grid() -> void:
 	combat.kill_grid()
 
 
+## Kills one cell via the combat resolver (rewards / free handled downstream).
 func kill_cell(target: CellResource) -> void:
 	combat.kill_cell(target)
 

@@ -1,4 +1,6 @@
 class_name UpgradeManager
+## Meta upgrades: discovers `data/upgrades/meta/*.tres`, tracks levels, applies via UpgradeApplier.
+## Load uses `for_load=true` so free cells / towers / spawn timers are not duplicated.
 
 enum Types {
 	NULL,
@@ -127,6 +129,7 @@ func get_level(type: Types) -> int:
 	return _levels.get(type, 0)
 
 
+## Levels keyed by enum name string (e.g. `"SHOOTER_CRIT": 2`). Zero/missing omitted.
 func to_save_dict() -> Dictionary:
 	var result: Dictionary = {}
 	for type in _levels:
@@ -137,6 +140,7 @@ func to_save_dict() -> Dictionary:
 	return result
 
 
+## Resets modifier baselines, re-applies each saved level with `for_load`, then restores special spawn timers.
 func load_from_dict(d: Dictionary) -> void:
 	_reset_modifier_baseline()
 	_levels.clear()

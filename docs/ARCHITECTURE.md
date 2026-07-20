@@ -45,8 +45,8 @@ scenes/main
 | **LevelUpgradeManager + LevelUpgradeApplier** | Per-tower talents from `data/upgrades/level/*.tres`. |
 | **ExpeditionManager** | Expedition state (`is_active`), layout load, rewards. |
 | **TimerManager / BuildingManager / Economy** | Timers, side buildings, currencies. |
-| **UI** (outer) | `ui/main_hud/` — currencies, tooltip, UpgradeMenu, Save button. Sibling of SubViewport in Main. |
-| **UIPP** (in-world) | `ui/game_hud/` — crit labels, timer/expedition layout inside Game’s CanvasLayer. |
+| **UI** (outer) | `ui/main_hud/` — currencies, tooltip, Save button. Sibling of SubViewport in Main. Hosts/wires the meta upgrade menu; the menu scene lives under `features/meta_upgrades/`. |
+| **UIPP** (in-world) | `ui/game_hud/` — crit labels, timer/expedition layout inside Game’s CanvasLayer. Domain menus (level upgrade, expedition) are created under Game and live in `features/`. |
 
 ---
 
@@ -73,10 +73,10 @@ Do not emit gameplay events on `G` from grid/combat/building code.
 
 Pixel art renders in a SubViewport. Two HUD layers:
 
-- **Outer UI** — sharp chrome above the scaled view (currencies, tooltips, meta upgrade menu).
+- **Outer UI** — sharp chrome above the scaled view (currencies, tooltips; hosts meta upgrade menu).
 - **UIPP** — in-world feedback (crit labels, expedition/timer layout swap).
 
-Shared controls live in `ui/shared/`.
+Shared controls live in `ui/shared/`. Domain menus stay under `features/<domain>/` — see [CONVENTIONS.md](CONVENTIONS.md#ui-placement-shell-vs-domain).
 
 ---
 
@@ -94,6 +94,8 @@ No new `static var` DI except `RunState._pending` for menu handoff.
 
 ## Known stubs
 
+Do not build new gameplay on these until the stub is replaced:
+
 - **Wizard tower** — placeable in data only; no production unlock; attack stub until Magic combat.
 - **Expedition rewards** — wood only via `ExpeditionManager.apply_reward`.
 - **Expedition time bar** — hidden until time tracking exists.
@@ -108,7 +110,7 @@ godot --headless -s res://tests/run_tests.gd
 
 | Test | Covers |
 |------|--------|
-| `tests/unit/*` | Damage compile, spawn roll, upgrades, save/load |
+| `tests/unit/*` | Damage compile, spawn roll, upgrades, save/load round-trips |
 | `tests/boot_smoke.gd` | Main scene boots, managers wired |
 
 Debug builds also assert wiring in `G._assert_wired()` at bind time.

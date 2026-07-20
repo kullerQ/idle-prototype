@@ -1,5 +1,7 @@
 extends GridContainer
 class_name PlayerCellManager
+## Tower grid: placement, highlight, level-up targeting, and tower save/load.
+## Domain signals (`tower_pressed`, `level_upgrade_requested`) are bridged to the UI bus by Game.
 
 const CELLS_IN_COLUMN: int = 13
 enum AttackEffects {
@@ -205,6 +207,7 @@ func _unlock_cell_slot() -> bool:
 	return true
 
 
+## After load: unlock slots so placed towers + economy FREE_CELLS match, then rebuild free pool.
 func sync_free_cells_from_economy(economy: Economy) -> void:
 	var placed_count: int = 0
 	for pos in cells:
@@ -305,6 +308,7 @@ func _on_cell_attacked(cell: PlayerCell, attack_effects: Array) -> void:
 					cell_manager.add_res(cell_data.type, cell_data.break_value)
 
 
+## Snapshot of placed towers (type, grid_pos, xp/level, level upgrades). Empty slots omitted.
 func to_save_dict() -> Array:
 	var result: Array = []
 	for pos in cells:
@@ -324,6 +328,7 @@ func to_save_dict() -> Array:
 	return result
 
 
+## Clears placed towers, then restores entries. Call `sync_free_cells_from_economy` after economy restore.
 func load_from_dict(d: Array) -> void:
 	_clear_placed_towers()
 	for entry in d:

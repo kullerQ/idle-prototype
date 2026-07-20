@@ -25,8 +25,18 @@ Co-locate scenes and scripts in the same folder (e.g. `features/towers/player_ce
 | Grid / tower / expedition / building behavior | `features/<domain>/` |
 | Pure logic (no Node) | Same feature folder, or `core/` if cross-cutting |
 | Stats / unlocks / descriptions | `data/<domain>/` as `.tres` |
-| Menu / HUD widget | `ui/` (see layout table in [README](../README.md)) |
+| App shell / shared chrome | `ui/` (see UI placement below) |
+| Domain-only menu or screen | `features/<domain>/` next to its manager |
 | Boot / save / autoload glue | `core/` or `scenes/` |
+
+### UI placement (shell vs domain)
+
+Do **not** put every Control under `ui/`. Split by ownership:
+
+- **`ui/`** — app shell and reusable chrome: main menu, outer HUD (`main_hud/`), in-world HUD host (`game_hud/` / `UIPP`), tooltips, shared controls (`ui/shared/`).
+- **`features/<domain>/`** — menus and screens that exist only for that domain and talk to its manager (meta upgrade menu, level upgrade menu, expedition menu / end screen / UI, timer UI). Co-locate with the manager.
+- Put a new shared button/panel under `ui/shared/` if two domains would otherwise copy it.
+- Do not move a domain menu into `ui/` just because it is a Control node.
 
 ### Common tasks
 
@@ -37,6 +47,31 @@ Co-locate scenes and scripts in the same folder (e.g. `features/towers/player_ce
 **New projectile** — scene under `features/combat/projectiles/<name>/`, data under `data/projectiles/`, register spawn in `ProjectileManager`.
 
 **New expedition** — JSON + reward `.tres` under `data/expeditions/`; UI under `features/expeditions/`.
+
+---
+
+## Pre-change checklist
+
+Before gameplay or save-format work:
+
+1. **Content** — prefer a `.tres` + effect script under `data/`; do not add description dicts or `_apply_*` match blocks in managers (effects go through appliers).
+2. **New manager dependency** — wire from `G.bind_scene_managers` / `scenes/game/game.gd` or the owning manager; do not reach for `G` from combat/grid/building code.
+3. **Save format** — extend `RunState`, bump `SAVE_VERSION`, and add/adjust a unit test under `tests/unit/`.
+4. **Stubs** — do not build new systems on Wizard combat, non-wood expedition rewards, or the hidden expedition time bar until those stubs are finished ([ARCHITECTURE.md](ARCHITECTURE.md#known-stubs)).
+5. **Gate** — run `godot --headless -s res://tests/run_tests.gd` before merging the change.
+
+---
+
+## Documentation comments (`##`)
+
+Godot documentation comments use `##` (not `#`) and appear in the editor Help / inspector tooltips.
+
+Prefer short `##` on:
+
+- Public manager APIs (`setup`, `apply`, save/load, spawn façades)
+- Non-obvious invariants (load order, `for_load` skips, injected deps)
+
+Skip restating the function name and skip most private `_` helpers. Keep long narrative in `docs/`.
 
 ---
 
@@ -96,7 +131,7 @@ Do not add `_apply_*` match blocks or description dicts in managers.
 
 ## Tests
 
-Add pure-logic tests under `tests/unit/` (extend `TestCase`). Run all:
+Add pure-logic tests under `tests/unit/` (extend `TestCase`). Prefer tests around save round-trips, upgrade apply/load, spawn weights, and damage compile — not UI layout or projectile motion. Register new scripts in `tests/test_runner.gd` `_UNIT_TESTS`. Run all:
 
 ```bash
 godot --headless -s res://tests/run_tests.gd

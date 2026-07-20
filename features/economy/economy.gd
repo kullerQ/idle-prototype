@@ -1,4 +1,5 @@
 class_name Economy
+## Currencies and save snapshot. Emits `res_changed` on every set.
 
 enum Currencies {
 	NULL,
@@ -45,6 +46,7 @@ func set_resource(type: Currencies, new_v: int) -> void:
 	res_changed.emit(type, new_v)
 
 
+## Flat dict for RunState (`wood`, `free_cells`, `xp`).
 func to_save_dict() -> Dictionary:
 	return {
 		"wood": resources[Currencies.WOOD],

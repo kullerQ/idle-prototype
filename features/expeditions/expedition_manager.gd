@@ -1,5 +1,6 @@
 extends Node
 class_name ExpeditionManager
+## Expedition session state (`is_active`), layout load, and rewards. Session is not saved.
 
 enum Types {
 	NULL,

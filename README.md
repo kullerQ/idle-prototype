@@ -11,7 +11,7 @@ Everything uses **`snake_case` folders and files** ([Godot project organization]
 | `core/` | Autoload `G`, save (`RunState`, `SaveService`), shared pure helpers |
 | `features/<domain>/` | Gameplay: managers, scenes, scripts co-located by domain |
 | `data/<domain>/` | Tunable `.tres` data and `_scr_*.gd` resource scripts |
-| `ui/` | Menus and HUD (main menu, outer UI, in-world HUD, shared controls) |
+| `ui/` | App shell chrome (main menu, outer HUD, in-world HUD host, shared controls). Domain menus live under `features/` — see [CONVENTIONS.md](docs/CONVENTIONS.md#ui-placement-shell-vs-domain) |
 | `scenes/` | Boot shell only: `main.tscn` (SubViewport + outer UI) and `game.tscn` (managers) |
 | `audio/` | Sound files |
 | `tests/` | Headless unit tests + boot smoke |
