@@ -9,6 +9,22 @@ func _enter_tree():
 	Engine.time_scale = 1
 
 
+func _ready() -> void:
+	call_deferred("_apply_pending_run_state")
+
+
+func _apply_pending_run_state() -> void:
+	var state: RunState = RunState.consume_pending()
+	if state == null:
+		return
+	state.apply_to({
+		"upgrade_manager": G.upgrade_manager,
+		"player_cell_manager": G.player_cell_manager,
+		"economy": G.economy,
+		"upgrade_menu": G.ui.get_upgrade_menu(),
+	})
+
+
 func _input(event):
 	if !(event is InputEventKey && event.is_pressed() && !event.echo):
 		return
@@ -69,10 +85,7 @@ func _input(event):
 	elif event.is_action_pressed("debug_layout_expedition"):
 		G.ui_layout_change_requested.emit(UIPP.Layouts.EXPEDITION)
 	elif event.is_action_pressed("debug_save_test"):
-		var state: RunState = RunState.new()
-		state.snapshot_economy(G.economy)
-		state.snapshot_upgrades(G.upgrade_manager)
-		state.snapshot_tower_grid(G.player_cell_manager)
+		var state: RunState = RunState.capture_from_game()
 		SaveService.save_to_file(state.to_dict())
 		print("Saved: ", state.to_dict())
 	elif event.is_action_pressed("debug_load_test"):

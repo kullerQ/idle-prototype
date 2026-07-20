@@ -2,6 +2,8 @@ class_name RunState
 
 const SAVE_VERSION: int = 1
 
+static var _pending: RunState
+
 const KEY_VERSION := "version"
 const KEY_ECONOMY := "economy"
 const KEY_UPGRADES := "upgrades"
@@ -12,6 +14,28 @@ var economy_data: Dictionary = {}
 var upgrades_data: Dictionary = {}
 var tower_grid_data: Array = []
 var save_version: int = SAVE_VERSION
+
+
+static func set_pending(state: RunState) -> void:
+	_pending = state
+
+
+static func clear_pending() -> void:
+	_pending = null
+
+
+static func consume_pending() -> RunState:
+	var state: RunState = _pending
+	_pending = null
+	return state
+
+
+static func capture_from_game() -> RunState:
+	var state: RunState = RunState.new()
+	state.snapshot_economy(G.economy)
+	state.snapshot_upgrades(G.upgrade_manager)
+	state.snapshot_tower_grid(G.player_cell_manager)
+	return state
 
 
 func to_dict() -> Dictionary:

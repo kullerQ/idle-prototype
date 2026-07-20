@@ -32,3 +32,15 @@ func test_from_dict_legacy_without_version() -> void:
 	var state: RunState = RunState.from_dict(legacy)
 	assert_eq(state.save_version, 0)
 	assert_eq(state.economy_data["wood"], 5)
+
+
+func test_pending_consume() -> void:
+	RunState.clear_pending()
+	assert_eq(RunState.consume_pending(), null)
+
+	var state: RunState = RunState.new()
+	state.economy_data = {"wood": 1}
+	RunState.set_pending(state)
+	var consumed: RunState = RunState.consume_pending()
+	assert_eq(consumed.economy_data["wood"], 1)
+	assert_eq(RunState.consume_pending(), null)

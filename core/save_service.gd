@@ -12,6 +12,15 @@ static func save_to_file(data: Dictionary) -> void:
 	file.close()
 
 
+static func has_save() -> bool:
+	return FileAccess.file_exists(SAVE_PATH)
+
+
+static func delete_save() -> void:
+	if FileAccess.file_exists(SAVE_PATH):
+		DirAccess.remove_absolute(SAVE_PATH)
+
+
 static func load_from_file() -> Dictionary:
 	if !FileAccess.file_exists(SAVE_PATH):
 		return {}

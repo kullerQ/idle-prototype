@@ -59,6 +59,11 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.682353)
 theme_override_font_sizes/font_size = 9
 text = "wood"
 
+[node name="SaveButton" type="Button" parent="UI/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Save"
+
 [node name="CanvasLayer" type="CanvasLayer" parent="UI"]
 
 [node name="UpgradeMenu" parent="UI/CanvasLayer" instance=ExtResource("4_i4aob")]

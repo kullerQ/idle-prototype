@@ -17,6 +17,7 @@ var upgrade_manager: UpgradeManager
 var _upgrade_menu: UpgradeMenu
 @onready var label_xp: Label = $HBoxContainer/LabelXP
 @onready var label_wood: Label = $HBoxContainer/LabelWood
+@onready var save_button: Button = $HBoxContainer/SaveButton
 
 
 func _enter_tree() -> void:
@@ -28,6 +29,17 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	economy.res_changed.connect(_on_resource_changed)
+	save_button.pressed.connect(_on_save_pressed)
+
+
+func save_game() -> void:
+	if G.player_cell_manager == null:
+		return
+	SaveService.save_to_file(RunState.capture_from_game().to_dict())
+
+
+func _on_save_pressed() -> void:
+	save_game()
 
 
 func register_upgrade_menu(menu: UpgradeMenu) -> void:
