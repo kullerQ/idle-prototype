@@ -81,7 +81,10 @@ func _input(event):
 			print("No save file found")
 		else:
 			var state: RunState = RunState.from_dict(loaded)
-			state.restore_all(G.upgrade_manager, G.player_cell_manager, G.economy)
-			var upgrade_menu: UpgradeMenu = G.ui.get_upgrade_menu()
-			upgrade_menu.sync_levels_from(G.upgrade_manager)
+			state.apply_to({
+				"upgrade_manager": G.upgrade_manager,
+				"player_cell_manager": G.player_cell_manager,
+				"economy": G.economy,
+				"upgrade_menu": G.ui.get_upgrade_menu(),
+			})
 			print("Loaded: ", loaded)
