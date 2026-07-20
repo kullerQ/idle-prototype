@@ -136,11 +136,14 @@ func _on_area_entered(a: Area2D) -> void:
 func set_disabled(_disabled: bool) -> void:
 	collision.disabled = _disabled
 
-
+#region TODO: Fix damage data asymmetry
 func get_dmg() -> float:
 	var total: float = 0
 	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
+			if type == DamageManager.DamageDataTypes.MULT:
+				total *= damage_data[dmg_type][type]
+				continue
 			for stat in damage_data[dmg_type][type]:
 				total += damage_data[dmg_type][type][stat]
 				
@@ -150,6 +153,8 @@ func get_dmg() -> float:
 func add_dmg(amount: int) -> void:
 	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
+			if type == DamageManager.DamageDataTypes.MULT:
+				continue
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] += amount
 
@@ -157,8 +162,11 @@ func add_dmg(amount: int) -> void:
 func div_dmg(amount: int) -> void:
 	for dmg_type in range(DamageManager.DamageDataTypes.size()):
 		for type in damage_data[dmg_type]:
+			if type == DamageManager.DamageDataTypes.MULT:
+				continue
 			for stat in damage_data[dmg_type][type]:
 				damage_data[dmg_type][type][stat] = floor(damage_data[dmg_type][type][stat] / amount)
+#endregion
 
 
 func ricochet(cell: CellResource = null, _div_dmg: bool = true) -> bool:
