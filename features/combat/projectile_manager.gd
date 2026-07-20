@@ -161,3 +161,13 @@ func add_resource_bullet(pos: Vector2, crit_chance: int, crit_mult: int, _dir: V
 	var bullet: Bullet = new_resource_projectile(pos, Types.BULLET, crit_chance, crit_mult, mod_data, {}, _ignore, _delay)
 	bullet.dir = _dir
 	add_projectile(bullet)
+
+
+func reset_upgrade_data() -> void:
+	projectile_data = {
+		Types.BULLET: _DATA_BULLET.duplicate(),
+		Types.KNIFE: _DATA_KNIFE.duplicate(),
+		Types.AXE: _DATA_AXE.duplicate(),
+		Types.DRUID_MAGIC: _DATA_DRUID_MAGIC.duplicate(),
+		Types.GREATAXE: _DATA_GREATAXE.duplicate(),
+	}

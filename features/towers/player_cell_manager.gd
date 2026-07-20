@@ -38,6 +38,7 @@ var economy: Economy
 var cell_manager: CellManager
 var damage_manager: DamageManager
 var projectile_manager: ProjectileManager
+var level_upgrade_manager: LevelUpgradeManager
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
@@ -251,3 +252,105 @@ func _on_cell_attacked(cell: PlayerCell, attack_effects: Array) -> void:
 				if res_cell:
 					var cell_data: CellResourceData = res_cell.data
 					cell_manager.add_res(cell_data.type, cell_data.break_value)
+
+
+func to_save_dict() -> Array:
+	var result: Array = []
+	for pos in cells:
+		var cell: PlayerCell = cells[pos]
+		if !cell.data || cell.data.type == PlayerCellData.Types.NULL:
+			continue
+		result.append({
+			"type": cell.data.type,
+			"grid_pos": [pos.x, pos.y],
+			"xp": int(cell.xp),
+			"level": cell.lvl,
+			"lvl_tokens": cell.lvl_tokens,
+			"upgrade_path": cell.upgrade_path.duplicate(),
+			"level_upgrades": cell.applied_level_upgrades.duplicate(),
+		})
+	return result
+
+
+func load_from_dict(d: Array) -> void:
+	_clear_placed_towers()
+	for entry in d:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var type: int = int(entry.get("type", 0))
+		if type == PlayerCellData.Types.NULL:
+			continue
+		var grid_pos: Array = entry.get("grid_pos", [])
+		if grid_pos.size() < 2:
+			push_warning("PlayerCellManager: invalid grid_pos in save entry")
+			continue
+		var coords := Vector2i(int(grid_pos[0]), int(grid_pos[1]))
+		if !cells.has(coords):
+			push_warning("PlayerCellManager: unknown grid_pos %s" % coords)
+			continue
+		_place_tower_at_for_load(type as PlayerCellData.Types, coords)
+		var cell: PlayerCell = cells[coords]
+		_restore_cell_progress(cell, entry)
+
+	_sync_cells_to_upgrade()
+
+
+func _restore_cell_progress(cell: PlayerCell, entry: Dictionary) -> void:
+	cell.reset_level_modifiers()
+	cell.xp = float(entry.get("xp", 0))
+	cell.lvl = int(entry.get("level", 0))
+	cell.lvl_tokens = int(entry.get("lvl_tokens", 0))
+	cell.upgrade_path = entry.get("upgrade_path", []).duplicate()
+	var saved_upgrades: Array = entry.get("level_upgrades", [])
+	if level_upgrade_manager:
+		for upgrade_type in saved_upgrades:
+			var type: LevelUpgradeManager.Types = int(upgrade_type) as LevelUpgradeManager.Types
+			level_upgrade_manager.apply_for_load(type, cell)
+			cell.applied_level_upgrades.append(type)
+	if cell.lvl_tokens > 0:
+		cell.upgrade_arrow.show()
+
+
+func _sync_cells_to_upgrade() -> void:
+	cells_to_upgrade.clear()
+	upgrade_cell_idx = 0
+	for pos in cells:
+		var cell: PlayerCell = cells[pos]
+		if cell.lvl_tokens <= 0:
+			continue
+		cells_to_upgrade.append(cell)
+		cell.upgrade_arrow.show()
+	if !lvl_upgrades_highlight_label:
+		return
+	if cells_to_upgrade.is_empty():
+		lvl_upgrades_highlight_label.hide()
+		return
+	lvl_upgrades_highlight_label.show()
+	lvl_upgrades_highlight_label.text = "%d" % cells_to_upgrade.size()
+
+
+func _clear_placed_towers() -> void:
+	for pos in cells:
+		var cell: PlayerCell = cells[pos]
+		if !cell.data || cell.data.type == PlayerCellData.Types.NULL:
+			continue
+		cell.set_data(all_data[PlayerCellData.Types.NULL])
+		if !free_cells.has(cell):
+			free_cells.append(cell)
+
+
+func _place_tower_at_for_load(type: PlayerCellData.Types, coords: Vector2i) -> void:
+	if type == PlayerCellData.Types.NULL:
+		return
+	var cell: PlayerCell = cells[coords]
+	cell.set_data(all_data[type])
+	free_cells.erase(cell)
+
+
+func reset_upgrade_data() -> void:
+	all_data[PlayerCellData.Types.NULL] = _DATA_NULL.duplicate()
+	all_data[PlayerCellData.Types.SHOOTER] = _DATA_SHOOTER.duplicate()
+	all_data[PlayerCellData.Types.ROGUE] = _DATA_ROGUE.duplicate()
+	all_data[PlayerCellData.Types.WIZARD] = _DATA_WIZARD.duplicate()
+	all_data[PlayerCellData.Types.DRUID] = _DATA_DRUID.duplicate()
+	all_data[PlayerCellData.Types.EXECUTIONER] = _DATA_EXECUTIONER.duplicate()

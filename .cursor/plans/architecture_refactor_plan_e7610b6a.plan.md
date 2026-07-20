@@ -28,7 +28,7 @@ todos:
     status: completed
   - id: m5d-grid-save
     content: "Phase 5d: Serialize tower grid placements (cell type + position); rebuild via PlayerCellManager on load"
-    status: pending
+    status: completed
   - id: m5e-boot-integration
     content: "Phase 5e: Wire RunState into Game boot (try_load_save after all wiring); autosave on key events"
     status: pending

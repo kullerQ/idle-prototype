@@ -62,7 +62,12 @@ func unblock() -> void:
 
 
 func get_cost(currency: Economy.Currencies) -> int:
-	return cost[currency][lvl]
+	if !cost.has(currency):
+		return 0
+	var costs: PackedInt64Array = cost[currency]
+	if lvl >= costs.size():
+		return 0
+	return costs[lvl]
 
 
 func get_cost_text() -> String:

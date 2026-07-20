@@ -39,6 +39,7 @@ var projectile_mod_data: ProjectileDataModifiers
 
 var cooldown: float = 1
 var upgrade_path: Array = []
+var applied_level_upgrades: Array = []
 var attack_count: int = 0
 var type_name: String
 var xp: float = 0
@@ -168,6 +169,32 @@ func set_data(_data: PlayerCellData) -> void:
 	progress_bar.show()
 	set_process_unhandled_input(true)
 	set_physics_process(true)
+
+
+func reset_level_modifiers() -> void:
+	cooldown_reduction = 0
+	bonus_crit_chance = 0
+	auto_aim = false
+	bonus_attacks = 0
+	attack_effects = []
+	weakened_dmg_mod = 0.4
+	auto_weakening_chance = 0
+	special_attack_count = 0
+	spawn_tree_on_overheal_chance = 0
+	spawn_wood_to_the_right_chance = 0
+	cell_lvlup_chance = 0
+	reduce_cd_if_heal = 0
+	weakening_chance = 0
+	max_obelisks = 1
+	obelisk_spawn_chance = 0
+	obelisks = []
+	upgrade_path = []
+	applied_level_upgrades = []
+	projectile_mod_data = ProjectileDataModifiers.new(weakened_dmg_mod)
+	bonus_damage = DamageManager.new_damage_data(
+		DamageManager.new_data(0, 0),
+		DamageManager.new_data(0, 0)
+	)
 
 
 func _on_timeout() -> void:

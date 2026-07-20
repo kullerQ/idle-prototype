@@ -7,11 +7,14 @@ enum Types {
 
 }
 var timers: Dictionary = {}
+var _default_wood_timer: DisplayableTimer
+var _default_wood_wait_time: float = 8.0
 ## Injected by G; spawn timeouts call CellManager façade methods.
 var cell_manager: CellManager
 var expedition_manager: ExpeditionManager
 
 signal timer_added(timer: Timer)
+signal timer_removed(timer: Timer)
 
 
 func _enter_tree() -> void:
@@ -19,7 +22,8 @@ func _enter_tree() -> void:
 		timers[i] = {}
 
 	add_cell_spawn_timer(DisplayableTimer.new(
-		8, Color(0.471, 0.404, 0.267)), CellManager.Types.WOOD)
+		_default_wood_wait_time, Color(0.471, 0.404, 0.267)), CellManager.Types.WOOD)
+	_default_wood_timer = get_res_timer(CellManager.Types.WOOD)
 
 
 func _ready() -> void:
@@ -85,3 +89,16 @@ func get_special_cell_timer(res_name: CellManager.Names) -> DisplayableTimer:
 func sub_timer_wait_t(timer_type: Types, value: int, amount: float) -> void:
 	var timer: DisplayableTimer = get_timer(timer_type, value)
 	timer.wait_time = max(0.1, timer.wait_time - amount)
+
+
+func reset_upgrade_timers() -> void:
+	if _default_wood_timer:
+		_default_wood_timer.wait_time = _default_wood_wait_time
+	var cell_spawn_timers: Dictionary = timers[Types.CELL_SPAWN]
+	for timer in cell_spawn_timers.duplicate():
+		if timer == _default_wood_timer:
+			continue
+		cell_spawn_timers.erase(timer)
+		if is_instance_valid(timer):
+			timer_removed.emit(timer)
+			timer.queue_free()

@@ -122,6 +122,11 @@ func add_flat_damage_bonus(projectile_type: ProjectileManager.Types, amount: flo
 	flat_damage_bonus[projectile_type] += amount
 
 
+func reset_upgrade_modifiers() -> void:
+	for i in range(1, ProjectileManager.Types.size()):
+		flat_damage_bonus[i] = 0
+
+
 ## Merge tower bonus_damage + flat_damage_bonus into a duplicated projectile damage dict.
 func build_projectile_damage(projectile_type: ProjectileManager.Types, bonus_damage: Dictionary) -> Dictionary:
 	var damage_data: Dictionary = get_damage_data(projectile_type).duplicate(true)

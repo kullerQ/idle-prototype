@@ -10,13 +10,15 @@ var projectile_manager: ProjectileManager
 var damage_manager: DamageManager
 
 
-func apply(def: UpgradeDefinition, times: int = 1) -> void:
+func apply(def: UpgradeDefinition, times: int = 1, for_load: bool = false) -> void:
 	for _i in times:
 		for effect in def.effects:
-			_apply_effect(effect as UpgradeEffect)
+			_apply_effect(effect as UpgradeEffect, for_load)
 
 
-func _apply_effect(effect: UpgradeEffect) -> void:
+func _apply_effect(effect: UpgradeEffect, for_load: bool = false) -> void:
+	if for_load && (effect is UpgradeEffectAddFreeTowerCell || effect is UpgradeEffectAddTower):
+		return
 	if effect is UpgradeEffectSubTimerWait:
 		var e: UpgradeEffectSubTimerWait = effect as UpgradeEffectSubTimerWait
 		timer_manager.sub_timer_wait_t(e.timer_type, e.timer_key, e.amount)
@@ -28,7 +30,10 @@ func _apply_effect(effect: UpgradeEffect) -> void:
 		cell_manager.add_break_and_durability(e.cell_name, e.break_amount, e.durability_amount)
 	elif effect is UpgradeEffectUnlockWeightedResource:
 		var e: UpgradeEffectUnlockWeightedResource = effect as UpgradeEffectUnlockWeightedResource
-		cell_manager.unlock_weighted_resource(e.cell_name, e.weight, e.resource_type)
+		if for_load:
+			cell_manager.add_cell_weight(e.cell_name, e.weight, e.resource_type)
+		else:
+			cell_manager.unlock_weighted_resource(e.cell_name, e.weight, e.resource_type)
 	elif effect is UpgradeEffectAddCellWeight:
 		var e: UpgradeEffectAddCellWeight = effect as UpgradeEffectAddCellWeight
 		cell_manager.add_cell_weight(e.cell_name, e.amount, e.resource_type)

@@ -17,10 +17,15 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if !is_instance_valid(timer):
+		set_physics_process(false)
+		return
 	progress_bar.value = (wt - timer.time_left) / wt
 
 
 func _on_timeout() -> void:
+	if !is_instance_valid(timer):
+		return
 	wt = timer.wait_time
 	if tw:
 		tw.kill()

@@ -53,3 +53,7 @@ func add_charge_per_hit(type: Buildings, amount: int) -> void:
 
 func add_production(type: Buildings, currency: Economy.Currencies, value: int) -> void:
 	all_data[type].production[currency] += value
+
+
+func reset_upgrade_data() -> void:
+	all_data[Buildings.LUMBERJACK] = _DATA_LUMBERJACK.duplicate()

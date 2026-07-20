@@ -198,6 +198,8 @@ func to_save_dict() -> Dictionary:
 
 
 func load_from_dict(d: Dictionary) -> void:
+	_reset_modifier_baseline()
+	_levels.clear()
 	for key in d:
 		if !Types.has(key):
 			push_warning("UpgradeManager: unknown upgrade id '%s' in save data" % key)
@@ -210,7 +212,16 @@ func load_from_dict(d: Dictionary) -> void:
 			push_error("UpgradeManager: no UpgradeDefinition for type %s" % type)
 			continue
 		_levels[type] = level
-		applier.apply(_definitions[type], level)
+		applier.apply(_definitions[type], level, true)
+
+
+func _reset_modifier_baseline() -> void:
+	timer_manager.reset_upgrade_timers()
+	player_cell_manager.reset_upgrade_data()
+	cell_manager.reset_upgrade_data()
+	projectile_manager.reset_upgrade_data()
+	damage_manager.reset_upgrade_modifiers()
+	building_manager.reset_upgrade_data()
 
 
 func _on_upgrade_purchased(type: Types) -> void:

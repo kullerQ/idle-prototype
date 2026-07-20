@@ -55,14 +55,20 @@ var player_cell_manager: PlayerCellManager
 
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:
-	if _apply_shooter_upgrade(type, cell):
-		pass
-	elif _apply_druid_upgrade(type, cell):
-		pass
-	elif _apply_rogue_upgrade(type, cell):
-		pass
-
+	_apply_upgrade(type, cell)
 	player_cell_manager.cell_upgraded.emit(cell)
+
+
+func apply_for_load(type: Types, cell: PlayerCell) -> void:
+	_apply_upgrade(type, cell)
+
+
+func _apply_upgrade(type: Types, cell: PlayerCell) -> void:
+	if _apply_shooter_upgrade(type, cell):
+		return
+	if _apply_druid_upgrade(type, cell):
+		return
+	_apply_rogue_upgrade(type, cell)
 
 
 func _apply_shooter_upgrade(type: Types, cell: PlayerCell) -> bool:

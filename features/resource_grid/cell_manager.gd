@@ -440,3 +440,18 @@ func get_grid_total_hp() -> int:
 		total += i.hp
 
 	return total
+
+
+func reset_upgrade_data() -> void:
+	all_data = {
+		Names.WOOD_TREE: _DATA_WOOD_TREE.duplicate(),
+		Names.WOOD_GROVE: _DATA_WOOD_GROVE.duplicate(),
+		Names.WOOD_FOREST: _DATA_WOOD_FOREST.duplicate(),
+		Names.SPECIAL_LUMBERJACK: _DATA_SPECIAL_LUMBERJACK.duplicate(),
+		Names.SPECIAL_OUTPOST: _DATA_SPECIAL_OUTPOST.duplicate(),
+		Names.SPECIAL_DRUID_OBELISK: _DATA_SPECIAL_DRUID_OBELISK.duplicate(),
+	}
+	for i in all_data:
+		all_data[i]._name = i
+	max_lumberjack_count = 1
+	_build_tiers_from_spawn_config()

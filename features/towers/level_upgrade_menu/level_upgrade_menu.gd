@@ -52,6 +52,7 @@ func _on_upgrade_button_pressed(node: LevelUpgradeNode) -> void:
 	economy.sub_resource(Economy.Currencies.XP, node.cost)
 #	cell.sub_tokens()
 	node.locked_for.append(cell)
+	cell.applied_level_upgrades.append(type)
 	manager.apply_upgrade(type, cell)
 #	label_tokens.text = "%d" %cell.lvl_tokens
 
@@ -178,4 +179,14 @@ func _on_level_upgrade_menu_open_requested(_cell: PlayerCell) -> void:
 	
 	global_position = cell.global_position + Vector2(12, 0)
 	label_tokens.text = "%d" %cell.lvl_tokens
+	_sync_locked_nodes_for_cell(cell)
 	show()
+	
+
+
+func _sync_locked_nodes_for_cell(_cell: PlayerCell) -> void:
+	for node in find_children("*", "LevelUpgradeNode", true, false):
+		var upgrade_node: LevelUpgradeNode = node as LevelUpgradeNode
+		if _cell.applied_level_upgrades.has(upgrade_node.type):
+			if !upgrade_node.locked_for.has(_cell):
+				upgrade_node.locked_for.append(_cell)

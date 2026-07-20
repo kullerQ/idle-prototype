@@ -72,6 +72,7 @@ func _input(event):
 		var state: RunState = RunState.new()
 		state.snapshot_economy(G.economy)
 		state.snapshot_upgrades(G.upgrade_manager)
+		state.snapshot_tower_grid(G.player_cell_manager)
 		SaveService.save_to_file(state.to_dict())
 		print("Saved: ", state.to_dict())
 	elif event.is_action_pressed("debug_load_test"):
@@ -80,8 +81,7 @@ func _input(event):
 			print("No save file found")
 		else:
 			var state: RunState = RunState.from_dict(loaded)
-			state.restore_economy(G.economy)
-			state.restore_upgrades(G.upgrade_manager)
+			state.restore_all(G.upgrade_manager, G.player_cell_manager, G.economy)
 			var upgrade_menu: UpgradeMenu = G.ui.get_node("CanvasLayer/UpgradeMenu")
 			upgrade_menu.sync_levels_from(G.upgrade_manager)
 			print("Loaded: ", loaded)

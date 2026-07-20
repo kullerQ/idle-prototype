@@ -107,6 +107,7 @@ func _wire_upgrades() -> void:
 
 	level_upgrade_manager = LevelUpgradeManager.new()
 	level_upgrade_manager.player_cell_manager = player_cell_manager
+	player_cell_manager.level_upgrade_manager = level_upgrade_manager
 
 
 func _assert_wired() -> void:
@@ -141,6 +142,7 @@ func _assert_wired() -> void:
 	assert(expedition_manager.projectile_manager != null, "ExpeditionManager.projectile_manager not wired")
 	assert(expedition_manager.timer_manager != null, "ExpeditionManager.timer_manager not wired")
 	assert(level_upgrade_manager.player_cell_manager != null, "LevelUpgradeManager.player_cell_manager not wired")
+	assert(player_cell_manager.level_upgrade_manager != null, "PlayerCellManager.level_upgrade_manager not wired")
 
 
 func toggle_menu(menu_type: UI.Menus) -> void:
