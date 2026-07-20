@@ -73,3 +73,17 @@ func reg_node(key: Array, node: UpgradeNode) -> void:
 		nodes[key] = []
 
 	nodes[key].append(node)
+
+
+func sync_levels_from(manager: UpgradeManager) -> void:
+	for node in find_children("*", "UpgradeNode", true, false):
+		var upgrade_node: UpgradeNode = node as UpgradeNode
+		if upgrade_node.type == UpgradeManager.Types.NULL:
+			continue
+		var saved_lvl: int = manager.get_level(upgrade_node.type)
+		if saved_lvl > 0:
+			upgrade_node.unlock()
+		upgrade_node.set_lvl(saved_lvl)
+
+	for i in range(1, Economy.Currencies.size()):
+		block_expensive(i, economy.resources[i])

@@ -10,9 +10,10 @@ var projectile_manager: ProjectileManager
 var damage_manager: DamageManager
 
 
-func apply(def: UpgradeDefinition) -> void:
-	for effect in def.effects:
-		_apply_effect(effect as UpgradeEffect)
+func apply(def: UpgradeDefinition, times: int = 1) -> void:
+	for _i in times:
+		for effect in def.effects:
+			_apply_effect(effect as UpgradeEffect)
 
 
 func _apply_effect(effect: UpgradeEffect) -> void:

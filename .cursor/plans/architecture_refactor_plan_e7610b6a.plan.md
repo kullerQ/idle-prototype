@@ -25,7 +25,7 @@ todos:
     status: completed
   - id: m5c-upgrades-save
     content: "Phase 5c: Serialize purchased meta-upgrade IDs+levels; re-apply via existing UpgradeApplier on load"
-    status: pending
+    status: completed
   - id: m5d-grid-save
     content: "Phase 5d: Serialize tower grid placements (cell type + position); rebuild via PlayerCellManager on load"
     status: pending

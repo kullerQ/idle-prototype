@@ -71,6 +71,7 @@ func _input(event):
 	elif event.is_action_pressed("debug_save_test"):
 		var state: RunState = RunState.new()
 		state.snapshot_economy(G.economy)
+		state.snapshot_upgrades(G.upgrade_manager)
 		SaveService.save_to_file(state.to_dict())
 		print("Saved: ", state.to_dict())
 	elif event.is_action_pressed("debug_load_test"):
@@ -80,4 +81,7 @@ func _input(event):
 		else:
 			var state: RunState = RunState.from_dict(loaded)
 			state.restore_economy(G.economy)
+			state.restore_upgrades(G.upgrade_manager)
+			var upgrade_menu: UpgradeMenu = G.ui.get_node("CanvasLayer/UpgradeMenu")
+			upgrade_menu.sync_levels_from(G.upgrade_manager)
 			print("Loaded: ", loaded)

@@ -143,6 +143,7 @@ var building_manager: BuildingManager
 
 var applier: UpgradeApplier
 var _definitions: Dictionary = {} # Types -> UpgradeDefinition
+var _levels: Dictionary = {} # Types -> int
 
 signal upgrade_purchased(type: Types)
 
@@ -182,7 +183,38 @@ func get_description(type: Types) -> String:
 	return "no description"
 
 
+func get_level(type: Types) -> int:
+	return _levels.get(type, 0)
+
+
+func to_save_dict() -> Dictionary:
+	var result: Dictionary = {}
+	for type in _levels:
+		var level: int = _levels[type]
+		if level <= 0:
+			continue
+		result[Types.keys()[type]] = level
+	return result
+
+
+func load_from_dict(d: Dictionary) -> void:
+	for key in d:
+		if !Types.has(key):
+			push_warning("UpgradeManager: unknown upgrade id '%s' in save data" % key)
+			continue
+		var type: Types = Types[key]
+		var level: int = int(d[key])
+		if level <= 0:
+			continue
+		if !_definitions.has(type):
+			push_error("UpgradeManager: no UpgradeDefinition for type %s" % type)
+			continue
+		_levels[type] = level
+		applier.apply(_definitions[type], level)
+
+
 func _on_upgrade_purchased(type: Types) -> void:
+	_levels[type] = get_level(type) + 1
 	if _definitions.has(type):
 		applier.apply(_definitions[type])
 		return
