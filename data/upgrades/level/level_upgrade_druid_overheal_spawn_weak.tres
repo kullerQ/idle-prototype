@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://data/upgrades/_scr_upgrade_definition.gd" id="1_def"]
+[ext_resource type="Script" path="res://data/upgrades/effects/level/_scr_level_upgrade_effect_set_weakening_chance.gd" id="2_weaken"]
+[ext_resource type="Script" path="res://data/upgrades/effects/level/_scr_level_upgrade_effect_add_spawn_tree_on_overheal_chance.gd" id="3_tree"]
+
+[sub_resource type="Resource" id="effect_0"]
+script = ExtResource("2_weaken")
+amount = 100
+
+[sub_resource type="Resource" id="effect_1"]
+script = ExtResource("3_tree")
+amount = 25
+
+[resource]
+script = ExtResource("1_def")
+id = 12
+description = "if overheals: 25% chance to spawn weakened wood resource"
+effects = [SubResource("effect_0"), SubResource("effect_1")]

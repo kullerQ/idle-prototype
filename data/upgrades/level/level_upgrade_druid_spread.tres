@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://data/upgrades/_scr_upgrade_definition.gd" id="1_def"]
+[ext_resource type="Script" path="res://data/upgrades/effects/level/_scr_level_upgrade_effect_add_spread_heal.gd" id="2_spread"]
+
+[sub_resource type="Resource" id="effect_0"]
+script = ExtResource("2_spread")
+ratio = 0.5
+targets = 2
+
+[resource]
+script = ExtResource("1_def")
+id = 9
+description = "50% of heal spreads to 2 random cells"
+effects = [SubResource("effect_0")]

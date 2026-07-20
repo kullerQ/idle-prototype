@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://data/upgrades/_scr_upgrade_definition.gd" id="1_def"]
+[ext_resource type="Script" path="res://data/upgrades/effects/level/_scr_level_upgrade_effect_set_ricochet_if_weakened.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="effect_0"]
+script = ExtResource("2_effect")
+enabled = true
+
+[resource]
+script = ExtResource("1_def")
+id = 3
+description = "if bullet is weakening, it ricochets off the weakened cell"
+effects = [SubResource("effect_0")]
