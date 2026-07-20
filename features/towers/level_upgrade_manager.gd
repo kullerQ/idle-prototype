@@ -13,11 +13,6 @@ enum Types {
 	DRUID_SPREAD,
 	SHOOTER_DPS_RICOCHET,
 	SHOOTER_DPS_DMG,
-	SHOOTER_DPS_5,
-	SHOOTER_DPS_6,
-	SHOOTER_SUP_4,
-	SHOOTER_SUP_5,
-	SHOOTER_SUP_6,
 	DRUID_OVERHEAL_SPAWN_WEAK,
 	DRUID_SPAWN_WOOD_RIGHT,
 	DRUID_OVERHEAL_LVLUP,
@@ -52,6 +47,19 @@ var descriptions: Dictionary = {
 }
 
 var player_cell_manager: PlayerCellManager
+
+## Remap pre-3a enum ints (dead slots 12–16 removed) for existing saves.
+const _REMOVED_DEAD_TYPE_COUNT: int = 5
+const _LEGACY_FIRST_DEAD_SLOT: int = 12
+const _LEGACY_FIRST_TYPE_AFTER_DEAD_SLOTS: int = 17
+
+
+static func remap_legacy_type(saved_type: int) -> int:
+	if saved_type >= _LEGACY_FIRST_TYPE_AFTER_DEAD_SLOTS:
+		return saved_type - _REMOVED_DEAD_TYPE_COUNT
+	if saved_type >= _LEGACY_FIRST_DEAD_SLOT && saved_type < _LEGACY_FIRST_TYPE_AFTER_DEAD_SLOTS:
+		return Types.NULL
+	return saved_type
 
 
 func apply_upgrade(type: Types, cell: PlayerCell) -> void:

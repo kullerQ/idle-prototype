@@ -32,4 +32,5 @@ const _UNIT_TESTS: Array = [
 	preload("res://tests/unit/test_damage_compile.gd"),
 	preload("res://tests/unit/test_spawn_roll.gd"),
 	preload("res://tests/unit/test_upgrade_effect.gd"),
+	preload("res://tests/unit/test_level_upgrade_effect.gd"),
 ]

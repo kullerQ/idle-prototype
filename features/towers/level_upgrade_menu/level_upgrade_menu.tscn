@@ -271,7 +271,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 18
+type = 13
 
 [node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root"]
 layout_mode = 2
@@ -281,7 +281,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 21
+type = 16
 
 [node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_2"]
 layout_mode = 2
@@ -295,7 +295,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 22
+type = 17
 
 [node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_2/Root"]
 layout_mode = 2
@@ -305,7 +305,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_1/Root/Path_1/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 23
+type = 18
 
 [node name="Path_2" type="VBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root"]
 layout_mode = 2
@@ -316,7 +316,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 17
+type = 12
 
 [node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2"]
 layout_mode = 2
@@ -330,7 +330,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 19
+type = 14
 
 [node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_1"]
 layout_mode = 2
@@ -363,7 +363,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 24
+type = 19
 
 [node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/DruidUpgrades/Root/Path_2/Root/Path_2"]
 layout_mode = 2
@@ -409,7 +409,7 @@ script = ExtResource("2_ienlk")
 [node name="LevelUpgradeNode" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1" instance=ExtResource("3_8usvs")]
 layout_mode = 2
 size_flags_horizontal = 4
-type = 20
+type = 15
 
 [node name="Root" type="HBoxContainer" parent="Graphics/Panel/MarginContainer/UpgradesContainer/RogueUpgrades/Root/Path_1"]
 layout_mode = 2
