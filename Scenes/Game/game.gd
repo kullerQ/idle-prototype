@@ -69,8 +69,22 @@ func _enter_tree() -> void:
 
 	uipp.set_layout(UIPP.Layouts.BASE)
 
+	_wire_tower_selection_bridge()
+
 	# Outer UI enters after Game; defer until G.ui is registered by Main/UI.
 	call_deferred("_wire_button_container")
+
+
+func _wire_tower_selection_bridge() -> void:
+	var player_cell_manager: PlayerCellManager = G.player_cell_manager
+	player_cell_manager.is_menu_blocking = func() -> bool: return G.opened_menu_type != 0
+	player_cell_manager.tower_selection_cleared.connect(
+		func() -> void: G.level_upgrade_menu_close_requested.emit()
+	)
+	player_cell_manager.level_upgrade_requested.connect(
+		func(cell: PlayerCell) -> void: G.level_upgrade_menu_open_requested.emit(cell)
+	)
+	G.level_upgrade_menu_close_requested.connect(player_cell_manager.clear_tower_selection)
 
 
 func _wire_button_container() -> void:

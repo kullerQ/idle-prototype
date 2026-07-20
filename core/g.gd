@@ -33,7 +33,6 @@ signal expedition_end_close_requested
 signal tooltip_requested(text: String)
 signal tooltip_close_required
 signal crit_label_requested(pos: Vector2)
-signal player_cell_pressed(cell: PlayerCell)
 signal level_upgrade_menu_close_requested
 signal level_upgrade_menu_open_requested(cell: PlayerCell)
 signal ui_layout_change_requested(new_layout: UIPP.Layouts)

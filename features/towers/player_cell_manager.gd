@@ -39,11 +39,16 @@ var cell_manager: CellManager
 var damage_manager: DamageManager
 var projectile_manager: ProjectileManager
 var level_upgrade_manager: LevelUpgradeManager
+## Injected by Game — returns true when another popup menu blocks tower selection.
+var is_menu_blocking: Callable
 
 signal cell_lvled_up(cell: PlayerCell, lvl: int)
 signal cell_upgraded(cell: PlayerCell)
 signal xp_added(cell: PlayerCell)
 signal cell_attacked(cell: PlayerCell)
+signal tower_pressed(cell: PlayerCell)
+signal tower_selection_cleared()
+signal level_upgrade_requested(cell: PlayerCell)
 
 
 func _ready() -> void:
@@ -70,8 +75,7 @@ func _ready() -> void:
 	xp_added.connect(_on_xp_added)
 #	fill_grid(PlayerCellData.Types.SHOOTER)
 
-	G.player_cell_pressed.connect(_on_cell_pressed)
-	G.level_upgrade_menu_close_requested.connect(_on_level_upgrade_menu_close_requested)
+	tower_pressed.connect(_on_tower_pressed)
 
 
 func _configure_cell(cell: PlayerCell) -> void:
@@ -84,28 +88,29 @@ func fill_grid(type: PlayerCellData.Types) -> void:
 		i.call_deferred("set_data", all_data[type])
 
 
-func _on_level_upgrade_menu_close_requested() -> void:
+func clear_tower_selection() -> void:
 	if !highlighted_cell:
 		return
-	
+
 	highlighted_cell.set_highlight(false)
 	highlighted_cell = null
 
 
-func _on_cell_pressed(cell: PlayerCell) -> void:
-	if G.opened_menu_type:
+func _on_tower_pressed(cell: PlayerCell) -> void:
+	if is_menu_blocking.is_valid() && is_menu_blocking.call():
 		return
-	
+
 	if highlighted_cell == cell:
-		G.level_upgrade_menu_close_requested.emit()
+		clear_tower_selection()
+		tower_selection_cleared.emit()
 		return
-	
+
 	if highlighted_cell:
 		highlighted_cell.set_highlight(false)
-		
+
 	highlighted_cell = cell
 	highlighted_cell.set_highlight(true)
-	G.level_upgrade_menu_open_requested.emit(cell)
+	level_upgrade_requested.emit(cell)
 
 
 func add_starting_cell(type: PlayerCellData.Types, offset_x: int = 0, offset_y: int = 0) -> void:

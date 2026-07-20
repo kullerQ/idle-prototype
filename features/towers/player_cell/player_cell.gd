@@ -97,7 +97,7 @@ func _on_pressed() -> void:
 	if !data:
 		return
 		
-	G.player_cell_pressed.emit(self)
+	manager.tower_pressed.emit(self)
 
 
 func add_xp() -> void:
