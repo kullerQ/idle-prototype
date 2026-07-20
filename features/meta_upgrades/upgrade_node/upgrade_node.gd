@@ -70,6 +70,13 @@ func get_cost(currency: Economy.Currencies) -> int:
 	return costs[lvl]
 
 
+func can_afford(p_economy: Economy) -> bool:
+	for currency in cost:
+		if p_economy.get_resource(currency) < get_cost(currency):
+			return false
+	return true
+
+
 func get_cost_text() -> String:
 	var cost_t: String = ""
 	for i in cost:

@@ -39,41 +39,18 @@ func _inject_node_deps() -> void:
 			node.upgrade_manager = upgrade_manager
 
 
-# TODO: remove bullshit 💩
-func block_expensive(currency: Economy.Currencies, value: int) -> void:
-	# bullshit 💩
-	var unlocked: int = 0
-	for k in nodes:
-		if !k.has(currency):
-			continue
+func block_expensive(currency: Economy.Currencies, _value: int) -> void:
+	var result: Dictionary = UpgradeAffordability.evaluate(nodes, economy, currency)
 
-		for node in nodes[k]:
-			if node.lvl == node.max_lvl || node.locked:
-				continue
-
-			if k.size() > 1:
-				var success: bool = true
-				for i in k:
-					if economy.get_resource(i) < node.get_cost(i):
-						node.block()
-						success = false
-						break
-
-				if !success:
-					continue
-
-			else:
-				if value < node.get_cost(currency):
-					node.block()
-					continue
-
-
-			node.unblock()
-			unlocked += 1
+	for node in result["blocked"]:
+		node.block()
+	for node in result["unblocked"]:
+		node.unblock()
 
 	if !highlight_label:
 		return
 
+	var unlocked: int = result["unlocked_count"]
 	if unlocked > 0:
 		highlight_label.text = str(unlocked)
 	else:
