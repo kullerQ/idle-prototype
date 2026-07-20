@@ -3,7 +3,7 @@ extends RefCounted
 ## Instantiates Main and asserts composition-root wiring after a few frames.
 
 
-const MAIN_SCENE: PackedScene = preload("res://Scenes/Main/main.tscn")
+const MAIN_SCENE: PackedScene = preload("res://scenes/main/main.tscn")
 
 var failures: int = 0
 

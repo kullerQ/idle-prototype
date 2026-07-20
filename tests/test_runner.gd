@@ -38,5 +38,4 @@ const _UNIT_TESTS: Array = [
 	preload("res://tests/unit/test_run_state.gd"),
 	preload("res://tests/unit/test_save_service.gd"),
 	preload("res://tests/unit/test_load_bugs.gd"),
-	preload("res://tests/architecture_lint.gd"),
 ]

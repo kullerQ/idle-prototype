@@ -1,6 +1,6 @@
 extends Control
 
-const MAIN_SCENE: String = "res://Scenes/Main/main.tscn"
+const MAIN_SCENE: String = "res://scenes/main/main.tscn"
 
 @onready var continue_button: Button = $VBoxContainer/ContinueButton
 @onready var new_game_button: Button = $VBoxContainer/NewGameButton

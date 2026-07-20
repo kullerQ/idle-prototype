@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://features/resource_grid/cell_resource/cell_resource.gd" id="1_fj0yu"]
 [ext_resource type="Script" path="res://features/resource_grid/cell_resource/cell_hitbox.gd" id="2_1muj4"]
-[ext_resource type="AudioStream" uid="uid://kb00raied7ja" path="res://Audio/pop.wav" id="3_bd4jn"]
+[ext_resource type="AudioStream" uid="uid://kb00raied7ja" path="res://audio/pop.wav" id="3_bd4jn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aoy02"]
 bg_color = Color(0.509804, 0.509804, 0.509804, 0.52549)

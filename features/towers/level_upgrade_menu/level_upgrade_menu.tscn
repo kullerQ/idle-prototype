@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://features/towers/level_upgrade_menu/level_upgrade_menu.gd" id="1_lr7v8"]
 [ext_resource type="Script" path="res://features/towers/level_upgrade_menu/level_upgrade_path.gd" id="2_ienlk"]
-[ext_resource type="PackedScene" uid="uid://bt1oojo2xwns6" path="res://features/towers/level_upgrade_menu/LevelUpgradeNode/level_upgrade_node.tscn" id="3_8usvs"]
+[ext_resource type="PackedScene" uid="uid://bt1oojo2xwns6" path="res://features/towers/level_upgrade_menu/level_upgrade_node/level_upgrade_node.tscn" id="3_8usvs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d5hbc"]
 bg_color = Color(0.862745, 0.862745, 0.862745, 0.431373)
