@@ -17,7 +17,7 @@ Companion: [ARCHITECTURE.md](../ARCHITECTURE.md) (boot, ownership, signals).
 | Cross-feature event that is *not* UI | Emit from the owning manager; UI listens |
 | Menu open/close, tooltip, crit-label flash | `G` UI bus only |
 | Debug cheats | `Main` + InputMap actions, `OS.is_debug_build()` only |
-| Saveable progress | Through RunState / save API (Phase 5) — never ad-hoc `user://` from a random script |
+| Saveable progress | `RunState` + `SaveService` (`core/`) — never ad-hoc `user://` from a random script |
 
 Quick checks:
 
@@ -126,6 +126,29 @@ Do not add a second parallel damage Resource path while live combat uses `Damage
 
 ---
 
+## Save system
+
+Progress is persisted through `RunState` + `SaveService` (`core/run_state.gd`, `core/save_service.gd`). File: `user://save.json`.
+
+**Boot flow:** `ui/main_menu/main_menu.tscn` (main scene) → New Game or Continue → `Scenes/Main/main.gd` calls `RunState.consume_pending()` after `G.bind_scene_managers` and applies via `RunState.apply_to(...)`. New Game clears any existing save and pending state; Continue loads the file and sets pending before changing scene.
+
+| Saved | Not saved (by design) |
+|-------|----------------------|
+| Economy (currencies) | Resource grid cells |
+| Meta upgrade levels | Building runtime state |
+| Tower grid + per-cell level upgrades | Timer elapsed progress |
+| | Active expedition session |
+
+After load, the resource grid respawns via `TimerManager` baseline timers — acceptable for the current idle scope.
+
+**Rules:**
+
+- Never write ad-hoc `user://` saves from random scripts.
+- New saveable data → extend `RunState.to_dict()` / `from_dict()` and bump `SAVE_VERSION` when the on-disk format changes.
+- Debug save/load hotkeys stay in `Main` (`OS.is_debug_build()` only); production uses the main menu (and optional in-game save if added later).
+
+---
+
 ## Static injection
 
 **No new `static var` dependency injection.**
@@ -180,7 +203,7 @@ Domain `crit_occurred` is bridged once in `Game` → `G.crit_label_requested` �
 3. Public API on the owning manager; mutators for upgrades/economy — no drive-by `get_data().field =` from unrelated systems.
 4. Domain signal for non-UI events; `G` only for menu/tooltip/crit bus.
 5. Inject deps from `Game` / parent manager; no new statics; no new `G` field unless it is a top-level manager.
-6. If it is saveable progress, plan for RunState (Phase 5) — do not invent a one-off save file.
+6. If it is saveable progress, extend `RunState` — do not invent a one-off save file (see **Save system** above).
 7. Pure logic worth locking down? Add a `test_*` method under `tests/unit/` (extends `TestCase`). Run all tests: `godot --headless -s res://tests/run_tests.gd`.
 
 ---
