@@ -64,7 +64,18 @@ Phase 3 feature + UI folder moves are done. Remaining physical moves (e.g. `G` �
 | Resource scripts | `_scr_<name>.gd` next to or under `data/<domain>/` / `Resources/` | `_scr_cell_resource_data.gd` |
 | Scene folder ≈ type | Folder name may be PascalCase for editor visibility; script file stays snake_case | `ui/shared/animated_button/animated_button.gd` → `class_name AnimatedButton` |
 
-Level-upgrade talent trees use a **frozen scene contract**: path nodes named `Path_%d` with nested `Root`. Do not rename those nodes without updating `LevelUpgradeMenu` path-walking code. Prefer data-driven UI when the tree is redesigned (Phase 7).
+### Level upgrade scene contract (frozen)
+
+`features/towers/level_upgrade_menu/level_upgrade_menu.tscn` encodes talent-tree layout in node names and hierarchy. Runtime code walks the tree by name — treat these as a **frozen contract** until Phase 7 (data-driven UI):
+
+| Rule | Why |
+|------|-----|
+| Path branch nodes stay named `Path_0`, `Path_1`, … | `LevelUpgradeMenu.change_path` / `show_upgrade_path` match children with `"Path_%d" % path` |
+| Each `Path_*` has a child named `Root` | Path walking does `i.get_node_or_null("Root")` before descending |
+| Do **not** rename `ShooterUpgrades`, `RogueUpgrades`, or `DruidUpgrades` | `LevelUpgradeMenu.upgrade_paths` maps `PlayerCellData.Types` → those `$…/UpgradesContainer/*` nodes |
+| Do **not** reparent `LevelUpgradeNode` instances casually | `LevelUpgradeNode.path` is set in `_ready` from the **parent** name: `int(get_parent().name.split("_")[1])` — moving a node under a different `Path_*` changes its path index |
+
+If you rename or reparent nodes, update `level_upgrade_menu.gd` and `level_upgrade_node.gd` in the same PR and re-test all three tower trees. Prefer a data-driven redesign (Phase 7) over incremental scene renames.
 
 ---
 
